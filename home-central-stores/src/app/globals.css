@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --Primary-50: #EBD8D8;
+  --secondary-500-main: #181464;
+  --Teritary-100: #F2EDE1;
+  --primary-500-main: #841618;
+  --Neutral-500: #A7A19D;
+  --Radius-md: 1rem;
+  --Radius-xs: 0.625rem;
+
+  --Secondary-50: #F1F1FF;
+  --Secondary-100: #E0DFFF;
+  --Colorsuccess: #37B800;
+  --Colors-Neutral-100: #EEEDEC;
+  --Colors-Neutral-900: #23201F;
+  --Colors-Neutral-500: #A7A19D;
+
+  --base: 12;
+
+  @media (min-width: 768px) {
+    --base: 14;
+  }
+
+  @media (min-width: 1280px) {
+    --base: 16;
+  }
+
+
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-figtree);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html {
+  font-size: calc(1px * var(--base)) !important;
+
+  @media (min-width: 1921px) {
+    font-size: 0.83333vw !important;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-figtree), sans-serif;
+}
+
+.baseContainer {
+  max-width: 120rem;
+  margin: 0 auto;
+  padding-left: 5.3%;
+  padding-right: 5.3%;
+
+  @media (max-width: 768px) {
+    padding-left: 6%;
+    padding-right: 6%;
+  }
+}
