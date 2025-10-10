@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
+import TopBar from "@/components/Layout/TopBar/TopBar";
 import Header from "@/components/Layout/Header/Header";
-import Navbar from "@/components/Layout/Navbar/Navbar";
 import JotaiProvider from "@/components/providers/JotaiProvider";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import Footer from "@/components/Layout/Footer/Footer";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -26,9 +28,14 @@ export default function RootLayout({
         className={`${figtree.variable} antialiased`}
       >
         <JotaiProvider>
+          <TopBar />
           <Header />
           <Navbar />
+          <div className="w-full">
+            <hr className="border-[var(--Neutral-100)]" />
+          </div>
           {children}
+          <Footer />
         </JotaiProvider>
       </body>
     </html>

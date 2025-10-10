@@ -48,7 +48,7 @@ export default function StoreSelector({ isOpen, onClose }: StoreSelectorProps) {
                         return (
                             <label
                                 key={store.id}
-                                className={`block py-[0.675rem] px-[0.55rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] cursor-pointer transition-all`}
+                                className={`block py-[0.675rem] px-[0.55rem] border border-[color:var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] cursor-pointer transition-all`}
                             >
                                 <div className="flex items-start gap-[0.25rem]">
                                     <Radio

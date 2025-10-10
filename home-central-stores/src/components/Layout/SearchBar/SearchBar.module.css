@@ -1,0 +1,6 @@
+.searchBar :global(.MuiInputBase-root) fieldset {
+    border: none !important;
+}
+.searchBar :global(.MuiSelect-select) {
+    padding: 1rem 1.5rem;
+}

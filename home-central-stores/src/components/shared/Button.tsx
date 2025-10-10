@@ -3,7 +3,7 @@
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
 
 interface ButtonProps extends Omit<MuiButtonProps, 'variant'> {
-    variant?: 'primary' | 'secondary';
+    variant?: 'primary' | 'secondary' | 'outline';
 }
 
 export default function Button({ variant = 'primary', children, sx, ...props }: ButtonProps) {
@@ -25,6 +25,12 @@ export default function Button({ variant = 'primary', children, sx, ...props }: 
                         backgroundColor: 'color-mix(in srgb, var(--Secondary-100) 85%, black)',
                     },
                 };
+            case 'outline':
+                return {
+                    backgroundColor: 'transparent',
+                    color: 'black',
+                    border: '1.5px solid var(--Colors-Neutral-500)',
+                };
             default:
                 return {};
         }
@@ -37,9 +43,11 @@ export default function Button({ variant = 'primary', children, sx, ...props }: 
                 textTransform: 'none',
                 borderRadius: 'var(--Radius-md)',
                 fontWeight: 500,
-                lineHeight: 1.5,
-                paddingX: '0.5rem',
-                paddingY: '1rem',
+                lineHeight: 1,
+                padding: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
 
                 ...getVariantStyles(),
                 ...sx, // Allow overriding with custom sx prop

@@ -8,6 +8,9 @@
   --Teritary-100: #F2EDE1;
   --primary-500-main: #841618;
   --Neutral-500: #A7A19D;
+  --Neutral-100:#EDEDF0;
+  --Neutral-200:#DCDCE2;
+  --Neutral-300:#B9B9C4;
   --Radius-md: 1rem;
   --Radius-xs: 0.625rem;
 
@@ -15,6 +18,8 @@
   --Secondary-100: #E0DFFF;
   --Colorsuccess: #37B800;
   --Colors-Neutral-100: #EEEDEC;
+  
+  --Neutral-800 :#33333D;
   --Colors-Neutral-900: #23201F;
   --Colors-Neutral-500: #A7A19D;
 
@@ -37,12 +42,6 @@
   --font-sans: var(--font-figtree);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
 html {
   font-size: calc(1px * var(--base)) !important;
@@ -60,7 +59,7 @@ body {
 
 .baseContainer {
   max-width: 120rem;
-  margin: 0 auto;
+  margin:  auto;
   padding-left: 5.3%;
   padding-right: 5.3%;
 
@@ -69,3 +68,6 @@ body {
     padding-right: 6%;
   }
 }
+
+
+
