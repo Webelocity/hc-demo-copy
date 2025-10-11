@@ -16,6 +16,7 @@ import { PiListBold } from "react-icons/pi";
 import Link from "next/link";
 import MobileDrawer from "../MobileDrawer/MobileDrawer";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Badge } from "@mui/material";
 
 export default function Header() {
     const [selectedStoreId] = useAtom(selectedStoreAtom);
@@ -85,10 +86,30 @@ export default function Header() {
                     </div>
                     <div className="flex items-center gap-[1rem]">
                         <div className="flex items-center">
-                            <IoMdHeartEmpty className="text-2xl cursor-pointer" />
+                            <Badge
+                                variant="dot"
+                                overlap="circular"
+                                sx={{
+                                    '& .MuiBadge-dot': {
+                                        backgroundColor: 'var(--Teritary-600-Main)',
+                                    }
+                                }}
+                            >
+                                <IoMdHeartEmpty className="text-2xl cursor-pointer" />
+                            </Badge>
                         </div>
                         <div className="flex items-center">
-                            <LuShoppingCart className="text-2xl cursor-pointer" />
+                            <Badge
+                                variant="dot"
+                                overlap="circular"
+                                sx={{
+                                    '& .MuiBadge-dot': {
+                                        backgroundColor: 'var(--Teritary-600-Main)',
+                                    }
+                                }}
+                            >
+                                <LuShoppingCart className="text-2xl cursor-pointer" />
+                            </Badge>
                         </div>
                         <Button variant="outline">
                             <CiUser className="text-xl" />

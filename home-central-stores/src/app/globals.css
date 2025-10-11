@@ -6,6 +6,7 @@
   --Primary-50: #EBD8D8;
   --secondary-500-main: #181464;
   --Teritary-100: #F2EDE1;
+  --Teritary-600-Main:#957A40;
   --primary-500-main: #841618;
   --Neutral-500: #A7A19D;
   --Neutral-100:#EDEDF0;
@@ -15,10 +16,13 @@
   --Radius-xs: 0.625rem;
 
   --Secondary-50: #F1F1FF;
+  --Secondary-600:#141153;
+  --Secondary-200:#8C8AB2;
   --Secondary-100: #E0DFFF;
   --Colorsuccess: #37B800;
+  --Colors-Neutral-700:#66605C;
   --Colors-Neutral-100: #EEEDEC;
-  
+  --Colors-Neutral-50:#F5F4F4;
   --Neutral-800 :#33333D;
   --Colors-Neutral-900: #23201F;
   --Colors-Neutral-500: #A7A19D;
