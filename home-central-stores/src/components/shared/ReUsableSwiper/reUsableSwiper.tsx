@@ -16,6 +16,7 @@ interface ReUsableSwiperProps<T> {
     renderSlide: (item: T, index: number) => ReactNode;
     swiperOptions?: SwiperOptions;
     className?: string;
+    slideStyles?: string;
 }
 
 export default function ReUsableSwiper<T>({
@@ -23,6 +24,7 @@ export default function ReUsableSwiper<T>({
     renderSlide,
     swiperOptions = {},
     className = '',
+    slideStyles = '',
 }: ReUsableSwiperProps<T>) {
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
     const [isBeginning, setIsBeginning] = useState(true);
@@ -37,7 +39,7 @@ export default function ReUsableSwiper<T>({
     };
 
     return (
-        <div>
+        <div className='w-full flex-[1] overflow-hidden min-h-fit'>
             <Swiper
                 modules={[Pagination]}
                 pagination={{
@@ -57,7 +59,7 @@ export default function ReUsableSwiper<T>({
                 className={`${styles.swiperContainer} ${className}`}
             >
                 {data.map((item, index) => (
-                    <SwiperSlide key={index}>
+                    <SwiperSlide key={index} className={slideStyles}>
                         {renderSlide(item, index)}
                     </SwiperSlide>
                 ))}

@@ -34,10 +34,10 @@ export default function Recommended() {
                         spaceBetween: 20,
                         slidesPerView: 5,
                         breakpoints: {
-                            320: { slidesPerView: 1, spaceBetween: 10 },
-                            640: { slidesPerView: 2, spaceBetween: 15 },
-                            1024: { slidesPerView: 3, spaceBetween: 20 },
-                            1280: { slidesPerView: 4, spaceBetween: 20 },
+                            320: { slidesPerView: 2, spaceBetween: 10 },
+                            640: { slidesPerView: 3, spaceBetween: 15 },
+                            1024: { slidesPerView: 4, spaceBetween: 20 },
+                            1280: { slidesPerView: 5, spaceBetween: 20 },
                         },
                     }}
                 />

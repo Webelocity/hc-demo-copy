@@ -17,6 +17,11 @@ export default function Button({ variant = 'primary', size = 'medium', children,
                     '&:hover': {
                         backgroundColor: 'color-mix(in srgb, var(--primary-500-main) 85%, black)',
                     },
+                    '&:disabled': {
+                        backgroundColor: 'var(--Neutral-100)',
+                        color: 'var(--Neutral-500)',
+                        cursor: 'not-allowed',
+                    },
                 };
             case 'secondary':
                 return {
@@ -25,12 +30,23 @@ export default function Button({ variant = 'primary', size = 'medium', children,
                     '&:hover': {
                         backgroundColor: 'color-mix(in srgb, var(--Secondary-100) 85%, black)',
                     },
+                    '&:disabled': {
+                        backgroundColor: 'var(--Neutral-100)',
+                        color: 'var(--Neutral-500)',
+                        cursor: 'not-allowed',
+                    },
+
                 };
             case 'outline':
                 return {
                     backgroundColor: 'transparent',
                     color: 'black',
                     border: '1.5px solid var(--Colors-Neutral-500)',
+                    '&:disabled': {
+                        backgroundColor: 'var(--Neutral-100)',
+                        color: 'var(--Neutral-500)',
+                        cursor: 'not-allowed',
+                    },
                 };
             default:
                 return {};
@@ -62,6 +78,7 @@ export default function Button({ variant = 'primary', size = 'medium', children,
     return (
         <MuiButton
             {...props}
+
             sx={{
                 textTransform: 'none',
                 borderRadius: '1.2rem',
