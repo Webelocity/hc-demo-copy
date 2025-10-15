@@ -1,8 +1,6 @@
 import dynamic from "next/dynamic";
 import Banners from "@/components/Pages/HomePage/Banners/Banners";
 
-// Lazy load components with loading states
-// Keep Banners and WeeklyOffers eager-loaded for above-the-fold content
 const WeeklyOffers = dynamic(
   () => import("@/components/Pages/HomePage/WeeklyOffers/WeeklyOffers"),
   {
