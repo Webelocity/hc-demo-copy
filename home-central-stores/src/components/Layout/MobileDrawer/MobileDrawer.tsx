@@ -19,7 +19,7 @@ export default function MobileDrawer({ isOpen }: MobileDrawerProps) {
                         Home
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/services">
                     <span>
                         Services
                     </span>

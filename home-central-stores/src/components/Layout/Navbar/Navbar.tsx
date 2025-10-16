@@ -24,7 +24,7 @@ export default function Navbar() {
                 </div>
                 <ul className="flex items-center gap-[1rem] text-[1rem] font-medium">
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Services</Link>
+                        <Link href="/services">Services</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
                         <Link href="/">Contractor Zone</Link>

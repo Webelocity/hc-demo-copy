@@ -1,32 +1,45 @@
 @import "tailwindcss";
 
 :root {
+  /* Base Colors */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Primary Colors */
   --Primary-50: #EBD8D8;
-  --secondary-500-main: #181464;
-  --Teritary-100: #F2EDE1;
-  --Teritary-600-Main:#957A40;
   --primary-500-main: #841618;
-  --Neutral-500: #A7A19D;
-  --Neutral-100:#EDEDF0;
-  --Neutral-200:#DCDCE2;
-  --Neutral-300:#B9B9C4;
-  --Radius-md: 1rem;
-  --Radius-xs: 0.625rem;
 
+  /* Secondary Colors */
   --Secondary-50: #F1F1FF;
-  --Secondary-600:#141153;
-  --Secondary-200:#8C8AB2;
   --Secondary-100: #E0DFFF;
-  --Colorsuccess: #37B800;
-  --Colors-Neutral-700:#66605C;
-  --Colors-Neutral-100: #EEEDEC;
-  --Colors-Neutral-50:#F5F4F4;
-  --Neutral-800 :#33333D;
-  --Colors-Neutral-900: #23201F;
-  --Colors-Neutral-500: #A7A19D;
+  --Secondary-200: #8C8AB2;
+  --secondary-500-main: #181464;
+  --Secondary-600: #141153;
 
+  /* Tertiary Colors */
+  --Teritary-100: #F2EDE1;
+  --Teritary-600-Main: #957A40;
+
+  /* Neutral Colors */
+  --Colors-Neutral-50: #F5F4F4;
+  --Neutral-100: #EDEDF0;
+  --Colors-Neutral-100: #EEEDEC;
+  --Neutral-200: #DCDCE2;
+  --Neutral-300: #B9B9C4;
+  --Neutral-500: #A7A19D;
+  --Colors-Neutral-500: #A7A19D;
+  --Colors-Neutral-700: #66605C;
+  --Neutral-800: #33333D;
+  --Colors-Neutral-900: #23201F;
+  --Neutral-700: #444452;
+  /* Success Colors */
+  --Colorsuccess: #37B800;
+
+  /* Border Radius */
+  --Radius-xs: 0.625rem;
+  --Radius-md: 1rem;
+
+  /* Base Font Size */
   --base: 12;
 
   @media (min-width: 768px) {
