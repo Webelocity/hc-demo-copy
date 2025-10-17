@@ -12,7 +12,7 @@ export default function ServiceList() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1.75rem]">
                 {services.map((service, index) => (
-                    <div className="p-[1.5rem] flex flex-col gap-[1rem] bg-white rounded-[var(--Radius-md)]">
+                    <div className="p-[1.5rem] flex flex-col gap-[1rem] bg-white rounded-[var(--Radius-md)]" key={index}>
                         <div className="relative ">
                             <Image className="aspect-[381/303] !relative rounded-[var(--Radius-md)] " src={service.imagePath} alt="Service1" fill />
                             <div className="absolute bg-white left-0 bottom-0 translate-y-1/2 p-[0.75rem] rounded-[var(--Radius-md)]">
