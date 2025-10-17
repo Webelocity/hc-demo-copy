@@ -31,7 +31,7 @@ export default function Rent() {
                 <ReUsableSwiper
                     data={mockProducts}
                     renderSlide={(product) => (
-                        <ProductCard />
+                        <ProductCard key={product.id} />
                     )}
                     className="swiper-pagination-Rent flex-1"
                     swiperOptions={{

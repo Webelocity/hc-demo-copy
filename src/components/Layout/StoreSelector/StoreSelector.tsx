@@ -3,8 +3,6 @@
 import { useAtom } from 'jotai';
 import { selectedStoreAtom } from '@/atoms/storeAtom';
 import { getAllStores, getStoreStatus, StoreId } from '@/util/shedule';
-import { SlLocationPin } from "react-icons/sl";
-import { HiOutlinePhone } from "react-icons/hi2";
 import Modal from '@/components/shared/Modal';
 import Button from '@/components/shared/Button';
 import { Radio } from '@mui/material';

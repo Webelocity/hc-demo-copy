@@ -34,7 +34,7 @@ export default function FreeDelivery() {
                     <ReUsableSwiper
                         data={mockProducts}
                         renderSlide={(product) => (
-                            <ProductCard />
+                            <ProductCard key={product.id} />
                         )}
                         className="swiper-pagination-free-delivery"
                         swiperOptions={{

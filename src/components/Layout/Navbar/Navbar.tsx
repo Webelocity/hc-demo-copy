@@ -4,7 +4,6 @@ import Button from "@/components/shared/Button";
 import Link from "next/link";
 import { PiListBold } from "react-icons/pi";
 import { useState } from "react";
-import styles from "./Navbar.module.scss";
 import MegaMenu from "../MegaMenu/MegaMenu";
 
 export default function Navbar() {

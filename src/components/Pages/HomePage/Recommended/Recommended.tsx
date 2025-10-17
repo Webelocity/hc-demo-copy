@@ -27,7 +27,7 @@ export default function Recommended() {
                 <ReUsableSwiper
                     data={mockProducts}
                     renderSlide={(product) => (
-                        <ProductCard />
+                        <ProductCard key={product.id} />
                     )}
                     className="swiper-pagination-recommended"
                     swiperOptions={{

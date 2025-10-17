@@ -33,7 +33,7 @@ export default function NewArrivals() {
                     className="swiper-pagination-new-arrivals"
                     data={mockProducts}
                     renderSlide={(product) => (
-                        <ProductCard />
+                        <ProductCard key={product.id} />
                     )}
                     swiperOptions={{
                         spaceBetween: 20,

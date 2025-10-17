@@ -81,7 +81,7 @@ const Map = () => {
   const isMobile = useMediaQuery("(max-width:1023px)");
   const [isLoaded, setIsLoaded] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-  const [mapCenter, setMapCenter] = useState({
+  const [mapCenter] = useState({
     lat: 42.10673330759051,
     lng: -76.267104752531,
   });

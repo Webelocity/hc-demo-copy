@@ -13,7 +13,6 @@ import { IoMdHeartEmpty } from "react-icons/io";
 import { CiUser } from "react-icons/ci";
 import Button from "@/components/shared/Button";
 import { PiListBold } from "react-icons/pi";
-import Link from "next/link";
 import MobileDrawer from "../MobileDrawer/MobileDrawer";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Badge } from "@mui/material";

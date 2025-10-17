@@ -33,7 +33,7 @@ export default function BestSellers() {
                     className="swiper-pagination-best-sellers"
                     data={mockProducts}
                     renderSlide={(product) => (
-                        <ProductCard />
+                        <ProductCard key={product.id} />
                     )}
                     swiperOptions={{
                         spaceBetween: 20,

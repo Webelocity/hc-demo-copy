@@ -1,6 +1,5 @@
 import services from "@/Data/Services";
 import Image from "next/image";
-import { TbTruckDelivery } from "react-icons/tb";
 
 export default function ServiceList() {
     return (

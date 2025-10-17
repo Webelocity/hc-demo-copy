@@ -1,5 +1,3 @@
-import { JSX } from 'react';
-import { LuPaintRoller } from "react-icons/lu";
 
 interface Service {
     title: string;
