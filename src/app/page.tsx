@@ -85,6 +85,20 @@ const ContactUs = dynamic(
   }
 );
 
+const OwegoShowRoom = dynamic(
+  () => import("@/components/Pages/HomePage/OwegoShowRoom/OwegoShowRoom"),
+  {
+    loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
+  }
+);
+
+const BestSellers = dynamic(
+  () => import("@/components/Pages/HomePage/BestSellers/BestSellers"),
+  {
+    loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
+  }
+);
+
 export default function Home() {
   return (
     <>
@@ -96,6 +110,8 @@ export default function Home() {
       <Recommended />
       <QuoteRequest />
       <FreeDelivery />
+      <OwegoShowRoom />
+      <BestSellers />
       <Rent />
       <GiftCards />
       <Brands />

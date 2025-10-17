@@ -17,12 +17,13 @@ import Link from "next/link";
 import MobileDrawer from "../MobileDrawer/MobileDrawer";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Badge } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
     const [selectedStoreId] = useAtom(selectedStoreAtom);
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+    const router = useRouter();
     const store = getStoreById(selectedStoreId);
     const status = getStoreStatus(selectedStoreId);
 
@@ -44,7 +45,7 @@ export default function Header() {
                             />
                         )}
 
-                        <div className="relative  w-[5rem] h-[3.7rem] lg:w-[6.6rem] lg:h-[4.7rem]">
+                        <div className="relative  w-[5rem] h-[3.7rem] lg:w-[6.6rem] lg:h-[4.7rem] cursor-pointer" onClick={() => router.push('/')}>
                             <Image src="/assets/image/shared/logo.svg" alt="Home Central Stores Logo" fill priority />
                         </div>
                     </div>
