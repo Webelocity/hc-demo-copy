@@ -26,7 +26,7 @@ export default function BestSellers() {
                     <h3 className="text-[2.5rem] font-bold text-start">
                         Best Sellers
                     </h3>
-                    <Button variant="secondary">View Shop</Button>
+                    <Button variant="secondary">Explore More </Button>
                 </div>
 
                 <ReUsableSwiper
