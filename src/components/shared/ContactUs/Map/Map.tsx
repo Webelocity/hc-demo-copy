@@ -77,7 +77,7 @@ const mapOptions = {
   scrollwheel: true,
 };
 
-const Map = () => {
+const Map = ({ size = "medium" }: { size?: "small" | "medium" | "large" }) => {
   const isMobile = useMediaQuery("(max-width:1023px)");
   const [isLoaded, setIsLoaded] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
@@ -85,6 +85,12 @@ const Map = () => {
     lat: 42.10673330759051,
     lng: -76.267104752531,
   });
+
+  const sizeMap = {
+    small: "15rem",
+    medium: "25rem",
+    large: "35rem",
+  };
 
   useEffect(() => {
     if (window.google && window.google.maps) {
@@ -103,9 +109,10 @@ const Map = () => {
 
   return (
     <LoadScript googleMapsApiKey={apiKey} onLoad={() => setIsLoaded(true)}>
-      <div className="map-wrapper">
+      <div className="map-wrapper" style={{ minHeight: sizeMap[size] }}>
         <GoogleMap
           mapContainerClassName="map-container"
+          mapContainerStyle={{ minHeight: sizeMap[size] }}
           center={mapCenter}
           zoom={isMobile ? 13 : 14}
           options={mapOptions}

@@ -8,7 +8,7 @@ export default function ContactUs() {
         <div className="baseContainer py-[5rem] flex flex-col lg:flex-row gap-[2.5rem] items-center ">
             <div className="flex flex-col gap-[1.5rem] flex-1">
                 <p className="text-[2.5rem] font-bold ">Reach Out to Home Central Stores</p>
-                <Map />
+                <Map size="medium" />
                 <div className="flex  gap-[1.5rem] align-center">
                     <div className="flex flex-col gap-[1rem]">
                         <p className="text-[1rem] font-bold">Owego, NY</p>

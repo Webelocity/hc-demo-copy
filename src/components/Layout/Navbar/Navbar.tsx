@@ -29,7 +29,7 @@ export default function Navbar() {
                         <Link href="/">Contractor Zone</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Owego Showroom</Link>
+                        <Link href="/owego-showroom">Owego Showroom</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
                         <Link href="/">Locations</Link>
