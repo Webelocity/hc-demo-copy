@@ -9,6 +9,16 @@ export default function OwegoShowRoom() {
         <div className="baseContainer bg-[var(--primary-500-main)] py-[5rem] flex flex-col lg:flex-row gap-[4rem] items-center">
             <div className="flex flex-col gap-[1.5rem] flex-[1] ps-[1rem]">
                 <h2 className="text-[2.5rem] font-bold text-white tracking-[0.8px]">Visit Our Home Central Showroom & Design Center in Owego</h2>
+
+                <p className="text-[1.125rem] text-[var(--Neutral-100)]">See, experience, and choose the best kitchen, bath, and appliance solutions for your projects. Our experts are ready to guide homeowners,  contractors and vendors to the perfect products.</p>
+                <div className="flex flex-col md:flex-row gap-[1.5rem] items-center">
+                    <Button variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
+                        Explore the Showroom
+                    </Button>
+                    <Link className="text-normal font-medium text-white" href="/owego-showroom">
+                        Shop Products
+                    </Link>
+                </div>
                 <div className="flex flex-col gap-[0.5rem] md:hidden">
                     <div className="py-[1rem] px-[1.5rem] bg-[var(--Primary-600)]  flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                         <RiDiscountPercentFill className="text-2xl text-white" />
@@ -18,15 +28,6 @@ export default function OwegoShowRoom() {
                         <HiMiniUserGroup className="text-2xl text-white" />
                         <p className="text-[1.125rem] text-white">Expert advice from our knowledgeable team</p>
                     </div>
-                </div>
-                <p className="text-[1.125rem] text-[var(--Neutral-100)]">See, experience, and choose the best kitchen, bath, and appliance solutions for your projects. Our experts are ready to guide homeowners,  contractors and vendors to the perfect products.</p>
-                <div className="flex flex-col md:flex-row gap-[1.5rem] items-center">
-                    <Button variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
-                        Explore the Showroom
-                    </Button>
-                    <Link className="text-normal font-medium text-white" href="/owego-showroom">
-                        Shop Products
-                    </Link>
                 </div>
             </div>
             <div className="flex-[1.8] relative  md:min-h-[34rem] w-full">

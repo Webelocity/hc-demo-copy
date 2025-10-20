@@ -41,7 +41,7 @@ export default function Navbar() {
                         <Link href="/">Contact</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Careers</Link>
+                        <Link href="/careers">Careers</Link>
                     </li>
                 </ul>
                 <div className="flex items-center">
