@@ -86,8 +86,6 @@ export default function Banners() {
                     </div>
                 </div>
             </div>
-
-
         </div>
     );
 }

@@ -64,7 +64,7 @@
 
 html {
   font-size: calc(1px * var(--base)) !important;
-
+  font-family: var(--font-figtree);
   @media (min-width: 1921px) {
     font-size: 0.83333vw !important;
   }
@@ -73,7 +73,7 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-figtree), sans-serif;
+  font-family: var(--font-figtree), sans-serif !important;
 }
 
 .baseContainer {

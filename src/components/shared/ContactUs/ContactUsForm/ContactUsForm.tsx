@@ -7,42 +7,9 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import { contactFormSchema, ContactFormData } from './ContactUsForm.schema';
 import { toast } from 'react-toastify';
 import Button from '../../Button';
+import CUstomMUITheme from '@/app/theme';
 
-// Custom theme for MUI components
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#1976d2',
-        },
-    },
-    components: {
-        MuiTextField: {
-            styleOverrides: {
-                root: {
-                    '& .MuiOutlinedInput-root': {
-                        backgroundColor: 'white',
-                        borderRadius: 'var(--Radius-md)',
-                        '& fieldset': {
-                            borderColor: 'var(--Neutral-100)',
-                        },
-                        '&:hover fieldset': {
-                            borderColor: 'var(--Neutral-100)',
-                        },
-                        '&.Mui-focused fieldset': {
-                            borderColor: 'var(--primary-500-main)',
-                        },
-                    },
-                    '& .MuiInputLabel-root': {
-                        color: '#666',
-                        '&.Mui-focused': {
-                            color: 'var(--primary-500-main)',
-                        },
-                    },
-                },
-            },
-        },
-    },
-});
+
 
 export default function ContactUsForm() {
     const {
@@ -78,7 +45,7 @@ export default function ContactUsForm() {
     };
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={CUstomMUITheme}>
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="flex flex-col gap-6 w-full"

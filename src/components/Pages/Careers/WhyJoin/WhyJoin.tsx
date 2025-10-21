@@ -1,10 +1,10 @@
+'use client';
 import Button from "@/components/shared/Button";
 import Image from "next/image";
-import Link from "next/link";
-import { RiDiscountPercentFill } from "react-icons/ri";
-import { HiMiniUserGroup } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
 
 export default function WhyJoinUs() {
+    const router = useRouter();
     return (
         <div className="baseContainer bg-[var(--primary-500-main)] py-[5rem] flex flex-col lg:flex-row gap-[1.5rem] items-start">
             <div className="flex flex-col gap-[1.5rem] flex-[1] ps-[1rem]">
@@ -12,7 +12,7 @@ export default function WhyJoinUs() {
 
                 <p className="text-[1.125rem] text-[var(--Neutral-100)]">Jobs at Home Central are diverse and are never limited to a single role. Team members are encouraged to learn all facets of our operations, including</p>
                 <div className="flex flex-col md:flex-row gap-[1.5rem] items-center">
-                    <Button variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
+                    <Button onClick={() => router.push('/careers/apply')} variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
                         Apply Now
                     </Button>
 

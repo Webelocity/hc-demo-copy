@@ -22,9 +22,8 @@ export default function Stepper({ steps, activeStep, completed, onStepClick }: S
                 const isActive = index === activeStep;
                 const isCompleted = completed[index];
                 return (
-                    <div key={step.id} className="flex items-start">
-                        {/* Left rail */}
-                        <div className="flex flex-col items-center mr-4">
+                    <div key={step.id} className="flex items-start gap-[1rem]">
+                        <div className="flex flex-col items-center ">
                             <button
                                 type="button"
                                 onClick={() => onStepClick?.(index)}
@@ -33,18 +32,17 @@ export default function Stepper({ steps, activeStep, completed, onStepClick }: S
                                     isCompleted
                                         ? "bg-[var(--primary-500-main)] text-white border-[var(--primary-500-main)] text-2xl"
                                         : isActive
-                                            ? "border-[var(--primary-500-main)] text-[var(--primary-500-main)]"
+                                            ? "border-[var(--primary-500-main)] border-[3px] text-[var(--primary-500-main)]"
                                             : "border-[var(--Neutral-200)] text-[var(--Neutral-300)]",
                                 ].join(" ")}
                                 aria-current={isActive ? "step" : undefined}
                             >
-                                {isCompleted ? <IoCheckmark /> : String(step.id).padStart(2, "0")}
+                                {isCompleted ? <IoCheckmark className="text-2xl" /> : String(step.id).padStart(2, "0")}
                             </button>
-                            {/* Connector line */}
                             {index < steps.length - 1 && (
                                 <div
                                     className={[
-                                        "w-[2px] h-10",
+                                        "w-[2px] h-[4rem]",
                                         isCompleted || index < activeStep
                                             ? "bg-[var(--primary-500-main)]"
                                             : "bg-[var(--Neutral-200)]",
@@ -52,15 +50,14 @@ export default function Stepper({ steps, activeStep, completed, onStepClick }: S
                                 />
                             )}
                         </div>
-                        {/* Title */}
-                        <div className="pb-6">
+                        <div>
                             <div
                                 className={[
-                                    "text-base font-semibold",
+                                    "text-base font-semibold pt-1",
                                     isActive
                                         ? "text-[var(--primary-500-main)]"
                                         : isCompleted
-                                            ? "text-[var(--Secondary-600)]"
+                                            ? "text-[var(--primary-500-main)]"
                                             : "text-[var(--Neutral-300)]",
                                 ].join(" ")}
                             >

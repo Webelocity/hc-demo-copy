@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "@/app/theme";
 import TopBar from "@/components/Layout/TopBar/TopBar";
 import Header from "@/components/Layout/Header/Header";
 import JotaiProvider from "@/components/providers/JotaiProvider";
@@ -26,31 +29,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${figtree.variable} antialiased`}
-      >
-        <JotaiProvider>
-          <TopBar />
-          <Header />
-          <Navbar />
-          <div className="w-full">
-            <hr className="border-[var(--Neutral-100)]" />
-          </div>
-          {children}
-          <Footer />
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-        </JotaiProvider>
+      <body className={`${figtree.variable} antialiased`}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <JotaiProvider>
+            <TopBar />
+            <Header />
+            <Navbar />
+            <div className="w-full">
+              <hr className="border-[var(--Neutral-100)]" />
+            </div>
+            {children}
+            <Footer />
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+          </JotaiProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

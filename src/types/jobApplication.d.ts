@@ -14,7 +14,7 @@ type EmploymentData = {
     cv: File | null;
     dateAvailableToStart: string;
     salaryRequirement: string;
-    whenCanYouStart: string; // yyyy-mm-dd
+    timeYouAreAvailableToWork: string; // yyyy-mm-dd or time
     daysAbleToWork: string[]; // e.g., ["Mon","Tue"]
     workedForHomeCentralBefore: "yes" | "no";
     workedForHomeCentralWhen?: string; // required only if yes
