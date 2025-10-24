@@ -26,7 +26,7 @@ export default function Navbar() {
                         <Link href="/services">Services</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Contractor Zone</Link>
+                        <Link href="/contractor-zone">Contractor Zone</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
                         <Link href="/owego-showroom">Owego Showroom</Link>
@@ -38,7 +38,7 @@ export default function Navbar() {
                         <Link href="/">About</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Contact</Link>
+                        <Link href="/contact">Contact</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
                         <Link href="/careers">Careers</Link>

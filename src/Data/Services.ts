@@ -2,8 +2,8 @@
 interface Service {
     title: string;
     description: string;
-    ctaName: string;
-    ctaLink: string;
+    ctaName?: string;
+    ctaLink?: string;
     imagePath: string;
     icon: string;
 }
@@ -156,4 +156,31 @@ const services: Service[] = [
     }
 ];
 
-export default services;
+const contractorServices: Service[] = [
+    {
+        title: "Delivery Options",
+        description: "Fast, reliable delivery for your job sites. We make bulk building materials boomed, dumped, or unloaded with a moffit truck on time.",
+        // ctaName: "Request a Quote",
+        // ctaLink: "/request-quote",
+        imagePath: "/assets/image/Services/serviceList/images/truck.svg",
+        icon: '/assets/image/Services/serviceList/icons/Group.svg', // Import and pass the JSX element as needed
+    },
+    {
+        title: "Business Solutions",
+        description: "Our sales team will simplify Pro purchasing with volume ordering, bulk pricing, online billing, and delivery options.",
+        ctaName: "Contact Us",
+        ctaLink: "/contact",
+        imagePath: "/assets/image/Services/serviceList/images/business.svg", // Replace with actual image paths later
+        icon: '/assets/image/Services/serviceList/icons/WinRar.svg', // Import and pass the JSX element as needed
+    },
+    {
+        title: "Blueprint Take-off",
+        description: "Provide your construction blueprints, and we’ll create a free of charge, accurate and detailed material quote so you know exactly what you need to build.",
+        // ctaName: "Request a Quote",
+        // ctaLink: "/request-quote",
+        imagePath: "/assets/image/Services/serviceList/images/blueprint.svg",
+        icon: '/assets/image/Services/serviceList/icons/RulerPen.svg', // Import and pass the JSX element as needed
+    }
+];
+
+export { services, contractorServices };

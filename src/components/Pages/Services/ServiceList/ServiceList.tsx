@@ -1,4 +1,4 @@
-import services from "@/Data/Services";
+import { services } from "@/Data/Services";
 import Image from "next/image";
 
 export default function ServiceList() {

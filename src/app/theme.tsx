@@ -219,6 +219,25 @@ export const CUstomMUITheme = createTheme({
                 },
             },
         },
+        MuiAccordion: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: 'white',
+                    borderRadius: 'var(--Radius-md) !important',
+                    border: '1px solid var(--Neutral-100)',
+                    boxShadow: 'none',
+                    marginBottom: '0 !important',
+                    '&:before': {
+                        display: 'none',
+                    },
+                },
+                heading: {
+                    fontSize: '1rem',
+                    fontWeight: 600,
+                },
+
+            },
+        },
     },
 });
 

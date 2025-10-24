@@ -24,7 +24,7 @@ export default function MobileDrawer({ isOpen }: MobileDrawerProps) {
                         Services
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contractor-zone">
                     <span>
                         Contractor Zone
                     </span>
@@ -44,7 +44,7 @@ export default function MobileDrawer({ isOpen }: MobileDrawerProps) {
                         About
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contact">
                     <span>
                         Contact
                     </span>
