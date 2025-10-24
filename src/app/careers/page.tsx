@@ -1,4 +1,3 @@
-import CareerForm from "@/components/Pages/Careers/CareerForm/CareerForm";
 import CareersBanner from "@/components/Pages/Careers/CareersBanner/CareersBanner";
 import Openings from "@/components/Pages/Careers/Openings/Openings";
 import Oppurtunities from "@/components/Pages/Careers/Oppurtunities/Oppurtunities";

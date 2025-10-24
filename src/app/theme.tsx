@@ -1,6 +1,5 @@
 'use client';
 import "@mui/x-date-pickers/themeAugmentation";
-import React from "react";
 import { createTheme } from "@mui/material";
 
 // No custom icons. Style base MUI classes and slots instead.

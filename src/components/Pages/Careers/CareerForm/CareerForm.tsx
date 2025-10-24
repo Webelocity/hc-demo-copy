@@ -58,7 +58,6 @@ export default function CareerForm() {
         handleSubmit,
         trigger,
         watch,
-        setValue,
         formState: { errors },
     } = useForm<FormValues>({
         defaultValues: {
@@ -198,8 +197,6 @@ export default function CareerForm() {
             toast.error("Please accept the certifications before submitting.");
             return;
         }
-        // Log the final object grouped by step
-        // eslint-disable-next-line no-console
         console.log("JobApplication submitted:", values);
         toast.success("Application submitted successfully.");
     };
@@ -221,19 +218,6 @@ export default function CareerForm() {
             reasonForLeaving: "",
         };
         append(newExp);
-    };
-
-    const handleCvChange = (file: File | null) => {
-        if (!file) {
-            setValue("employmentData.cv", null, { shouldValidate: true });
-            return;
-        }
-        const allowed = ["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
-        if (!allowed.includes(file.type)) {
-            toast.error("CV must be a PDF or DOCX file.");
-            return;
-        }
-        setValue("employmentData.cv", file, { shouldValidate: true });
     };
 
     return (
