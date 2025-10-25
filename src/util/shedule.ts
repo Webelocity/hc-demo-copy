@@ -1,6 +1,6 @@
 export type StoreId = 'ow-homecentralstores' | 've-homecentralstores' | 'ca-homecentralstores';
 
-export interface StoreLocation {
+export type StoreLocation = {
     id: StoreId;
     name: string;
     address: string;
@@ -8,8 +8,11 @@ export interface StoreLocation {
     state: string;
     zip: string;
     phone: string;
+    fax: string;
     fullAddress: string;
-}
+    lat: number;
+    lng: number;
+};
 
 export interface DaySchedule {
     open: string;
@@ -36,7 +39,10 @@ export const STORES: Record<StoreId, StoreLocation> = {
         state: 'NY',
         zip: '13850',
         phone: '(607) 785-3307',
+        fax: '(607) 785-3538',
         fullAddress: '199 Stage Rd. Vestal, NY 13850',
+        lat: 42.08759358290779,
+        lng: -76.05341079108524,
     },
     'ca-homecentralstores': {
         id: 'ca-homecentralstores',
@@ -46,7 +52,10 @@ export const STORES: Record<StoreId, StoreLocation> = {
         state: 'NY',
         zip: '13743',
         phone: '(607) 659-4205',
+        fax: '(607) 659-4205',
         fullAddress: '309 Owego Rd. Candor, NY 13743',
+        lat: 42.21814148544821,
+        lng: -76.32937882477931,
     },
     'ow-homecentralstores': {
         id: 'ow-homecentralstores',
@@ -56,7 +65,10 @@ export const STORES: Record<StoreId, StoreLocation> = {
         state: 'NY',
         zip: '13827',
         phone: '(607) 687-3284',
+        fax: '(607) 687-5301',
         fullAddress: '151 Central Ave. Owego, NY 13827',
+        lat: 42.10680465663656,
+        lng: -76.26674955982054,
     },
 };
 

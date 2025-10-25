@@ -32,7 +32,7 @@ export default function Navbar() {
                         <Link href="/owego-showroom">Owego Showroom</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
-                        <Link href="/">Locations</Link>
+                        <Link href="/locations">Locations</Link>
                     </li>
                     <li className="py-[0.625rem] px-[1rem]">
                         <Link href="/">About</Link>
