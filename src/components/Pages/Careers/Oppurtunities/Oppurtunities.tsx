@@ -11,7 +11,7 @@ export default function Oppurtunities() {
                     <p className="text-[var(--Neutral-100)] text-[1.125rem]">Jobs at Home Central are diverse and are never limited to a single role. Team members are encouraged to learn all facets of our operations, including:</p>
                 </div>
                 <div className="flex-[1.6]">
-                    <Image className="!relative object-cover aspect-[526/320] rounded-[var(--Radius-md)]" src={"/assets/image/careers/people.svg"} alt="Oppurtunities" fill />
+                    <Image className="!relative object-cover aspect-[526/320] rounded-[var(--Radius-md)]" src={"/assets/image/Careers/people.svg"} alt="Oppurtunities" fill />
                 </div>
             </div>
         </div>

@@ -68,7 +68,7 @@ export default function Footer() {
                             <Link href={'/'} className="text-[0.9rem] text-[var(--Neutral-800)]">Quote Request</Link>
                             <div className="flex items-center gap-[0.5rem]">
                                 <span className="relative w-[3.7rem] h-[2.7rem]">
-                                    <Image src="/assets/icon/Visa.svg" alt="Visa" fill />
+                                    <Image src="/assets/icon/VISA.svg" alt="Visa" fill />
                                 </span>
                                 <span className="relative w-[2.5rem] h-[2.5rem]">
                                     <Image src="/assets/icon/Mastercard.svg" alt="Mastercard" fill />

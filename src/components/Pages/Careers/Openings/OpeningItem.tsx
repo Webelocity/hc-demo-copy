@@ -15,7 +15,7 @@ export default function OpeningItem() {
                         <p className="text-[var(--Neutral-700)]">Owego</p>
                     </span>
                     <span className="flex gap-[0.5rem] items-center">
-                        <Image className="!relative !w-[1.5rem] !h-[1.5rem]" src="/assets/image/careers/icons/Calendar.svg" alt="Calendar" fill />
+                        <Image className="!relative !w-[1.5rem] !h-[1.5rem]" src="/assets/image/Careers/icons/Calendar.svg" alt="Calendar" fill />
 
                         <p className="text-[var(--Neutral-700)]">Owego</p>
                     </span>
