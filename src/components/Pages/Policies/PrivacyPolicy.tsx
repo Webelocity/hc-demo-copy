@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
       </h2>
 
       <div className="font-['Figtree'] font-normal leading-[1.5] text-[1.125rem] text-[var(--Neutral-700)] tracking-[0.0225rem] w-full">
-        <p className="font-bold mb-2">Effective: (Date)</p>
+        <p className="font-bold mb-2">Effective: (October 27, 2025)</p>
         <p className="mb-4">
           Home Central is committed to the privacy of your information. This
           Privacy Policy is meant to help you understand the information we
