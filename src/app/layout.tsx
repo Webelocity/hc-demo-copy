@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Figtree, Sora } from "next/font/google";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "@mui/material/styles";
@@ -17,6 +17,11 @@ const figtree = Figtree({
   subsets: ["latin"],
 });
 
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
   title: "Home Central Stores",
   description: "Home Central Stores Ecommerce web app ",
@@ -29,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} antialiased`}>
+      <body className={`${figtree.variable} ${sora.variable} antialiased`}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <JotaiProvider>
