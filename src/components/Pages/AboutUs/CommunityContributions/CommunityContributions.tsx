@@ -31,7 +31,7 @@ export default function CommunityContributions() {
 
           {/* Community Organizations */}
           <div className="flex flex-col gap-[1.5rem] items-start justify-center flex-1 min-w-[19.125rem] px-0 py-[1rem] rounded-[var(--Radius-md)]">
-            <div className="flex gap-[1rem] items-start w-full flex-wrap">
+            <div className="flex gap-[1rem] items-start w-full flex-wrap lg:flex-nowrap">
               {contributions.map((contribution, index) => (
                 <div
                   key={index}
