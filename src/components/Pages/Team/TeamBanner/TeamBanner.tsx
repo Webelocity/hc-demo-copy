@@ -4,8 +4,7 @@ export default function TeamBanner() {
       <div
         className="min-h-[25rem] p-[1.5rem] md:p-[2.5rem] rounded-[var(--Radius-md)] flex flex-col items-center justify-center bg-cover bg-center bg-no-repeat relative overflow-hidden"
         style={{
-          backgroundImage:
-            "url('https://www.figma.com/api/mcp/asset/e5b0bbfd-1abb-4a68-97d7-11d8fdd9cab8')",
+          backgroundImage: "url('/assets/image/Team/landing.svg')",
         }}
       >
         {/* Overlay */}
