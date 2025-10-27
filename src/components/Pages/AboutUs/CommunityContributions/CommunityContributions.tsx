@@ -23,7 +23,7 @@ export default function CommunityContributions() {
   return (
     <div className="baseContainer py-[3rem]">
       <div className="bg-[var(--Teritary-100)] flex gap-[1rem] items-end overflow-hidden p-[2.5rem] rounded-[1rem] w-full">
-        <div className="flex gap-[1.5rem] items-start w-full">
+        <div className="flex flex-col lg:flex-row gap-[1.5rem] items-start w-full">
           {/* Title */}
           <h2 className="text-[2.5rem] font-bold text-black leading-[1.2] tracking-[0.05rem] w-[24.8125rem] shrink-0">
             Home Central's Contributions to Our Community
@@ -31,7 +31,7 @@ export default function CommunityContributions() {
 
           {/* Community Organizations */}
           <div className="flex flex-col gap-[1.5rem] items-start justify-center flex-1 min-w-[19.125rem] px-0 py-[1rem] rounded-[var(--Radius-md)]">
-            <div className="flex gap-[1rem] items-start w-full">
+            <div className="flex gap-[1rem] items-start w-full flex-wrap">
               {contributions.map((contribution, index) => (
                 <div
                   key={index}

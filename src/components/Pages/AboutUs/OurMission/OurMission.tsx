@@ -4,9 +4,9 @@ export default function OurMission() {
   return (
     <div className="bg-white flex items-center justify-center rounded-[1.5rem] w-full">
       <div className="baseContainer py-[3rem]">
-        <div className=" flex flex-col lg:flex-row flex-wrap gap-[1.25rem] items-center rounded-[var(--Radius-md)] w-full">
+        <div className=" flex flex-col lg:flex-row flex-wrap gap-[1.25rem] items-stretch rounded-[var(--Radius-md)] w-full">
           {/* Text Content */}
-          <div className="bg-[var(--Secondary-50)] flex-1 min-w-[26.5625rem] flex flex-col gap-[1.5rem] p-[1.5rem] rounded-[var(--Radius-md)] h-[19rem]">
+          <div className="bg-[var(--Secondary-50)] w-full lg:flex-1 lg:min-w-[26.5625rem] flex flex-col gap-[1.5rem] p-[1.5rem] rounded-[var(--Radius-md)] h-[19rem]">
             <h2 className="text-[2.5rem] font-bold text-black leading-[1.2] tracking-[0.05rem]">
               Our Mission
             </h2>
@@ -21,7 +21,7 @@ export default function OurMission() {
           </div>
 
           {/* Image */}
-          <div className="flex-1 min-w-[26.5625rem] h-[18.8125rem] relative rounded-[var(--Radius-md)] overflow-hidden">
+          <div className="w-full lg:flex-1 lg:min-w-[26.5625rem] h-[18.8125rem] relative rounded-[var(--Radius-md)] overflow-hidden">
             <Image
               className="object-cover"
               src="/assets/image/AboutUs/mission.svg"
