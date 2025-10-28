@@ -125,31 +125,31 @@ export default function Footer() {
                 Support
               </span>
               <Link
-                href={"/"}
+                href={"/policies?tab=privacy-policy"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Privacy Policy
               </Link>
               <Link
-                href={"/"}
+                href={"/policies?tab=terms-of-use"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Terms & Conditions
               </Link>
               <Link
-                href={"/"}
+                href={"/policies?tab=return-refund-policy"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Return Policy
               </Link>
               <Link
-                href={"/"}
+                href={"/policies?tab=shipping-delivery-policy"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Shipping and Delivery Policy
               </Link>
               <Link
-                href={"/"}
+                href={"/resources"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Resources
