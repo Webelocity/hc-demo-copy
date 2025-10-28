@@ -40,7 +40,7 @@ export default function LocationsSelector() {
     };
 
     return (
-        <div className="flex flex-col lg:flex-row gap-[1.5rem] items-center justify-center x py-[2.5rem]">
+        <div className="flex flex-col lg:flex-row gap-[1.5rem] items-center justify-center baseContainer py-[2.5rem]">
             <div className="flex-1 flex flex-col gap-[1rem] w-full">
                 {stores.map((store) => {
                     const isMyStore = selectedStore === store.id;
