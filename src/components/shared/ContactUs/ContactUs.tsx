@@ -7,7 +7,7 @@ interface ContactUsProps {
 export default function ContactUs({ version = "home" }: ContactUsProps) {
 
     return (
-        <div className={`  flex flex-col ${version === "contact" ? "lg:flex-row-reverse " : "baseContainer lg:flex-row py-[5rem]"}  gap-[2.5rem] items-center `}>
+        <div className={`  flex flex-col ${version === "contact" ? "lg:flex-row-reverse " : "baseContainer lg:flex-row py-[5rem]"}  gap-[2.5rem] items-center w-full `}>
             <div className="flex flex-col gap-[1.5rem] flex-1">
                 {version === "home" && <p className="text-[2.5rem] font-bold ">Reach Out to Home Central Stores</p>}
                 <Map size="medium" />
