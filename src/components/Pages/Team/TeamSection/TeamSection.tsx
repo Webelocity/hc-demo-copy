@@ -52,7 +52,7 @@ export default function TeamSection() {
                                     flex-1 min-w-fit whitespace-nowrap flex gap-[0.5rem] items-center justify-center 
                                     px-[1.5rem] py-[1rem] rounded-[var(--Radius-md)] 
                                     font-medium text-[0.875rem] leading-[1.5] tracking-[0.0175rem] 
-                                    text-black transition-all
+                                    text-black transition-all cursor-pointer
                                     ${
                                       activeTab === tab
                                         ? 'bg-[var(--Secondary-100)]'
