@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import "./Map.scss";
 import { useMediaQuery } from "@mui/material";
-import { GoogleMap, LoadScript, MarkerF } from "@react-google-maps/api";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useAtom } from "jotai";
 import { selectedStoreAtom } from "@/atoms/storeAtom";
 import { STORES } from "@/util/shedule";
@@ -40,8 +40,8 @@ type MapProps = {
 };
 
 const Map: React.FC<MapProps> = ({ size = "medium", center }) => {
-  const isMobile = useMediaQuery("(max-width:1023px)");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const isMobile = useMediaQuery("(max-width:1023px)", { noSsr: true });
+  const [mounted, setMounted] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   const [selectedStoreId] = useAtom(selectedStoreAtom);
@@ -57,42 +57,56 @@ const Map: React.FC<MapProps> = ({ size = "medium", center }) => {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.google && window.google.maps) {
-      setIsLoaded(true);
-    }
-    return () => setIsLoaded(false);
+    setMounted(true);
   }, []);
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: apiKey,
+  });
 
   const openInGoogleMaps = () => {
     const url = `https://www.google.com/maps/search/?api=1&query=${mapCenter.lat},${mapCenter.lng}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  return (
-    <LoadScript googleMapsApiKey={apiKey} onLoad={() => setIsLoaded(true)}>
-      <div className="map-wrapper" style={{ minHeight: sizeMap[size] }}>
-        <GoogleMap
-          mapContainerClassName="map-container"
-          mapContainerStyle={{ minHeight: sizeMap[size] }}
-          center={mapCenter}
-          zoom={isMobile ? 13 : 14}
-          options={mapOptions}
+  if (!mounted) {
+    return <div className="map-wrapper" style={{ minHeight: sizeMap[size] }} />;
+  }
 
-        >
-          {isLoaded && (
-            <MarkerF
-              onClick={openInGoogleMaps}
-              position={mapCenter}
-              icon={{
-                url: "/assets/image/shared/Pin.svg",
-                // `google` is global when the script loads
-                scaledSize: new google.maps.Size(40, 40),
-              }}
-            />
-          )}
-        </GoogleMap>
+  if (loadError || !apiKey) {
+    return (
+      <div className="map-wrapper" style={{ minHeight: sizeMap[size], display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <button onClick={openInGoogleMaps} style={{ padding: "0.5rem 1rem", border: "1px solid #ccc", borderRadius: 6 }}>
+          Open in Google Maps
+        </button>
       </div>
-    </LoadScript>
+    );
+  }
+
+  if (!isLoaded) {
+    return <div className="map-wrapper" style={{ minHeight: sizeMap[size] }} />;
+  }
+
+  return (
+    <div className="map-wrapper" style={{ minHeight: sizeMap[size] }}>
+      <GoogleMap
+        mapContainerClassName="map-container"
+        mapContainerStyle={{ minHeight: sizeMap[size] }}
+        center={mapCenter}
+        zoom={isMobile ? 13 : 14}
+        options={mapOptions}
+      >
+        <MarkerF
+          onClick={openInGoogleMaps}
+          position={mapCenter}
+          icon={{
+            url: "/assets/image/shared/Pin.svg",
+            scaledSize: new google.maps.Size(40, 40),
+          }}
+        />
+      </GoogleMap>
+    </div>
   );
 };
 
