@@ -13,8 +13,8 @@ export default function WhyUs() {
                 <Button variant="primary" size="large">Apply Now</Button>
             </div>
             <div className="flex-[1.5] relative w-full h-[-webkit-fill-available] relative ">
-                <Image className="aspect-[519/379] !relative  rounded-[var(--Radius-md)] object-cover" src="/assets/image/careers/store.svg" alt="Why Us" fill />
-                <Image className="!bottom-[1rem] !left-[1rem] top-unset top-[auto] !w-[6.5rem] !h-[4.6rem]" src="/assets/image/shared/logo.svg" alt="Why Us" fill />
+                <Image className="aspect-[519/379] !relative  rounded-[var(--Radius-md)] object-cover" src="/assets/image/Careers/store.svg" alt="Why Us" fill />
+                <Image className="!bottom-[1rem] !left-[1rem] top-unset !top-[auto] !w-[6.5rem] !h-[4.6rem]" src="/assets/image/shared/logo.svg" alt="Why Us" fill />
             </div>
         </div>
     );
