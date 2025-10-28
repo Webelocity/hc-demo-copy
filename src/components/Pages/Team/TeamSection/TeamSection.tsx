@@ -1,49 +1,49 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import TeamCard from "../TeamCard/TeamCard";
-import { teamMembers } from "@/Data/Team";
+import { useState, useMemo } from 'react';
+import TeamCard from '../TeamCard/TeamCard';
+import { teamMembers } from '@/Data/Team';
 
 type TabType =
-  | "All"
-  | "Ownership"
-  | "General Manager"
-  | "Office Manager"
-  | "Purchasing"
-  | "Accounting"
-  | "IT";
+  | 'All'
+  | 'Ownership'
+  | 'General Manager'
+  | 'Office Manager'
+  | 'Purchasing'
+  | 'Accounting'
+  | 'IT';
 
 const tabs: TabType[] = [
-  "All",
-  "Ownership",
-  "General Manager",
-  "Office Manager",
-  "Purchasing",
-  "Accounting",
-  "IT",
+  'All',
+  'Ownership',
+  'General Manager',
+  'Office Manager',
+  'Purchasing',
+  'Accounting',
+  'IT',
 ];
 
 export default function TeamSection() {
-  const [activeTab, setActiveTab] = useState<TabType>("All");
+  const [activeTab, setActiveTab] = useState<TabType>('All');
 
   const filteredMembers = useMemo(() => {
-    if (activeTab === "All") {
+    if (activeTab === 'All') {
       return teamMembers;
     }
     return teamMembers.filter((member) => member.category === activeTab);
   }, [activeTab]);
 
   return (
-    <div className="baseContainer py-[3rem]">
-      <div className="bg-[var(--Secondary-100)] rounded-[var(--Radius-md)] p-[1.5rem] sm:p-[2rem] md:p-[2.5rem]">
-        <div className="flex flex-col gap-[1.5rem] w-full">
+    <div className='baseContainer py-[3rem]'>
+      <div className='bg-[var(--Secondary-100)] rounded-[var(--Radius-md)] p-[1.5rem] sm:p-[2rem] md:p-[2.5rem]'>
+        <div className='flex flex-col gap-[1.5rem] w-full'>
           {/* Title */}
-          <h2 className="font-bold text-[1.75rem] sm:text-[2rem] md:text-[2.5rem] leading-[1.2] tracking-[0.05rem] text-black text-center w-full font-[family-name:var(--font-sora)]">
+          <h2 className='font-bold text-[1.75rem] sm:text-[2rem] md:text-[2.5rem] leading-[1.2] tracking-[0.05rem] text-black text-center w-full '>
             Meet Our Team
           </h2>
 
           {/* Tab Bar */}
-          <div className="bg-[var(--Secondary-50)] p-[0.75rem] rounded-[var(--Radius-md)] flex items-center justify-center overflow-x-auto gap-[0.5rem]">
+          <div className='bg-[var(--Secondary-50)] p-[0.75rem] rounded-[var(--Radius-md)] flex items-center justify-center overflow-x-auto gap-[0.5rem]'>
             {tabs.map((tab) => (
               <button
                 key={tab}
@@ -55,8 +55,8 @@ export default function TeamSection() {
                                     text-black transition-all
                                     ${
                                       activeTab === tab
-                                        ? "bg-[var(--Secondary-100)]"
-                                        : "bg-transparent hover:bg-[var(--Secondary-100)] hover:bg-opacity-50"
+                                        ? 'bg-[var(--Secondary-100)]'
+                                        : 'bg-transparent hover:bg-[var(--Secondary-100)] hover:bg-opacity-50'
                                     }
                                 `}
               >
@@ -66,15 +66,15 @@ export default function TeamSection() {
           </div>
 
           {/* Team Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-[1.25rem] w-full">
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-[1.25rem] w-full'>
             {filteredMembers.map((member, index) => {
               // Last 3 members span 2 columns on desktop when showing all members
               const isLastThree =
-                activeTab === "All" && index >= filteredMembers.length - 3;
+                activeTab === 'All' && index >= filteredMembers.length - 3;
               return (
                 <div
                   key={member.id}
-                  className={isLastThree ? "lg:col-span-2" : ""}
+                  className={isLastThree ? 'lg:col-span-2' : ''}
                 >
                   <TeamCard
                     name={member.name}
