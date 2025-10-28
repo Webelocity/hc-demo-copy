@@ -1,20 +1,26 @@
-import type { Metadata } from 'next';
-import { Figtree } from 'next/font/google';
-import './globals.css';
-import 'react-toastify/dist/ReactToastify.css';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/app/theme';
-import TopBar from '@/components/Layout/TopBar/TopBar';
-import Header from '@/components/Layout/Header/Header';
-import JotaiProvider from '@/components/providers/JotaiProvider';
-import Navbar from '@/components/Layout/Navbar/Navbar';
-import Footer from '@/components/Layout/Footer/Footer';
-import { ToastContainer } from 'react-toastify';
+import type { Metadata } from "next";
+import { Figtree, Sora } from "next/font/google";
+import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import theme from "@/app/theme";
+import TopBar from "@/components/Layout/TopBar/TopBar";
+import Header from "@/components/Layout/Header/Header";
+import JotaiProvider from "@/components/providers/JotaiProvider";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import Footer from "@/components/Layout/Footer/Footer";
+import { ToastContainer } from "react-toastify";
 
 const figtree = Figtree({
-  variable: '--font-figtree',
-  subsets: ['latin'],
+  variable: "--font-figtree",
+  subsets: ["latin"],
+});
+
+const sora = Sora({
+  variable: "--font-sora",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -28,8 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={`${figtree.variable} antialiased`}>
+    <html lang="en">
+      <body className={`${figtree.variable} ${sora.variable} antialiased`}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <JotaiProvider>
