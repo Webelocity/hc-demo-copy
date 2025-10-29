@@ -74,11 +74,11 @@ body {
 }
 
 .baseContainer {
-  max-width: 120rem;
+  /* max-width: 1920px; */
   margin: auto;
   padding-left: 5.3%;
   padding-right: 5.3%;
-
+  
   @media (max-width: 768px) {
     padding-left: 6%;
     padding-right: 6%;

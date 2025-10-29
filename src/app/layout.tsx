@@ -11,6 +11,7 @@ import JotaiProvider from "@/components/providers/JotaiProvider";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import Footer from "@/components/Layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
+import PreFetcher from "@/components/shared/PreFetcher";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -39,6 +40,7 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <JotaiProvider>
+            <PreFetcher />
             <TopBar />
             <Header />
             <Navbar />
