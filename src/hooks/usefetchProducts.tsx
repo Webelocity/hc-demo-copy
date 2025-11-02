@@ -20,7 +20,7 @@ export function useProducts() {
     const subcat = searchParams.get('subcats') ?? undefined;
     const sort = searchParams.get('sort') ?? '';
     const page = Number(searchParams.get('page') ?? '1');
-    const limit = Number(searchParams.get('limit') ?? '25');
+    const limit = Number(searchParams.get('limit') ?? '16');
     const filters = useMemo(() => parseFilters(searchParams), [searchParams]);
 
     const queryKey = [

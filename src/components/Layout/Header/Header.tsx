@@ -121,7 +121,7 @@ export default function Header() {
 
                 </header>
 
-                <MobileDrawer isOpen={isDrawerOpen} />
+                <MobileDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
             </div>
 
 

@@ -13,7 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import CategoryItem from "../CategoryItem/CategoryItem";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { FaFilter, FaAngleDown } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
 // Animation imports
@@ -21,6 +21,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { fetchAllShopFilters } from "@/Api/Apis";
 import { useAtomValue } from "jotai";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
+import { CiFilter } from "react-icons/ci";
 
 interface FiltersProps {
     initialCatId?: string;
@@ -41,7 +42,7 @@ const Filters: React.FC<FiltersProps> = ({
     const categoriesData = categories.data;
     console.log(categoriesStatus);
 
-    const isMobile = useMediaQuery('(max-width:1025px)');
+    const isMobile = useMediaQuery('(max-width:1024px)');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -207,6 +208,21 @@ const Filters: React.FC<FiltersProps> = ({
         return param.split(',').includes(value);
     };
 
+    const handleResetFilters = () => {
+        const newParams = new URLSearchParams(searchParams);
+
+        // Remove all filter-related parameters
+        searchParams.forEach((value, key) => {
+            if (key !== 'page') {
+                newParams.delete(key);
+            }
+        });
+        router.replace(`?${newParams.toString()}`, {
+            scroll: false,
+        });
+
+    };
+
     // Render dynamic brands
     const renderDynamicBrands = () => {
         if (!showBrandsSection) return null;
@@ -336,16 +352,25 @@ const Filters: React.FC<FiltersProps> = ({
         >
             <div className="flex items-center justify-between">
                 <h3 className="text-[1.25rem] font-semibold text-[color:var(--Neutral-800)]">Filter By</h3>
-                {isMobile && (
+                <div className="flex items-center gap-[0.75rem]">
                     <button
                         type="button"
-                        aria-label="Close filters"
-                        onClick={() => setDrawerOpen(false)}
-                        className="text-[1.25rem] text-[color:var(--Neutral-700)]"
+                        onClick={handleResetFilters}
+                        className="text-[0.875rem] font-medium text-[color:var(--secondary-500-main)] hover:text-[color:var(--secondary-500-main)] hover:opacity-70 transition-opacity duration-200 cursor-pointer"
                     >
-                        <IoMdClose />
+                        Reset Filters
                     </button>
-                )}
+                    {isMobile && (
+                        <button
+                            type="button"
+                            aria-label="Close filters"
+                            onClick={() => setDrawerOpen(false)}
+                            className="text-[1.25rem] text-[color:var(--Neutral-700)]"
+                        >
+                            <IoMdClose />
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div className="w-full">
@@ -575,10 +600,10 @@ const Filters: React.FC<FiltersProps> = ({
                     <button
                         id="filterButton"
                         onClick={() => setDrawerOpen(true)}
-                        className="flex items-center gap-[0.5rem] justify-center rounded-full px-[1.25rem] py-[0.625rem] text-[0.75rem] font-medium w-[5.5625rem] bg-[color:var(--secondary-500-main)] text-white"
+                        className="flex items-center gap-[0.5rem] justify-center text-black rounded-[var(--Radius-md)] px-[1.25rem] py-[0.625rem] text-[1.2rem] font-medium bg-[color:var(--Colors-Neutral-50)]"
                     >
-                        <FaFilter />
-                        Open Filters
+                        <CiFilter className="text-2xl" />
+                        Filters
                     </button>
                     <Drawer
                         anchor="bottom"
@@ -587,7 +612,7 @@ const Filters: React.FC<FiltersProps> = ({
                         PaperProps={{
                             sx: {
                                 width: '100%',
-                                height: '100vh',
+                                height: '80vh',
                                 borderTopLeftRadius: '1rem',
                                 borderTopRightRadius: '1rem',
                                 p: '1rem'

@@ -3,59 +3,68 @@
 import Button from '@/components/shared/Button';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { GoArrowRight, GoArrowLeft } from 'react-icons/go';
+import { categoriesQueryAtom } from '@/atoms/categoryAtom';
+import { useAtomValue } from 'jotai';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface MobileDrawerProps {
     isOpen: boolean;
+    onClose?: () => void;
 }
 
-export default function MobileDrawer({ isOpen }: MobileDrawerProps) {
+export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
+    const router = useRouter();
+    const { data: categories, status: categoriesStatus } = useAtomValue(categoriesQueryAtom);
     const [activeTab, setActiveTab] = useState<'main' | 'shop'>('main');
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     const renderMain = () => {
         return (
             <div className='flex flex-col'>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/" onClick={() => onClose?.()}>
                     <span>
                         Home
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/services">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/services" onClick={() => onClose?.()}>
                     <span>
                         Services
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contractor-zone">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contractor-zone" onClick={() => onClose?.()}>
                     <span>
                         Contractor Zone
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/owego-showroom">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/owego-showroom" onClick={() => onClose?.()}>
                     <span>
                         Owego Showroom
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/locations">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/locations" onClick={() => onClose?.()}>
                     <span>
                         Locations
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/" onClick={() => onClose?.()}>
                     <span>
                         About
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contact">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/contact" onClick={() => onClose?.()}>
                     <span>
                         Contact
                     </span>
                 </Link>
-                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/careers">
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/careers" onClick={() => onClose?.()}>
                     <span>
                         Careers
                     </span>
                 </Link>
                 <div className='w-full mt-[3rem]'>
-                    <Button variant='primary' fullWidth>
+                    <Button variant='primary' fullWidth onClick={() => onClose?.()}>
                         Request a Quote
                     </Button>
                 </div>
@@ -64,10 +73,122 @@ export default function MobileDrawer({ isOpen }: MobileDrawerProps) {
         );
     };
 
+    const handleCategoryClick = (category: Category) => {
+        setSelectedCategory(category);
+    };
+
+    const handleBackToCategories = () => {
+        setSelectedCategory(null);
+    };
+
+    const handleSubcategoryClick = (subcategoryId: string) => {
+        router.push(`/shop/catalogue?subcats=${subcategoryId}&page=1`);
+        onClose?.();
+    };
+
+    const handleShopAllClick = (categoryId: string) => {
+        router.push(`/shop/catalogue?category_active=${categoryId}&page=1`);
+        onClose?.();
+    };
+
+    const isLoading = categoriesStatus === 'pending';
+
     const renderShop = () => {
         return (
-            <div>
-                {/* Shop content goes here */}
+            <div className="relative overflow-hidden">
+                <AnimatePresence mode="wait" initial={false}>
+                    {selectedCategory ? (
+                        // Subcategories view
+                        <motion.div
+                            key="subcategories"
+                            initial={{ x: '100%', opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: '100%', opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            className="flex flex-col"
+                        >
+                            {/* Back button */}
+                            <button
+                                onClick={handleBackToCategories}
+                                className="flex items-center gap-[0.5rem] p-[1rem] text-[1.125rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] transition-colors duration-200"
+                            >
+                                <GoArrowLeft className="text-[1.5rem]" />
+                                <span>Back to Categories</span>
+                            </button>
+
+                            {/* Category name header */}
+                            <div className="px-[1rem] py-[0.5rem] text-[1.5rem] font-bold text-[color:var(--Neutral-800)]">
+                                {selectedCategory.name}
+                            </div>
+
+                            {/* Subcategories list */}
+                            <div className="flex flex-col mt-[0.5rem]">
+                                {selectedCategory.categorySubCategories?.map((subcategory, index) => (
+                                    <motion.button
+                                        key={subcategory._id}
+                                        initial={{ x: 20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ duration: 0.2, delay: index * 0.05 }}
+                                        onClick={() => handleSubcategoryClick(subcategory._id)}
+                                        className="p-[1rem] text-[1.125rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] hover:bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] transition-all duration-200"
+                                    >
+                                        {subcategory.name}
+                                    </motion.button>
+                                ))}
+                            </div>
+
+                            {/* Shop All button */}
+                            <motion.div
+                                initial={{ y: 20, opacity: 0 }}
+                                animate={{ y: 0, opacity: 1 }}
+                                transition={{ duration: 0.3, delay: 0.2 }}
+                                className="w-full mt-[2rem]"
+                            >
+                                <Button
+                                    variant="outline"
+                                    fullWidth
+                                    onClick={() => handleShopAllClick(selectedCategory._id)}
+                                >
+                                    Shop All {selectedCategory.name}
+                                </Button>
+                            </motion.div>
+                        </motion.div>
+                    ) : (
+                        // Main categories view
+                        <motion.div
+                            key="categories"
+                            initial={{ x: '-100%', opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: '-100%', opacity: 0 }}
+                            transition={{ duration: 0.3, ease: 'easeInOut' }}
+                            className="flex flex-col"
+                        >
+                            {isLoading ? (
+                                // Skeleton loaders
+                                [...Array(8)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        className="h-[3.5rem] rounded-[var(--Radius-md)] animate-pulse bg-[color:var(--Neutral-200)] mb-[0.5rem]"
+                                    />
+                                ))
+                            ) : (
+                                categories?.map((category, index) => (
+                                    <motion.button
+                                        key={category._id}
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        transition={{ duration: 0.2, delay: index * 0.05 }}
+                                        onClick={() => handleCategoryClick(category)}
+                                        className="flex items-center justify-between p-[1rem] text-[1.25rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] hover:bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] transition-all duration-200 group"
+                                    >
+                                        <span>{category.name}</span>
+                                        <GoArrowRight className="text-[1.5rem] group-hover:translate-x-[0.25rem] transition-transform duration-200" />
+                                    </motion.button>
+                                ))
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         );
     };

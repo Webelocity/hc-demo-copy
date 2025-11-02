@@ -8,7 +8,9 @@ import MegaMenu from "../MegaMenu/MegaMenu";
 
 export default function Navbar() {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
-
+  const onCloseMegaMenu = () => {
+    setIsMegaMenuOpen(false);
+  }
   return (
     <nav className={"relative"}>
       <div className="hidden lg:flex baseContainer justify-between items-center py-[1rem]">
@@ -49,7 +51,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <MegaMenu isOpen={isMegaMenuOpen} />
+      <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} />
     </nav>
   );
 }

@@ -1,0 +1,54 @@
+.ProductsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .pagination {
+        justify-content: center;
+
+        .MuiPaginationItem-root,
+        button.pag-button {
+            display: flex;
+            width: 32px;
+            height: 32px;
+            padding: 5px 4px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+            border: 1px solid var(--Neutral-200);
+            background: #FFF;
+            color: var(--Colors-Neutral-900);
+            text-align: center;
+            font-family: var(--font-figtree);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 20px;
+        }
+
+        .MuiPaginationItem-root.Mui-selected {
+            background: var(--secondary-500-main);
+            color: #FFF;
+            border-color: var(--secondary-500-main);
+        }
+
+        .pag-button {
+            color: var(--secondary-500-main);
+            font-family: var(--font-figtree);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 150%;
+            width: fit-content;
+        }
+    }
+}
+
+@media (min-width: 850px) {
+    .ProductsContainer {
+        .pagination {
+            justify-content: end;
+        }
+    }
+}
+
