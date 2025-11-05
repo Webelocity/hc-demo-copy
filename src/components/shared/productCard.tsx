@@ -4,8 +4,10 @@ import Button from "./Button";
 import { LuShoppingCart } from "react-icons/lu";
 import FallBackImage from "./FallBackImage";
 import { useRouter } from "next/navigation";
-
-export default function ProductCard({ product }: { product: Product }) {
+interface ProductCardProps {
+    product?: Product;
+}
+export default function ProductCard({ product }: ProductCardProps) {
     const router = useRouter();
     const isTrackQuantity = product?.trackQuantity;
     const renderStock = () => {
@@ -22,7 +24,7 @@ export default function ProductCard({ product }: { product: Product }) {
         }
     }
     const showVariants = () => {
-        if (product?.productVariants.length > 1) {
+        if (product?.productVariants?.length && product.productVariants.length > 1) {
             return <div className="text-[var(--Colors-Neutral-700)] text-[0.75rem] underline cursor-pointer">
                 +{product?.productVariants.length} variants
             </div>
