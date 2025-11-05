@@ -96,3 +96,47 @@ export const fetchSubcategoryById = async (
 
     return response;
 };
+
+export const fetchSingleProductById = async (
+    productId: string | undefined,
+    params: Record<string, string | number | boolean> = {}
+): Promise<Product> => {
+    if (!productId) {
+        // Could throw here or handle the error so the function never returns `undefined`
+        throw new Error("No productId provided");
+    }
+
+    const query = constructQueryParams(params);
+    const pathname = `/products/singleProduct/${productId}`;
+
+    const response = await fetchWithStoreId<Product>(pathname, {
+        method: "GET",
+        query,
+    });
+
+    if (!response) {
+        // Could throw here, or handle however you'd like
+        throw new Error(`Error fetching product with ID ${productId}`);
+    }
+
+    return response; // Always a Product, never undefined
+};
+
+export const fetchSingleProductByIdPrices = async (
+    variantId: string | undefined,
+    params: Record<string, string | number | boolean> = {}
+): Promise<ProductPricing> => {
+    if (!variantId) {
+        throw new Error("No productId provided");
+    }
+    const query = constructQueryParams(params);
+    const pathname = `/products/singleProduct/${variantId}/prices`;
+    const response = await fetchWithStoreId<ProductPricing>(pathname, {
+        method: "GET",
+        query,
+    });
+    if (!response) {
+        throw new Error(`Error fetching product prices with ID ${variantId}`);
+    }
+    return response;
+}

@@ -25,7 +25,6 @@ type Product = {
     finalPrice: number;
     weight: number;
     inventoryCount: number;
-    allInventory: AllInventoryItem[][];
     lowestPriceVariant: ProductVariant;
     totalSold: number;
     totalSales: number;
@@ -44,4 +43,79 @@ type Product = {
     __v: number;
     ratings: { [key: string]: number };
 
+}
+type ProductVariant = {
+    _id: string;
+    parentProduct: string;
+    parentCategory: string[];
+    name: string;
+    description: string;
+    productMedia: ProductMedia[];
+    isActive: boolean;
+    width: number;
+    height: number;
+    length: number;
+    weight: number;
+    brand: string;
+    sku: string;
+    attribute: ProductVariantAttribute;
+    isDiscounted: boolean;
+    discountAmount: number;
+    retailPrice: number;
+    costPrice: number;
+    finalPrice: number;
+    wholesalePrice: number;
+    totalSold: number;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    parentSubCategories: string[];
+    id: string;
+    inventory: Inventory[];
+    bulkPricingTable: BulkPriceRow[],
+    thumbnail: ProductMedia;
+    allowPro: boolean;
+    allowRegular: boolean;
+    trackQuantity: boolean;
+    inventoryCount: number;
+    hasCustomInputs: boolean;
+    customInputFields: customInputField[];
+    rating: number;
+
+}
+type ProductVariantAttribute = {
+    [key: string]: string;
+}
+type BulkPriceRow = {
+
+    _id: string,
+    state: "ACTIVE" | "INACTIVE",
+    key: number,
+    percentagePerUnit: number,
+    BulkDiscountType: "Percentage" | "Fixed",
+    allowRegular: boolean
+}
+type customInputField = {
+    label: string,
+    isRequired: boolean,
+    additionalCost: number,
+}
+type ObjectValue = {
+    key: string;
+    value: string;
+}
+
+type ProductSpecificationTable = {
+    title: string;
+    values: ObjectValue[];
+}
+
+type ProductVariantPricing = {
+    _id: string;
+    isDiscounted: boolean;
+    retailPrice: number;
+    lowestFinalPrice: number;
+}
+type ProductPricing = {
+    productVariants: ProductVariantPricing[];
 }
