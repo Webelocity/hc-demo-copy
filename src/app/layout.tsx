@@ -12,6 +12,7 @@ import Navbar from "@/components/Layout/Navbar/Navbar";
 import Footer from "@/components/Layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
 import PreFetcher from "@/components/shared/PreFetcher";
+import CartDrawer from "@/components/Pages/Shop/Cart/CartDrawer/CartDrawer";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -48,6 +49,7 @@ export default function RootLayout({
               <hr className='border-[var(--Neutral-100)]' />
             </div>
             {children}
+            <CartDrawer />
             <Footer />
             <ToastContainer
               position='top-right'

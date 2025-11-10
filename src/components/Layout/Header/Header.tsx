@@ -17,11 +17,15 @@ import MobileDrawer from "../MobileDrawer/MobileDrawer";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { Badge } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { cartAtom } from '@/atoms/cartAtom';
+import { cartDrawerOpenAtom } from '@/atoms/cartDrawerAtom';
 
 export default function Header() {
     const [selectedStoreId] = useAtom(selectedStoreAtom);
     const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [cart] = useAtom(cartAtom);
+    const [, setCartDrawerOpen] = useAtom(cartDrawerOpenAtom);
     const router = useRouter();
     const store = getStoreById(selectedStoreId);
     const status = getStoreStatus(selectedStoreId);
@@ -102,13 +106,14 @@ export default function Header() {
                             <Badge
                                 variant="dot"
                                 overlap="circular"
+                                invisible={cart.length === 0}
                                 sx={{
                                     '& .MuiBadge-dot': {
                                         backgroundColor: 'var(--Teritary-600-Main)',
                                     }
                                 }}
                             >
-                                <LuShoppingCart className="text-2xl cursor-pointer" />
+                                <LuShoppingCart className="text-2xl cursor-pointer" onClick={() => setCartDrawerOpen(true)} />
                             </Badge>
                         </div>
                         <Button variant="outline">

@@ -1,4 +1,10 @@
 import { constructQueryParams, fetchWithStoreId } from "./helpers";
+import { MOCK_PRODUCT, getMockProductWithPrices } from "@/mocks/products";
+import { getMockCartTotals } from "@/mocks/cart";
+import type { CartState } from "@/atoms/cartAtom";
+
+// Toggle to use mock data (set to false when backend is ready)
+const USE_MOCK_DATA = true;
 
 export const getCategories = async (): Promise<Category[]> => {
     const response = await fetchWithStoreId<Category[]>('/categories');
@@ -106,6 +112,17 @@ export const fetchSingleProductById = async (
         throw new Error("No productId provided");
     }
 
+    // Use mock data if enabled (import directly, no HTTP call needed)
+    if (USE_MOCK_DATA) {
+        // Simulate network delay for realistic testing
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        if (productId === MOCK_PRODUCT._id || productId === MOCK_PRODUCT.id || productId === 'prod_12345') {
+            return MOCK_PRODUCT;
+        }
+        throw new Error(`Mock product not found with ID ${productId}. Use 'prod_12345' for testing.`);
+    }
+
     const query = constructQueryParams(params);
     const pathname = `/products/singleProduct/${productId}`;
 
@@ -129,6 +146,20 @@ export const fetchSingleProductByIdPrices = async (
     if (!variantId) {
         throw new Error("No productId provided");
     }
+
+    // Use mock data if enabled (import directly, no HTTP call needed)
+    if (USE_MOCK_DATA) {
+        // Simulate network delay for realistic testing
+        await new Promise(resolve => setTimeout(resolve, 200));
+
+        const quantity = Number(params.quantity) || 1;
+
+        if (variantId === MOCK_PRODUCT._id || variantId === MOCK_PRODUCT.id || variantId === 'prod_12345') {
+            return getMockProductWithPrices(quantity);
+        }
+        throw new Error(`Mock product not found with ID ${variantId}. Use 'prod_12345' for testing.`);
+    }
+
     const query = constructQueryParams(params);
     const pathname = `/products/singleProduct/${variantId}/prices`;
     const response = await fetchWithStoreId<ProductPricing>(pathname, {
@@ -137,6 +168,56 @@ export const fetchSingleProductByIdPrices = async (
     });
     if (!response) {
         throw new Error(`Error fetching product prices with ID ${variantId}`);
+    }
+    return response;
+}
+
+export type CartTotalsProductItem = {
+    quantity: number;
+    productVariantId: string;
+    trackQuantity: boolean;
+    customInputValues: unknown[];
+    customInputFields: unknown[];
+    calculatedPrice: number; // per unit final price
+    isFinalSale: boolean;
+    fulfillmentMethod: FulfillmentMethodEnum;
+};
+
+export type CartTotals = {
+    productItems: CartTotalsProductItem[];
+    subTotalDiscount: number;
+    additionalCosts: Record<string, number>;
+    subTotal: number;
+};
+
+export const fetchCartTotals = async (cart: CartState, discountIds: string[] = []): Promise<CartTotals> => {
+    // Map cart to API body
+    const requestBody = {
+        items: cart.map((item) => ({
+            quantity: item.quantity,
+            product: {
+                productVariantId: item.variant._id,
+            },
+            fulfillmentMethod: (item.fulfillmentMethod ?? 'pickup'),
+        })),
+        discountIds,
+        // Hard-code order type for now as requested
+        orderType: "Pickup",
+    };
+
+    if (USE_MOCK_DATA) {
+        // simulate latency
+        await new Promise((r) => setTimeout(r, 350));
+        return getMockCartTotals(cart, discountIds);
+    }
+
+    const pathname = `/cart/calculate-prices`;
+    const response = await fetchWithStoreId<CartTotals>(pathname, {
+        method: "POST",
+        body: requestBody,
+    });
+    if (!response) {
+        throw new Error(`Error fetching cart totals`);
     }
     return response;
 }

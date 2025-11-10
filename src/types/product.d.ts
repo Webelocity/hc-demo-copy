@@ -81,6 +81,7 @@ type ProductVariant = {
     hasCustomInputs: boolean;
     customInputFields: customInputField[];
     rating: number;
+    supportedFulfillmentMethods: FulfillmentMethodEnum[];
 
 }
 type ProductVariantAttribute = {
@@ -119,3 +120,13 @@ type ProductVariantPricing = {
 type ProductPricing = {
     productVariants: ProductVariantPricing[];
 }
+
+type ProductMedia = {
+    _id: string;
+    file: string;
+    type: string;
+    isActive: boolean;
+    order: number;
+}
+
+type FulfillmentMethodEnum = 'pickup' | 'delivery' | 'shipping';

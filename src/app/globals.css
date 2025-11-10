@@ -7,10 +7,11 @@
 
   /* Primary Colors */
   --Primary-50: #ebd8d8;
+  --Primary-100: #d6b1b2;
+  --Colors-Primary-300: #b86668;
   --Primary-400: #993d3e;
   --primary-500-main: #841618;
   --Primary-600: #6e1214;
-  --Primary-100: #d6b1b2;
   /* Secondary Colors */
   --Secondary-50: #f1f1ff;
   --Secondary-100: #e0dfff;
@@ -37,6 +38,7 @@
   --Neutral-700: #444452;
   /* Success Colors */
   --Colorsuccess: #37b800;
+  --Colors-Success-800:#1B7A38;
 
   /* Border Radius */
   --Radius-xs: 0.625rem;
@@ -84,4 +86,14 @@ body {
     padding-left: 6%;
     padding-right: 6%;
   }
+}
+
+/* Gallery slides - show only active or targeted slide */
+.slides .slide {
+  display: none;
+}
+
+.slides .slide.is-active,
+.slides .slide:target {
+  display: block;
 }

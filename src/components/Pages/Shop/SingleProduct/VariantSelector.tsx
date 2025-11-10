@@ -1,8 +1,7 @@
 'use client';
 
-import { Button } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 export default function VariantAttributes({
     product,
@@ -16,6 +15,36 @@ export default function VariantAttributes({
 
     const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+
+    // Helper to check if an attribute value is available
+    const getAttributeAvailability = useMemo(() => {
+        return (attrKey: string, attrValue: string) => {
+            // Create a hypothetical selection with this attribute value
+            const hypotheticalSelection = { ...selectedAttributes, [attrKey]: attrValue };
+
+            // Find variants that match this hypothetical selection
+            const matchingVariants = product.productVariants.filter(variant => {
+                return Object.entries(hypotheticalSelection).every(([key, value]) => {
+                    return variant.attribute?.[key] === value;
+                });
+            });
+
+            if (matchingVariants.length === 0) {
+                return { available: false, inStock: false, reason: 'not-exist' };
+            }
+
+            // Check if any matching variant has stock
+            const hasStock = matchingVariants.some(v =>
+                !v.trackQuantity || (v.trackQuantity && v.inventoryCount > 0)
+            );
+
+            return {
+                available: true,
+                inStock: hasStock,
+                reason: hasStock ? 'available' : 'out-of-stock'
+            };
+        };
+    }, [product.productVariants, selectedAttributes]);
 
     // Initialize attributes from URL variant_Id or use default
     useEffect(() => {
@@ -73,21 +102,61 @@ export default function VariantAttributes({
     return (
         <>
             {product.attributes && Object.keys(product.attributes).length > 0 && (
-                <div className="attributes-container">
+                <div className="space-y-6">
                     {Object.entries(product.attributes).map(([attr, values]) => (
                         <div key={attr} className="attribute-block">
-                            <p>Select {attr}</p>
-                            <div className="attribute-values">
-                                {values.map((v) => (
-                                    <Button
-                                        key={v}
-                                        type="button"
-                                        className={selectedAttributes[attr] === v ? 'active' : ''}
-                                        onClick={() => changeAttr(attr, v)}
-                                    >
-                                        {v}
-                                    </Button>
-                                ))}
+                            <p className="text-sm font-semibold text-gray-700 mb-3">
+                                {attr} :
+                                {selectedAttributes[attr] && (
+                                    <span className="ml-2 text-gray-500 font-normal">
+                                        ({selectedAttributes[attr]})
+                                    </span>
+                                )}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {values.map((v) => {
+                                    const availability = getAttributeAvailability(attr, v);
+                                    const isSelected = selectedAttributes[attr] === v;
+                                    const isDisabled = !availability.available;
+                                    const isOutOfStock = availability.available && !availability.inStock && selectedVariant?.trackQuantity;
+
+                                    return (
+                                        <button
+                                            key={v}
+                                            type="button"
+                                            disabled={isDisabled || isOutOfStock}
+                                            onClick={() => changeAttr(attr, v)}
+                                            className={`
+                                                relative px-[0.75rem] py-[0.25rem] min-w-[60px] border-[1px] rounded-[0.5rem] font-medium text-sm
+                                                transition-all duration-200
+                                                ${isSelected
+                                                    ? 'border-[var(--primary-500-main)] text-[var(--primary-500-main)] bg-white'
+                                                    : 'border-[var(--Neutral-300)] text-[var(--Colors-Neutral-700)] bg-white'
+                                                }
+                                                ${isDisabled
+                                                    ? '!bg-[var(--Colors-Neutral-100)] text-[var(--Neutral-300)] border-[var(--Neutral-300)] cursor-not-allowed line-through'
+                                                    : isOutOfStock
+                                                        ? 'opacity-50 cursor-not-allowed border-red-300 text-red-600 bg-[var(--primary-500-main)]'
+                                                        : 'cursor-pointer hover:border-[var(--primary-500-main)] hover:text-[var(--primary-500-main)] hover:bg-[var(--Colors-Neutral-100)]'
+                                                }
+                                            `}
+                                            title={
+                                                isDisabled
+                                                    ? `${v} is not available`
+                                                    : isOutOfStock
+                                                        ? `${v} is out of stock`
+                                                        : `Select ${v}`
+                                            }
+                                        >
+                                            {v}
+                                            {isOutOfStock && (
+                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1 rounded-full">
+                                                    Out
+                                                </span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     ))}
