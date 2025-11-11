@@ -30,9 +30,16 @@ export default function ServingBanner() {
                   From lumber and decking to millwork, hardware, and specialty
                   tools, Home Central Stores carries everything you need for
                   your projects, including hardware, building materials, and
-                  tools. We also offer kitchen and bath materials, windows,
-                  doors, flooring, and siding, ensuring you can access
-                  high-quality products for any job.{" "}
+                  tools. We also offer{" "}
+                  <Link
+                    className="text-[var(--primary-500-main)] underline"
+                    href={"/owego-showroom"}
+                  >
+                    {" "}
+                    kitchen and bath{" "}
+                  </Link>{" "}
+                  materials, windows, doors, flooring, and siding, ensuring you
+                  can access high-quality products for any job.{" "}
                 </p>
               </div>
               <div className="flex flex-1 flex-col gap-[1rem] items-start bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] p-[1rem]">
