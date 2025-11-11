@@ -48,7 +48,15 @@ export default function ServingBanner() {
                   Expert Services for Every Project
                 </p>
                 <p className="text-[var(--Neutral-700)] text-[1rem] font-normal">
-                  Beyond products, we provide a variety of services, including:
+                  Beyond products, we provide a variety of
+                  <Link
+                    className="text-[var(--primary-500-main)] underline"
+                    href={"/services"}
+                  >
+                    {" "}
+                    services
+                  </Link>
+                  , including:
                   <ul className="list-disc list-inside">
                     Delivery and job-site logistics
                     <li>Material cutting and pipe threading</li>
