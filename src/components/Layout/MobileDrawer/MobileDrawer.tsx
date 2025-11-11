@@ -63,6 +63,11 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
                         Careers
                     </span>
                 </Link>
+                <Link className='p-[1rem] text-[1.25rem] font-medium text-start' href="/history" onClick={() => onClose?.()}>
+                    <span>
+                        History
+                    </span>
+                </Link>
                 <div className='w-full mt-[3rem]'>
                     <Button variant='primary' fullWidth onClick={() => onClose?.()}>
                         Request a Quote
