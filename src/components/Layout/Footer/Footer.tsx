@@ -35,7 +35,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex-[4]">
+        <div className="flex-[5]">
           <div className="flex flex-col md:flex-row justify-start  gap-[1.5rem]">
             <div className="flex-1 flex flex-col gap-[1rem]">
               <span className="text-[1.25rem] font-bold text-[var(--Neutral-800)]">
@@ -88,6 +88,24 @@ export default function Footer() {
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 History
+              </Link>
+            </div>
+            {/* Services */}
+            <div className="flex-1 flex flex-col gap-[1rem]">
+              <span className="text-[1.25rem] font-bold text-[var(--Neutral-800)]">
+                Services
+              </span>
+              <Link
+                href={"/services"}
+                className="text-[0.9rem] text-[var(--Neutral-800)] flex items-center gap-[0.5rem]"
+              >
+                All Services <GoArrowUpRight className="text-2xl" />
+              </Link>
+              <Link
+                href={"/special-ordering"}
+                className="text-[0.9rem] text-[var(--Neutral-800)]"
+              >
+                Special Ordering
               </Link>
             </div>
 

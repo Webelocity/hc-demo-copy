@@ -15,7 +15,7 @@ export default function SpecialOrdering() {
   return (
     <>
       <HeroSection />
-      <div className="bg-white py-[3rem] flex flex-col gap-[5rem] w-full">
+      <div className="bg-white py-[1.5rem] md:py-[3rem] flex flex-col gap-[2rem] md:gap-[5rem] w-full">
         <MaterialsSection />
         <CustomQuotesSection />
         <BulkOrdersSection />

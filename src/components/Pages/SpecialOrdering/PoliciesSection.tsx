@@ -12,19 +12,21 @@ export default function PoliciesSection() {
         >
           <div className="flex flex-col gap-[1.5rem]">
             <h2
-              className="text-black font-bold leading-[1.2] tracking-[0.05rem] text-[1.75rem] md:text-[2.5rem]"
+              className="text-black font-bold leading-[1.2] text-[1.5rem] md:text-[2.5rem]"
               style={{
                 fontFamily: "var(--font-sora)",
+                letterSpacing: "0.03rem",
               }}
             >
               Special Order Policies
             </h2>
 
             <div
-              className="text-[1rem] md:text-[1.125rem] leading-[1.5] tracking-[0.0225rem]"
+              className="text-[1.125rem] leading-[1.5]"
               style={{
                 color: "var(--Neutral-700, #444452)",
                 fontFamily: "var(--font-figtree)",
+                letterSpacing: "0.0225rem",
               }}
             >
               <p className="mb-0">

@@ -8,38 +8,40 @@ export default function MaterialsSection() {
     <section className="baseContainer">
       <div className="w-full mx-auto">
         <div
-          className="relative w-full rounded-[1.5rem] p-[1.5rem] md:p-[2.5rem] overflow-hidden"
+          className="relative w-full rounded-[1.5rem] p-[1.5rem] pb-[1.5rem] md:p-[2.5rem] overflow-hidden"
           style={{
             backgroundColor: "var(--Secondary-50)",
           }}
         >
-          {/* Image on the right - hidden on mobile */}
-          <div className="hidden lg:block absolute right-0 top-[-13rem] w-[25.56rem] h-[30.5rem] pointer-events-none z-10">
+          {/* Image on top for mobile, positioned absolutely on desktop */}
+          <div className="relative lg:absolute lg:right-0 lg:top-[-13rem] w-full lg:w-[25.56rem] h-[12.94rem] lg:h-[30.5rem] mb-[1.5rem] lg:mb-0 pointer-events-none z-10 rounded-[1rem] overflow-hidden">
             <Image
               src="/assets/image/SpecialOrdering/materials-placeholder.svg"
               alt="Construction materials"
               fill
-              className="object-cover rounded-[1rem]"
+              className="object-cover"
             />
           </div>
 
           {/* Content */}
-          <div className="relative z-20 max-w-full  flex flex-col gap-[2rem] md:gap-[2.56rem]">
+          <div className="relative z-20 max-w-full flex flex-col gap-[2rem] md:gap-[2.56rem]">
             <div className="flex flex-col gap-[1.5rem]">
               <h2
-                className="text-black font-bold leading-[1.2] tracking-[0.05rem] text-[1.75rem] md:text-[2.5rem]"
+                className="text-black font-bold leading-[1.2] text-[1.5rem] md:text-[2.5rem]"
                 style={{
                   fontFamily: "var(--font-sora)",
+                  letterSpacing: "0.03rem",
                 }}
               >
                 Get the Materials You Need
               </h2>
 
               <div
-                className="text-[1rem] md:text-[1.125rem] leading-[1.5] tracking-[0.0225rem] max-w-3/4"
+                className="text-[1.125rem] leading-[1.5] max-w-full lg:max-w-[75%]"
                 style={{
                   color: "var(--Neutral-600, #555566)",
                   fontFamily: "var(--font-figtree)",
+                  letterSpacing: "0.0225rem",
                 }}
               >
                 <p className="mb-0">
