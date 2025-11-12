@@ -29,9 +29,9 @@ const services: Service[] = [
   {
     title: "Special Ordering",
     description:
-      "Can’t find what you need? Home Central Stores offers special ordering for building materials and supplies in Owego, Vestal, and Candor. Our experienced team sources products for your project—often saving on shipping fees—so you get exactly what you need, hassle-free.",
-    ctaName: "Shop Now",
-    ctaLink: "/shop",
+      "Can't find what you need? Home Central Stores offers special ordering for building materials and supplies in Owego, Vestal, and Candor. Our experienced team sources products for your project—often saving on shipping fees—so you get exactly what you need, hassle-free.",
+    ctaName: "Learn More",
+    ctaLink: "/special-ordering",
     imagePath: "/assets/image/Services/serviceList/images/specialOrdering.svg", // Replace with actual image paths later
     icon: "/assets/image/Services/serviceList/icons/Box.svg", // Import and pass the JSX element as needed
   },
