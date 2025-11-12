@@ -84,7 +84,7 @@ export default function Footer() {
                 Careers
               </Link>
               <Link
-                href={"/"}
+                href={"/history"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 History
@@ -149,31 +149,31 @@ export default function Footer() {
                 Support
               </span>
               <Link
-                href={"/policies?tab=privacy-policy"}
+                href={"/"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Privacy Policy
               </Link>
               <Link
-                href={"/policies?tab=terms-of-use"}
+                href={"/"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Terms & Conditions
               </Link>
               <Link
-                href={"/policies?tab=return-refund-policy"}
+                href={"/"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Return Policy
               </Link>
               <Link
-                href={"/policies?tab=shipping-delivery-policy"}
+                href={"/"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Shipping and Delivery Policy
               </Link>
               <Link
-                href={"/resources"}
+                href={"/"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >
                 Resources
