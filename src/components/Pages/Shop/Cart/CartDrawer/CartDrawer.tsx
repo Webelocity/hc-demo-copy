@@ -34,7 +34,7 @@ export default function CartDrawer() {
             keepMounted
             PaperProps={{
                 sx: {
-                    width: '33.3333%',
+                    width: '37.5%',
                     '@media (max-width: 1024px)': {
                         width: '70%',
                     },
@@ -56,9 +56,9 @@ export default function CartDrawer() {
                 </IconButton>
             </div>
 
-            <div className=" overflow-y-auto px-4 py-4">
+            <div className={` overflow-y-auto px-4 py-4 ${cart.length === 0 ? 'm-auto' : ''}`}>
                 {cart.length === 0 ? (
-                    <div className="flex h-full flex-col items-center justify-center text-center gap-4">
+                    <div className="flex h-full flex-col items-center justify-center text-center gap-4  ">
                         <TiShoppingCart className='text-[6rem] text-[var(--secondary-500-main)]' />
 
                         <Typography variant="body1">
@@ -82,52 +82,57 @@ export default function CartDrawer() {
 
             {/* Totals Area */}
             {cart.length > 0 ? (
-                <div className="px-4 py-4 border-t border-[var(--Neutral-100)]">
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Subtotal</span>
-                            {isLoading ? (
-                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                            ) : (
-                                <span className="text-sm font-semibold">${(totals?.subTotal ?? 0).toFixed(2)}</span>
-                            )}
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
-                            {isLoading ? (
-                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                            ) : (
-                                <span className="text-sm font-semibold">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
-                            )}
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
-                            {isLoading ? (
-                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                            ) : (
-                                <span className="text-sm font-semibold">Calculated at checkout</span>
-                            )}
-                        </div>
-                        <div className="flex items-center justify-between pt-2 border-t border-[var(--Neutral-100)]">
-                            <span className="text-base font-medium">Grand Total</span>
-                            {isLoading ? (
-                                <span className="inline-block h-[1.25rem] w-[7rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                            ) : (
-                                <span className="text-base font-bold">
-                                    ${((totals?.subTotal ?? 0) - (totals?.subTotalDiscount ?? 0)).toFixed(2)}
-                                </span>
-                            )}
+                <>
+                    <div className="px-4 py-4 border-t border-[var(--Neutral-100)]">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-[var(--Colors-Neutral-700)]">Subtotal</span>
+                                {isLoading ? (
+                                    <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                                ) : (
+                                    <span className="text-sm font-semibold">${(totals?.subTotal ?? 0).toFixed(2)}</span>
+                                )}
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
+                                {isLoading ? (
+                                    <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                                ) : (
+                                    <span className="text-sm font-semibold">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
+                                )}
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
+                                {isLoading ? (
+                                    <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                                ) : (
+                                    <span className="text-sm font-semibold">Calculated at checkout</span>
+                                )}
+                            </div>
+                            <div className="flex items-center justify-between pt-2 border-t border-[var(--Neutral-100)]">
+                                <span className="text-base font-medium">Grand Total</span>
+                                {isLoading ? (
+                                    <span className="inline-block h-[1.25rem] w-[7rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                                ) : (
+                                    <span className="text-base font-bold">
+                                        ${((totals?.subTotal ?? 0) - (totals?.subTotalDiscount ?? 0)).toFixed(2)}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div className='flex items-center gap-[1rem] px-4 py-4'>
+                        <Button variant="outline" fullWidth onClick={navigateToCatalogue}>
+                            View Cart                </Button>
+                        <Button variant="primary" fullWidth>
+                            Proceed to Checkout
+                        </Button>
+                    </div>
+                </>
+
+
             ) : null}
-            <div className='flex items-center gap-[1rem] px-4 py-4'>
-                <Button variant="outline" fullWidth onClick={navigateToCatalogue}>
-                    View Cart                </Button>
-                <Button variant="primary" fullWidth>
-                    Proceed to Checkout
-                </Button>
-            </div>
+
         </Drawer>
     );
 }
