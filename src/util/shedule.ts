@@ -1,190 +1,194 @@
-export type StoreId = 'ow-homecentralstores' | 've-homecentralstores' | 'ca-homecentralstores';
+export type StoreId =
+  | "ow-homecentralstores"
+  | "ve-homecentralstores"
+  | "ca-homecentralstores";
 
 export type StoreLocation = {
-    id: StoreId;
-    name: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    phone: string;
-    fax: string;
-    fullAddress: string;
-    lat: number;
-    lng: number;
+  id: StoreId;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  phone: string;
+  fax?: string;
+  fullAddress: string;
+  lat: number;
+  lng: number;
 };
 
 export interface DaySchedule {
-    open: string;
-    close: string;
-    closed?: boolean;
+  open: string;
+  close: string;
+  closed?: boolean;
 }
 
 export interface StoreSchedule {
-    monday: DaySchedule;
-    tuesday: DaySchedule;
-    wednesday: DaySchedule;
-    thursday: DaySchedule;
-    friday: DaySchedule;
-    saturday: DaySchedule;
-    sunday: DaySchedule;
+  monday: DaySchedule;
+  tuesday: DaySchedule;
+  wednesday: DaySchedule;
+  thursday: DaySchedule;
+  friday: DaySchedule;
+  saturday: DaySchedule;
+  sunday: DaySchedule;
 }
 
 export const STORES: Record<StoreId, StoreLocation> = {
-    've-homecentralstores': {
-        id: 've-homecentralstores',
-        name: 'Vestal Store',
-        address: '199 Stage Rd.',
-        city: 'Vestal',
-        state: 'NY',
-        zip: '13850',
-        phone: '(607) 785-3307',
-        fax: '(607) 785-3538',
-        fullAddress: '199 Stage Rd. Vestal, NY 13850',
-        lat: 42.08759358290779,
-        lng: -76.05341079108524,
-    },
-    'ca-homecentralstores': {
-        id: 'ca-homecentralstores',
-        name: 'Candor Store',
-        address: '309 Owego Rd.',
-        city: 'Candor',
-        state: 'NY',
-        zip: '13743',
-        phone: '(607) 659-4205',
-        fax: '(607) 659-4205',
-        fullAddress: '309 Owego Rd. Candor, NY 13743',
-        lat: 42.21814148544821,
-        lng: -76.32937882477931,
-    },
-    'ow-homecentralstores': {
-        id: 'ow-homecentralstores',
-        name: 'Owego Store',
-        address: '151 Central Ave.',
-        city: 'Owego',
-        state: 'NY',
-        zip: '13827',
-        phone: '(607) 687-3284',
-        fax: '(607) 687-5301',
-        fullAddress: '151 Central Ave. Owego, NY 13827',
-        lat: 42.10680465663656,
-        lng: -76.26674955982054,
-    },
+  "ve-homecentralstores": {
+    id: "ve-homecentralstores",
+    name: "Vestal Store",
+    address: "199 Stage Rd.",
+    city: "Vestal",
+    state: "NY",
+    zip: "13850",
+    phone: "(607) 785-3307",
+    fax: "(607) 785-3538",
+    fullAddress: "199 Stage Rd. Vestal, NY 13850",
+    lat: 42.08759358290779,
+    lng: -76.05341079108524,
+  },
+  "ca-homecentralstores": {
+    id: "ca-homecentralstores",
+    name: "Candor Store",
+    address: "309 Owego Rd.",
+    city: "Candor",
+    state: "NY",
+    zip: "13743",
+    phone: "(607) 659-4205",
+    fullAddress: "309 Owego Rd. Candor, NY 13743",
+    lat: 42.21814148544821,
+    lng: -76.32937882477931,
+  },
+  "ow-homecentralstores": {
+    id: "ow-homecentralstores",
+    name: "Owego Store",
+    address: "151 Central Ave.",
+    city: "Owego",
+    state: "NY",
+    zip: "13827",
+    phone: "(607) 687-3284",
+    fax: "(607) 687-5301",
+    fullAddress: "151 Central Ave. Owego, NY 13827",
+    lat: 42.10680465663656,
+    lng: -76.26674955982054,
+  },
 };
 
 // Store schedules - assuming same hours for all stores (Open until 6:00 PM)
 export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
-    've-homecentralstores': {
-        monday: { open: '08:00', close: '18:00' },
-        tuesday: { open: '08:00', close: '18:00' },
-        wednesday: { open: '08:00', close: '18:00' },
-        thursday: { open: '08:00', close: '18:00' },
-        friday: { open: '08:00', close: '18:00' },
-        saturday: { open: '08:00', close: '18:00' },
-        sunday: { closed: true, open: '00:00', close: '00:00' },
-    },
-    'ca-homecentralstores': {
-        monday: { open: '08:00', close: '18:00' },
-        tuesday: { open: '08:00', close: '18:00' },
-        wednesday: { open: '08:00', close: '18:00' },
-        thursday: { open: '08:00', close: '18:00' },
-        friday: { open: '08:00', close: '18:00' },
-        saturday: { open: '08:00', close: '18:00' },
-        sunday: { closed: true, open: '00:00', close: '00:00' },
-    },
-    'ow-homecentralstores': {
-        monday: { open: '08:00', close: '18:00' },
-        tuesday: { open: '08:00', close: '18:00' },
-        wednesday: { open: '08:00', close: '18:00' },
-        thursday: { open: '08:00', close: '18:00' },
-        friday: { closed: true, open: '08:00', close: '18:00' },
-        saturday: { open: '08:00', close: '18:00' },
-        sunday: { closed: true, open: '00:00', close: '00:00' },
-    },
+  "ve-homecentralstores": {
+    monday: { open: "08:00", close: "18:00" },
+    tuesday: { open: "08:00", close: "18:00" },
+    wednesday: { open: "08:00", close: "18:00" },
+    thursday: { open: "08:00", close: "18:00" },
+    friday: { open: "08:00", close: "18:00" },
+    saturday: { open: "08:00", close: "18:00" },
+    sunday: { closed: true, open: "00:00", close: "00:00" },
+  },
+  "ca-homecentralstores": {
+    monday: { open: "08:00", close: "18:00" },
+    tuesday: { open: "08:00", close: "18:00" },
+    wednesday: { open: "08:00", close: "18:00" },
+    thursday: { open: "08:00", close: "18:00" },
+    friday: { open: "08:00", close: "18:00" },
+    saturday: { open: "08:00", close: "18:00" },
+    sunday: { closed: true, open: "00:00", close: "00:00" },
+  },
+  "ow-homecentralstores": {
+    monday: { open: "08:00", close: "18:00" },
+    tuesday: { open: "08:00", close: "18:00" },
+    wednesday: { open: "08:00", close: "18:00" },
+    thursday: { open: "08:00", close: "18:00" },
+    friday: { closed: true, open: "08:00", close: "18:00" },
+    saturday: { open: "08:00", close: "18:00" },
+    sunday: { closed: true, open: "00:00", close: "00:00" },
+  },
 };
 
 // Helper function to get current day of week
 function getCurrentDayOfWeek(): keyof StoreSchedule {
-    const days: (keyof StoreSchedule)[] = [
-        'sunday',
-        'monday',
-        'tuesday',
-        'wednesday',
-        'thursday',
-        'friday',
-        'saturday',
-    ];
-    return days[new Date().getDay()];
+  const days: (keyof StoreSchedule)[] = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
+  return days[new Date().getDay()];
 }
 
 // Helper function to convert time string to minutes since midnight
 function timeToMinutes(time: string): number {
-    const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
 }
 
 // Helper function to format time in 12-hour format
 export function formatTime12Hour(time: string): string {
-    const [hours, minutes] = time.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
-    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+  const [hours, minutes] = time.split(":").map(Number);
+  const period = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+  return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 }
 
 // Get store status and closing time
 export interface StoreStatus {
-    isOpen: boolean;
-    closingTime: string; // formatted time
-    openingTime?: string; // formatted time, if closed
-    isClosed24Hours: boolean; // true if store is closed all day
+  isOpen: boolean;
+  closingTime: string; // formatted time
+  openingTime?: string; // formatted time, if closed
+  isClosed24Hours: boolean; // true if store is closed all day
 }
 
 export function getStoreStatus(storeId: StoreId): StoreStatus {
-    const schedule = STORE_SCHEDULES[storeId];
-    const today = getCurrentDayOfWeek();
-    const daySchedule = schedule[today];
+  const schedule = STORE_SCHEDULES[storeId];
+  const today = getCurrentDayOfWeek();
+  const daySchedule = schedule[today];
 
-    // Check if store is closed all day
-    if (daySchedule.closed) {
-        return {
-            isOpen: false,
-            closingTime: '',
-            isClosed24Hours: true,
-        };
-    }
-
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    const openMinutes = timeToMinutes(daySchedule.open);
-    const closeMinutes = timeToMinutes(daySchedule.close);
-
-    const isOpen = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
-
+  // Check if store is closed all day
+  if (daySchedule.closed) {
     return {
-        isOpen,
-        closingTime: formatTime12Hour(daySchedule.close),
-        openingTime: formatTime12Hour(daySchedule.open),
-        isClosed24Hours: false,
+      isOpen: false,
+      closingTime: "",
+      isClosed24Hours: true,
     };
+  }
+
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  const openMinutes = timeToMinutes(daySchedule.open);
+  const closeMinutes = timeToMinutes(daySchedule.close);
+
+  const isOpen = currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+
+  return {
+    isOpen,
+    closingTime: formatTime12Hour(daySchedule.close),
+    openingTime: formatTime12Hour(daySchedule.open),
+    isClosed24Hours: false,
+  };
 }
 
 // Get all stores as an array
 export function getAllStores(): StoreLocation[] {
-    return Object.values(STORES);
+  return Object.values(STORES);
 }
 
 // Get store by ID
 export function getStoreById(storeId: StoreId): StoreLocation {
-    console.log('storeId', storeId);
-    const store = STORES[storeId];
+  console.log("storeId", storeId);
+  const store = STORES[storeId];
 
-    // Safety check: ensure the store exists
-    if (!store) {
-        console.error(`Store ID "${storeId}" not found in stores. Available stores:`, Object.keys(STORES));
-        // Return the default Owego store as fallback
-        return STORES['ow-homecentralstores'];
-    }
+  // Safety check: ensure the store exists
+  if (!store) {
+    console.error(
+      `Store ID "${storeId}" not found in stores. Available stores:`,
+      Object.keys(STORES)
+    );
+    // Return the default Owego store as fallback
+    return STORES["ow-homecentralstores"];
+  }
 
-    return store;
+  return store;
 }
-
