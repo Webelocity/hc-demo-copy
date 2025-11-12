@@ -6,15 +6,18 @@ import { useSetAtom } from "jotai";
 import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
 import { GoTrash } from "react-icons/go";
 import useDebounce from "@/hooks/useDebounce";
+import router, { useRouter } from "next/navigation";
 
 export default function CartItem({ item, isLoading }: { item: CartItem; isLoading: boolean }) {
     const increaseQuantity = useSetAtom(increaseQuantityAtom);
     const decreaseQuantity = useSetAtom(decreaseQuantityAtom);
     const deleteFromCartAction = useSetAtom(deleteFromCartAtom);
-
+    const router = useRouter();
     const [quantity, setQuantity] = useState(item.quantity);
     const debouncedQuantity = useDebounce(quantity, 2000);
-
+    const handleProductClick = () => {
+        router.push(`/product/${item.variant.parentProduct}?variant_Id=${item.variant._id}`);
+    }
     // Keep local quantity in sync with store updates
     useEffect(() => {
         setQuantity(item.quantity);
@@ -60,7 +63,7 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     return (
         <div className="flex flex-col gap-[0.5rem] p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)]">
             <div className="flex gap-[0.5rem]">
-                <div className="flex-1 relative">
+                <div className="flex-1 relative cursor-pointer" onClick={handleProductClick}>
                     {item.variant.thumbnail?.file ? (
                         <Image
                             src={item.variant.thumbnail.file}
