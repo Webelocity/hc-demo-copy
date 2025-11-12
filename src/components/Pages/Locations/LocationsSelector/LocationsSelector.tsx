@@ -1,44 +1,133 @@
 "use client";
 import Image from "next/image";
-import { IoCheckmark } from "react-icons/io5";
+import { IoCheckmark, IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { useAtom } from "jotai";
 import { selectedStoreAtom } from "@/atoms/storeAtom";
-import { getAllStores, getStoreStatus, StoreId } from "@/util/shedule";
+import {
+  getAllStores,
+  getStoreStatus,
+  StoreId,
+  STORE_SCHEDULES,
+  formatTime12Hour,
+} from "@/util/shedule";
 import Button from "@/components/shared/Button";
 import Map from "@/components/shared/ContactUs/Map/Map";
+import { useState } from "react";
 
 export default function LocationsSelector() {
   const [selectedStore, setSelectedStore] = useAtom(selectedStoreAtom);
+  const [expandedStores, setExpandedStores] = useState<Set<StoreId>>(new Set());
   const stores = getAllStores();
   console.log(stores);
+
+  const toggleHours = (storeId: StoreId) => {
+    setExpandedStores((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(storeId)) {
+        newSet.delete(storeId);
+      } else {
+        newSet.add(storeId);
+      }
+      return newSet;
+    });
+  };
+
+  const renderWeekSchedule = (storeId: StoreId) => {
+    const schedule = STORE_SCHEDULES[storeId];
+    const days = [
+      { key: "monday", label: "Monday" },
+      { key: "tuesday", label: "Tuesday" },
+      { key: "wednesday", label: "Wednesday" },
+      { key: "thursday", label: "Thursday" },
+      { key: "friday", label: "Friday" },
+      { key: "saturday", label: "Saturday" },
+      { key: "sunday", label: "Sunday" },
+    ] as const;
+
+    return (
+      <div className="flex flex-col gap-[0.25rem] mt-[0.5rem] pl-[0.5rem]">
+        {days.map(({ key, label }) => {
+          const daySchedule = schedule[key];
+          return (
+            <div
+              key={key}
+              className="flex justify-between items-center text-[0.875rem]"
+            >
+              <span className="text-[var(--Colors-Neutral-700)] min-w-[6rem]">
+                {label}
+              </span>
+              <span className="text-[var(--Colors-Neutral-500)]">
+                {daySchedule.closed
+                  ? "Closed"
+                  : `${formatTime12Hour(daySchedule.open)} - ${formatTime12Hour(
+                      daySchedule.close
+                    )}`}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
   const renderStatus = (storeId: StoreId) => {
     const status = getStoreStatus(storeId);
+    const isExpanded = expandedStores.has(storeId);
+
     if (status.isClosed24Hours) {
       return (
-        <div className="flex items-center gap-[0.2rem] font-semibold text-[1.125rem]">
-          <span className="text-red-600">Closed Today</span>
+        <div className="flex flex-col gap-[0.5rem]">
+          <div className="flex items-center gap-[0.4rem] font-semibold text-[1.125rem]">
+            <span className="text-red-600">Closed Today</span>
+            <button
+              onClick={() => toggleHours(storeId)}
+              className="text-[var(--Colors-Neutral-500)] hover:text-[var(--Colors-Neutral-700)] transition-colors"
+              aria-label="Toggle hours"
+            >
+              {isExpanded ? (
+                <IoChevronUp className="w-[1rem] h-[1rem]" />
+              ) : (
+                <IoChevronDown className="w-[1rem] h-[1rem]" />
+              )}
+            </button>
+          </div>
+          {isExpanded && renderWeekSchedule(storeId)}
         </div>
       );
     }
+
     return (
-      <div className="flex items-center gap-[0.4rem] font-semibold text-[1.125rem]">
-        {status.isOpen ? (
-          <>
-            <span className="text-[var(--Colorsuccess)]">Open</span>
-            <span className="text-[var(--Colors-Neutral-500)]">
-              until {status.closingTime}
-            </span>
-          </>
-        ) : (
-          <>
-            <span className="text-red-600">Closed</span>
-            {status.openingTime && (
+      <div className="flex flex-col gap-[0.5rem]">
+        <div className="flex items-center gap-[0.4rem] font-semibold text-[1.125rem]">
+          {status.isOpen ? (
+            <>
+              <span className="text-[var(--Colorsuccess)]">Open</span>
               <span className="text-[var(--Colors-Neutral-500)]">
-                Opens {status.openingTime}
+                until {status.closingTime}
               </span>
+            </>
+          ) : (
+            <>
+              <span className="text-red-600">Closed</span>
+              {status.openingTime && (
+                <span className="text-[var(--Colors-Neutral-500)]">
+                  Opens {status.openingTime}
+                </span>
+              )}
+            </>
+          )}
+          <button
+            onClick={() => toggleHours(storeId)}
+            className="text-[var(--Colors-Neutral-500)] hover:text-[var(--Colors-Neutral-700)] transition-colors"
+            aria-label="Toggle hours"
+          >
+            {isExpanded ? (
+              <IoChevronUp className="w-[1rem] h-[1rem]" />
+            ) : (
+              <IoChevronDown className="w-[1rem] h-[1rem]" />
             )}
-          </>
-        )}
+          </button>
+        </div>
+        {isExpanded && renderWeekSchedule(storeId)}
       </div>
     );
   };
