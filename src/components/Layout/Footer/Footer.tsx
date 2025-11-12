@@ -102,6 +102,12 @@ export default function Footer() {
                 All Services <GoArrowUpRight className="text-2xl" />
               </Link>
               <Link
+                href={"/paint"}
+                className="text-[0.9rem] text-[var(--Neutral-800)]"
+              >
+                Custom Paint
+              </Link>
+              <Link
                 href={"/special-ordering"}
                 className="text-[0.9rem] text-[var(--Neutral-800)]"
               >

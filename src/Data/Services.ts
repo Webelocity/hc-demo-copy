@@ -21,8 +21,8 @@ const services: Service[] = [
     title: "Custom Paint Mixing/Color Matching",
     description:
       "Home Central Stores offers custom paint mixing and precise color matching in Owego, Vestal, and Candor. Bring a sample or a paint can—our computerized system and qualified team can adjust the shade to meet your project needs.",
-    ctaName: "Contact Us",
-    ctaLink: "/contact",
+    ctaName: "Learn More",
+    ctaLink: "/paint",
     imagePath: "/assets/image/Services/serviceList/images/paint.svg",
     icon: "/assets/image/Services/serviceList/icons/Paint Roller.svg", // Import and pass the JSX element as needed
   },
