@@ -49,7 +49,7 @@ const services: Service[] = [
     description:
       "Need house, car, or master keys? Home Central Stores can re-key locks, cut keys, and program chip keys for newer vehicles. We make it easy to have all your locks keyed alike or master keyed, with fast, reliable service from our experienced team.",
     ctaName: "Visit Your Nearest Branch",
-    ctaLink: "/branches",
+    ctaLink: "/locations",
     imagePath: "/assets/image/Services/serviceList/images/keys.svg",
     icon: "/assets/image/Services/serviceList/icons/Scissors.svg", // Import and pass the JSX element as needed
   },
