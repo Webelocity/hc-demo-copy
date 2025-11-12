@@ -18,7 +18,6 @@ export default function LocationsSelector() {
   const [selectedStore, setSelectedStore] = useAtom(selectedStoreAtom);
   const [expandedStores, setExpandedStores] = useState<Set<StoreId>>(new Set());
   const stores = getAllStores();
-  console.log(stores);
 
   const toggleHours = (storeId: StoreId) => {
     setExpandedStores((prev) => {

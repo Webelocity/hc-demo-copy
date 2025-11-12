@@ -1,7 +1,8 @@
 export type StoreId =
   | "ow-homecentralstores"
   | "ve-homecentralstores"
-  | "ca-homecentralstores";
+  | "ca-homecentralstores"
+  | "showroom-homecentralstores";
 
 export type StoreLocation = {
   id: StoreId;
@@ -72,6 +73,18 @@ export const STORES: Record<StoreId, StoreLocation> = {
     lat: 42.10680465663656,
     lng: -76.26674955982054,
   },
+  "showroom-homecentralstores": {
+    id: "showroom-homecentralstores",
+    name: "Owega Showroom & Design Center",
+    address: "133 Central Ave., Owego",
+    city: "Owego",
+    state: "NY",
+    zip: "13827",
+    phone: "(607) 223-2360",
+    fullAddress: "133 Central Ave. Owego, NY 13827",
+    lat: 42.10680465663656,
+    lng: -76.26674955982054,
+  },
 };
 
 // Store schedules - assuming same hours for all stores (Open until 6:00 PM)
@@ -101,6 +114,15 @@ export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
     thursday: { open: "08:00", close: "18:00" },
     friday: { closed: true, open: "08:00", close: "18:00" },
     saturday: { open: "08:00", close: "18:00" },
+    sunday: { closed: true, open: "00:00", close: "00:00" },
+  },
+  "showroom-homecentralstores": {
+    monday: { open: "09:00", close: "17:00" },
+    tuesday: { open: "09:00", close: "17:00" },
+    wednesday: { open: "09:00", close: "17:00" },
+    thursday: { open: "09:00", close: "17:00" },
+    friday: { open: "09:00", close: "17:00" },
+    saturday: { open: "09:00", close: "15:00" },
     sunday: { closed: true, open: "00:00", close: "00:00" },
   },
 };
