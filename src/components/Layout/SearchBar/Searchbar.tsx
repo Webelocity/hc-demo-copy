@@ -1,17 +1,17 @@
 'use client';
 
-import { Select, MenuItem, TextField } from '@mui/material';
-import { useMemo, useState, useRef, useEffect } from 'react';
-import styles from './SearchBar.module.css';
-import { GoChevronDown } from 'react-icons/go';
-import { CiSearch } from 'react-icons/ci';
-import { useQuery } from '@tanstack/react-query';
 import {
   fetchAllProducts,
   fetchProductsByCategoryId,
   getCategories,
 } from '@/Api/Apis';
 import debounce from '@/util/debounce';
+import { CircularProgress, MenuItem, Select, TextField } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo, useRef, useState } from 'react';
+import { CiSearch } from 'react-icons/ci';
+import { GoChevronDown } from 'react-icons/go';
+import styles from './SearchBar.module.css';
 import SearchResults from './SearchResults';
 
 export default function Searchbar() {
@@ -72,11 +72,15 @@ export default function Searchbar() {
         value={selectedOption}
         onChange={(e) => setSelectedOption(e.target.value)}
         displayEmpty
-        defaultValue={
-          categories && categories.length > 0
-            ? categories[0].name
-            : 'All Categories'
-        }
+        renderValue={(selected) => {
+          if (!selected) {
+            return 'All Categories';
+          }
+          return (
+            categories?.find((cat) => cat._id === selected)?.name ||
+            'All Categories'
+          );
+        }}
         sx={{
           minWidth: '10rem',
         }}
@@ -94,27 +98,33 @@ export default function Searchbar() {
           },
         }}
       >
-        {categories?.map((option) => (
-          <MenuItem
-            key={option._id}
-            value={option._id}
-            className={
-              selectedOption === option._id
-                ? `${styles.menuItem} ${styles.menuItemActive}`
-                : styles.menuItem
-            }
-            sx={{
-              borderRadius: 'var(--Radius-md)',
-              padding: '1rem 1.5rem',
-              fontWeight: 500,
-              '&.Mui-selected': {
-                backgroundColor: 'var(--Secondary-100)',
-              },
-            }}
-          >
-            {option.name}
+        {isLoading ? (
+          <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress color='primary' />
           </MenuItem>
-        ))}
+        ) : (
+          categories?.map((option) => (
+            <MenuItem
+              key={option._id}
+              value={option._id}
+              className={
+                selectedOption === option._id
+                  ? `${styles.menuItem} ${styles.menuItemActive}`
+                  : styles.menuItem
+              }
+              sx={{
+                borderRadius: 'var(--Radius-md)',
+                padding: '1rem 1.5rem',
+                fontWeight: 500,
+                '&.Mui-selected': {
+                  backgroundColor: 'var(--Secondary-100)',
+                },
+              }}
+            >
+              {option.name}
+            </MenuItem>
+          ))
+        )}
       </Select>
 
       <div className='flex items-center pl-[0.75rem]' />
