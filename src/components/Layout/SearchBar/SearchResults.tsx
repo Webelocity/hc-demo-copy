@@ -9,6 +9,7 @@ interface SearchResultsProps {
   isLoading: boolean;
   isError: boolean;
   searchTerm: string;
+  categoryId?: string;
   onClose: () => void;
   isOpen: boolean;
 }
@@ -18,6 +19,7 @@ export default function SearchResults({
   isLoading,
   isError,
   searchTerm,
+  categoryId,
   onClose,
   isOpen,
 }: SearchResultsProps) {
@@ -31,7 +33,10 @@ export default function SearchResults({
   };
 
   const handleViewAllClick = () => {
-    router.push(`/shop?search=${encodeURIComponent(searchTerm)}`);
+    const params = new URLSearchParams();
+    if (searchTerm) params.set('searchTerm', searchTerm);
+    if (categoryId) params.set('category', categoryId);
+    router.push(`/shop?${params.toString()}`);
     onClose();
   };
   console.log('Search Results:', results);
@@ -72,7 +77,7 @@ export default function SearchResults({
             </div>
 
             <div className={styles.resultsList}>
-              {results.data.slice(0, 8).map((product) => (
+              {results.data.map((product) => (
                 <div
                   key={product._id}
                   className={styles.resultItem}
