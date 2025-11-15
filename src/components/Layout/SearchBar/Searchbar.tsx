@@ -135,6 +135,7 @@ export default function Searchbar() {
         isLoading={searchLoading}
         isError={searchError}
         searchTerm={debouncedSearchTerm}
+        categoryId={selectedOption}
         onClose={handleCloseDropdown}
         isOpen={isDropdownOpen && debouncedSearchTerm.length > 0}
       />
