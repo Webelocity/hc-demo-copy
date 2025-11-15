@@ -39,7 +39,6 @@ export default function SearchResults({
     router.push(`/shop?${params.toString()}`);
     onClose();
   };
-  console.log('Search Results:', results);
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
