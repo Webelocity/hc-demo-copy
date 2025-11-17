@@ -13,6 +13,7 @@ import { CiSearch } from 'react-icons/ci';
 import { GoChevronDown } from 'react-icons/go';
 import styles from './SearchBar.module.css';
 import SearchResults from './SearchResults';
+import { useRouter } from 'next/navigation';
 
 export default function Searchbar() {
   const [selectedOption, setSelectedOption] = useState('');
@@ -20,6 +21,7 @@ export default function Searchbar() {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const debounceSearch = useMemo(() => {
     return debounce((term: string) => {
@@ -63,6 +65,13 @@ export default function Searchbar() {
     refetchOnWindowFocus: false,
   });
 
+  const handleEnterPress = () => {
+    const params = new URLSearchParams();
+    if (searchTerm) params.set('searchTerm', searchTerm);
+    if (selectedOption) params.set('category', selectedOption);
+    router.push(`/shop?${params.toString()}`);
+    handleCloseDropdown();
+  };
   return (
     <div
       ref={searchBarRef}
@@ -138,6 +147,11 @@ export default function Searchbar() {
         }}
         value={searchTerm}
         onChange={handleSearchChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleEnterPress();
+          }
+        }}
       />
 
       <SearchResults
