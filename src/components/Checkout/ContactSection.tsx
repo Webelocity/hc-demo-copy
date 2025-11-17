@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { ThemeProvider, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -8,16 +9,25 @@ import CUstomMUITheme from '@/app/theme';
 import { toast } from 'react-toastify';
 import { checkoutContactSchema, type CheckoutContactFormData } from './ContactSection.schema';
 import Button from '@/components/shared/Button';
+import AddressBookSection from './AddressBook/AddressBookSection';
 import type React from 'react';
+import type { AddressSelectionValue, CheckoutSelectedAddresses } from '@/types/address';
 
 type ContactSectionProps = {
     isCompleted: boolean;
     onComplete: () => void;
     setOpenById: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
     onSubmitData: (data: CheckoutContactFormData) => void;
+    requiresAddress: boolean;
 };
 
-export default function ContactSection({ isCompleted, onComplete, setOpenById, onSubmitData }: ContactSectionProps) {
+export default function ContactSection({ isCompleted, onComplete, setOpenById, onSubmitData, requiresAddress }: ContactSectionProps) {
+    const [addressSelection, setAddressSelection] = useState<AddressSelectionValue>({
+        shipping: null,
+        billing: null,
+        billingSameAsShipping: true,
+    });
+
     const {
         control,
         handleSubmit,
@@ -29,12 +39,33 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
             lastName: '',
             email: '',
             phoneNumber: '',
+            selectedAddresses: null,
         },
         mode: 'onSubmit',
     });
 
     const onValid = async (data: CheckoutContactFormData) => {
-        onSubmitData(data);
+        let selectedAddresses: CheckoutSelectedAddresses | null = null;
+        if (requiresAddress) {
+            if (!addressSelection.shipping) {
+                toast.error('Please add and select a shipping address.');
+                return;
+            }
+            if (!addressSelection.billing) {
+                toast.error('Please select a billing address.');
+                return;
+            }
+            selectedAddresses = {
+                shipping: addressSelection.shipping,
+                billing: addressSelection.billing,
+                billingSameAsShipping: addressSelection.billingSameAsShipping,
+            };
+        }
+
+        onSubmitData({
+            ...data,
+            selectedAddresses,
+        });
         // Open the next accordion explicitly
         setOpenById((prev) => ({ ...prev, fulfillment: true }));
         onComplete();
@@ -140,6 +171,13 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
                         )}
                     />
                 </div>
+
+                {requiresAddress && (
+                    <>
+                        <div className="border-t border-[var(--Neutral-100)]" />
+                        <AddressBookSection onSelectionChange={setAddressSelection} />
+                    </>
+                )}
 
                 <div className="flex justify-end">
                     <Button

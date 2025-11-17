@@ -201,8 +201,8 @@ export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [
             fulfillmentMethod: (item.fulfillmentMethod ?? 'pickup'),
         })),
         discountIds,
+        orderType: 'Pickup',
         // Hard-code order type for now as requested
-        orderType: "Pickup",
         storeAddressId: selectedStore,
     };
 

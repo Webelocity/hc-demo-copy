@@ -80,7 +80,7 @@ export default function QuantityPicker({
                         <div
                             key={method}
                             onClick={() => setSelectedFulfillmentMethod(method)}
-                            className={`cursor-pointer flex-1 flex flex-col items-center justify-center p-[0.5rem] py-[1rem] border rounded-[var(--Radius-xs)] relative overflow-hidden ${selectedFulfillmentMethod === method ? 'border-[var(--secondary-500-main)]' : 'border-[var(--Colors-Neutral-100)]'}`}
+                            className={`cursor-pointer flex-1 flex flex-col items-center justify-center p-[0.5rem] py-[1rem] border rounded-[var(--Radius-xs)] relative overflow-hidden min-h-full text-center ${selectedFulfillmentMethod === method ? 'border-[var(--secondary-500-main)]' : 'border-[var(--Colors-Neutral-100)]'}`}
                         >
                             <p className={`text-[1rem] font-medium ${selectedFulfillmentMethod === method ? 'text-[var(--Colors-Neutral-800)]' : 'text-[var(--Colors-Neutral-700)]'}`}>
                                 {method.charAt(0).toUpperCase() + method.slice(1)}

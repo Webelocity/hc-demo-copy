@@ -75,14 +75,14 @@ export default function CheckoutPage() {
                         title={STEPS[0].title}
                         isOpen={!completedById.contact && openById.contact}
                         isCompleted={completedById.contact}
-                        completedContent={contactData ? (
-                            <ContactConfirmation
-                                firstName={contactData.firstName}
-                                lastName={contactData.lastName}
-                                email={contactData.email}
-                                phoneNumber={contactData.phoneNumber}
-                            />
-                        ) : null}
+                        completedContent={
+                            contactData ? (
+                                <ContactConfirmation
+                                    contact={contactData}
+                                    showAddresses={hasShippingOrDelivery}
+                                />
+                            ) : null
+                        }
                         onToggle={() => setOpenById((prev) => ({ ...prev, contact: !prev.contact }))}
                         onEdit={() => editById('contact')}
                     >
@@ -91,6 +91,7 @@ export default function CheckoutPage() {
                             onComplete={() => setComplete('contact')}
                             setOpenById={setOpenById}
                             onSubmitData={setContactData}
+                            requiresAddress={hasShippingOrDelivery}
                         />
                     </AccordionSection>
 

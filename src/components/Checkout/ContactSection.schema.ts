@@ -1,10 +1,12 @@
 import Joi from 'joi';
+import type { CheckoutSelectedAddresses } from '@/types/address';
 
 export interface CheckoutContactFormData {
     firstName: string;
     lastName: string;
     email: string;
     phoneNumber: string;
+    selectedAddresses?: CheckoutSelectedAddresses | null;
 }
 
 export const checkoutContactSchema = Joi.object<CheckoutContactFormData>({
@@ -25,6 +27,7 @@ export const checkoutContactSchema = Joi.object<CheckoutContactFormData>({
     phoneNumber: Joi.string().trim().required().messages({
         'string.empty': 'Phone number is required',
     }),
+    selectedAddresses: Joi.any().optional(),
 });
 
 
