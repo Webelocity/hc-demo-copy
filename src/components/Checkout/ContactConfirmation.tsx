@@ -6,7 +6,6 @@ import { LuPhone, LuMapPin, LuMap } from 'react-icons/lu';
 import { MdOutlineMail } from 'react-icons/md';
 import { HiOutlineHome } from 'react-icons/hi2';
 import type { CheckoutContactFormData } from './ContactSection.schema';
-import type { SavedAddress } from '@/types/address';
 import { State } from 'country-state-city';
 import type { IconType } from 'react-icons';
 

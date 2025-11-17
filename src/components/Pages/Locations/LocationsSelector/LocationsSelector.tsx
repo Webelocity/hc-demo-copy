@@ -59,8 +59,8 @@ export default function LocationsSelector() {
                 {daySchedule.closed
                   ? "Closed"
                   : `${formatTime12Hour(daySchedule.open)} - ${formatTime12Hour(
-                      daySchedule.close
-                    )}`}
+                    daySchedule.close
+                  )}`}
               </span>
             </div>
           );

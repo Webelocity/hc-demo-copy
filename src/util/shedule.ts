@@ -1,8 +1,8 @@
 export type StoreId =
-  | "ow-homecentralstores"
-  | "ve-homecentralstores"
-  | "ca-homecentralstores"
-  | "showroom-homecentralstores";
+  | "685a6dac1e47caf847ec4d9e"
+  | "69142c70e1597ae70a5390d7"
+  | "69142c80e1597ae70a5390d8"
+  | "69142c8ee1597ae70a5390d9";
 
 export type StoreLocation = {
   id: StoreId;
@@ -17,6 +17,8 @@ export type StoreLocation = {
   lat: number;
   lng: number;
 };
+
+export const DEFAULT_STORE_ID: StoreId = "685a6dac1e47caf847ec4d9e";
 
 export interface DaySchedule {
   open: string;
@@ -35,8 +37,8 @@ export interface StoreSchedule {
 }
 
 export const STORES: Record<StoreId, StoreLocation> = {
-  "ve-homecentralstores": {
-    id: "ve-homecentralstores",
+  "69142c80e1597ae70a5390d8": {
+    id: "69142c80e1597ae70a5390d8",
     name: "Vestal Store",
     address: "199 Stage Rd.",
     city: "Vestal",
@@ -48,8 +50,8 @@ export const STORES: Record<StoreId, StoreLocation> = {
     lat: 42.08759358290779,
     lng: -76.05341079108524,
   },
-  "ca-homecentralstores": {
-    id: "ca-homecentralstores",
+  "69142c70e1597ae70a5390d7": {
+    id: "69142c70e1597ae70a5390d7",
     name: "Candor Store",
     address: "309 Owego Rd.",
     city: "Candor",
@@ -60,8 +62,8 @@ export const STORES: Record<StoreId, StoreLocation> = {
     lat: 42.21814148544821,
     lng: -76.32937882477931,
   },
-  "ow-homecentralstores": {
-    id: "ow-homecentralstores",
+  "685a6dac1e47caf847ec4d9e": {
+    id: "685a6dac1e47caf847ec4d9e",
     name: "Owego Store",
     address: "151 Central Ave.",
     city: "Owego",
@@ -73,14 +75,14 @@ export const STORES: Record<StoreId, StoreLocation> = {
     lat: 42.10680465663656,
     lng: -76.26674955982054,
   },
-  "showroom-homecentralstores": {
-    id: "showroom-homecentralstores",
-    name: "Owega Showroom & Design Center",
-    address: "133 Central Ave., Owego",
-    city: "Owego",
-    state: "NY",
-    zip: "13827",
-    phone: "(607) 223-2360",
+  "69142c8ee1597ae70a5390d9": {
+    id: "69142c8ee1597ae70a5390d9",
+    name: "Do it Best",
+    address: "1595 Victoria St N-3",
+    city: "Kitchener",
+    state: "ON",
+    zip: "N2B 3E6",
+    phone: "+15197427141",
     fullAddress: "133 Central Ave. Owego, NY 13827",
     lat: 42.10680465663656,
     lng: -76.26674955982054,
@@ -89,7 +91,7 @@ export const STORES: Record<StoreId, StoreLocation> = {
 
 // Store schedules - assuming same hours for all stores (Open until 6:00 PM)
 export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
-  "ve-homecentralstores": {
+  "69142c80e1597ae70a5390d8": {
     monday: { open: "08:00", close: "18:00" },
     tuesday: { open: "08:00", close: "18:00" },
     wednesday: { open: "08:00", close: "18:00" },
@@ -98,7 +100,7 @@ export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
     saturday: { open: "08:00", close: "18:00" },
     sunday: { closed: true, open: "00:00", close: "00:00" },
   },
-  "ca-homecentralstores": {
+  "69142c70e1597ae70a5390d7": {
     monday: { open: "08:00", close: "18:00" },
     tuesday: { open: "08:00", close: "18:00" },
     wednesday: { open: "08:00", close: "18:00" },
@@ -107,7 +109,7 @@ export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
     saturday: { open: "08:00", close: "18:00" },
     sunday: { closed: true, open: "00:00", close: "00:00" },
   },
-  "ow-homecentralstores": {
+  "685a6dac1e47caf847ec4d9e": {
     monday: { open: "08:00", close: "18:00" },
     tuesday: { open: "08:00", close: "18:00" },
     wednesday: { open: "08:00", close: "18:00" },
@@ -116,7 +118,7 @@ export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
     saturday: { open: "08:00", close: "18:00" },
     sunday: { closed: true, open: "00:00", close: "00:00" },
   },
-  "showroom-homecentralstores": {
+  "69142c8ee1597ae70a5390d9": {
     monday: { open: "09:00", close: "17:00" },
     tuesday: { open: "09:00", close: "17:00" },
     wednesday: { open: "09:00", close: "17:00" },
@@ -126,6 +128,24 @@ export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
     sunday: { closed: true, open: "00:00", close: "00:00" },
   },
 };
+
+function isStoreId(value: string): value is StoreId {
+  return Object.prototype.hasOwnProperty.call(STORES, value);
+}
+
+export function normalizeStoreId(
+  storeId: StoreId | string | null | undefined
+): StoreId {
+  if (!storeId) {
+    return DEFAULT_STORE_ID;
+  }
+
+  if (isStoreId(storeId)) {
+    return storeId;
+  }
+
+  return DEFAULT_STORE_ID;
+}
 
 // Helper function to get current day of week
 function getCurrentDayOfWeek(): keyof StoreSchedule {
@@ -163,8 +183,9 @@ export interface StoreStatus {
   isClosed24Hours: boolean; // true if store is closed all day
 }
 
-export function getStoreStatus(storeId: StoreId): StoreStatus {
-  const schedule = STORE_SCHEDULES[storeId];
+export function getStoreStatus(storeId: StoreId | string): StoreStatus {
+  const normalizedStoreId = normalizeStoreId(storeId);
+  const schedule = STORE_SCHEDULES[normalizedStoreId];
   const today = getCurrentDayOfWeek();
   const daySchedule = schedule[today];
 
@@ -198,9 +219,10 @@ export function getAllStores(): StoreLocation[] {
 }
 
 // Get store by ID
-export function getStoreById(storeId: StoreId): StoreLocation {
-  console.log("storeId", storeId);
-  const store = STORES[storeId];
+export function getStoreById(storeId: StoreId | string): StoreLocation {
+  const normalizedStoreId = normalizeStoreId(storeId);
+  console.log("storeId", normalizedStoreId);
+  const store = STORES[normalizedStoreId];
 
   // Safety check: ensure the store exists
   if (!store) {
@@ -208,8 +230,8 @@ export function getStoreById(storeId: StoreId): StoreLocation {
       `Store ID "${storeId}" not found in stores. Available stores:`,
       Object.keys(STORES)
     );
-    // Return the default Owego store as fallback
-    return STORES["ow-homecentralstores"];
+    // Return the default store as fallback
+    return STORES[DEFAULT_STORE_ID];
   }
 
   return store;

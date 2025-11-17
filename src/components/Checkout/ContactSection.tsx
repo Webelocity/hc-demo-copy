@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { joiResolver } from '@hookform/resolvers/joi';
@@ -11,7 +11,8 @@ import { checkoutContactSchema, type CheckoutContactFormData } from './ContactSe
 import Button from '@/components/shared/Button';
 import AddressBookSection from './AddressBook/AddressBookSection';
 import type React from 'react';
-import type { AddressSelectionValue, CheckoutSelectedAddresses } from '@/types/address';
+import { useSetAtom } from 'jotai';
+import { checkoutShippingLocationAtom } from '@/atoms/checkoutAtom';
 
 type ContactSectionProps = {
     isCompleted: boolean;
@@ -27,6 +28,7 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
         billing: null,
         billingSameAsShipping: true,
     });
+    const setShippingLocation = useSetAtom(checkoutShippingLocationAtom);
 
     const {
         control,
@@ -43,6 +45,19 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
         },
         mode: 'onSubmit',
     });
+
+    useEffect(() => {
+        if (!requiresAddress) {
+            setShippingLocation(null);
+            return;
+        }
+        if (addressSelection.shipping) {
+            const { country, state, zipCode } = addressSelection.shipping;
+            setShippingLocation({ country, state, zipCode });
+        } else {
+            setShippingLocation(null);
+        }
+    }, [addressSelection.shipping, requiresAddress, setShippingLocation]);
 
     const onValid = async (data: CheckoutContactFormData) => {
         let selectedAddresses: CheckoutSelectedAddresses | null = null;

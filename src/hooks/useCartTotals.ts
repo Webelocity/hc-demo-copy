@@ -7,6 +7,7 @@ import { cartAtom, type CartState } from '@/atoms/cartAtom';
 import { fetchCartTotals, type CartTotals } from '@/Api/Apis';
 import { appliedDiscountIdsAtom } from '@/atoms/discountAtom';
 import { selectedStoreAtom } from '@/atoms/storeAtom';
+import { checkoutShippingLocationAtom } from '@/atoms/checkoutAtom';
 
 function fingerprintCart(cart: CartState) {
     // Create a stable key for caching. Include only fields that affect pricing.
@@ -25,11 +26,14 @@ export function useCartTotals() {
     const appliedDiscountIds = useAtomValue(appliedDiscountIdsAtom);
     const setCart = useSetAtom(cartAtom);
     const selectedStore = useAtomValue(selectedStoreAtom);
+    const shippingLocation = useAtomValue(checkoutShippingLocationAtom);
     const fp = useMemo(() => fingerprintCart(cart), [cart]);
+    const shippingFingerprint = shippingLocation ? `${shippingLocation.country}|${shippingLocation.state}|${shippingLocation.zipCode}` : 'no-destination';
+    const storeFingerprint = selectedStore ?? 'no-store';
 
     const query = useQuery({
-        queryKey: ['cartTotals', fp, appliedDiscountIds],
-        queryFn: () => fetchCartTotals(cart, appliedDiscountIds),
+        queryKey: ['cartTotals', fp, appliedDiscountIds, shippingFingerprint, storeFingerprint],
+        queryFn: () => fetchCartTotals(cart, appliedDiscountIds, selectedStore, shippingLocation ?? undefined),
         enabled: cart.length > 0,
         // Cache for 10 minutes so subsequent views use cached values
         staleTime: 10 * 60 * 1000,

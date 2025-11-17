@@ -7,13 +7,10 @@ import { Checkbox, FormControlLabel, Radio, IconButton, Menu, MenuItem } from '@
 import Button from '@/components/shared/Button';
 import Modal from '@/components/shared/Modal';
 import AddressForm from './AddressForm';
-import type { AddressFormValues } from './addressForm.schema';
 import { addressBookAtom } from '@/atoms/addressBookAtom';
-import type { AddressSelectionValue, SavedAddress } from '@/types/address';
-import { State } from 'country-state-city';
+import { Country, State } from 'country-state-city';
 import { toast } from 'react-toastify';
 import { HiDotsHorizontal } from 'react-icons/hi';
-import type { AddressFormValues } from './addressForm.schema';
 
 type AddressBookSectionProps = {
     onSelectionChange: (value: AddressSelectionValue) => void;
@@ -34,7 +31,7 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingAddress, setEditingAddress] = useState<SavedAddress | null>(null);
 
-    const usStates = useMemo(() => State.getStatesOfCountry('US'), []);
+    const countries = useMemo(() => Country.getAllCountries(), []);
 
     useEffect(() => {
         if (addresses.length === 0) {
@@ -91,10 +88,10 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
                 prev.map((addr) =>
                     addr.id === editingAddress.id
                         ? {
-                              ...addr,
-                              ...values,
-                              updatedAt: new Date().toISOString(),
-                          }
+                            ...addr,
+                            ...values,
+                            updatedAt: new Date().toISOString(),
+                        }
                         : addr
                 )
             );
@@ -121,13 +118,19 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
         toast.info('Address removed');
     };
 
-    const formatStateLabel = useCallback(
-        (stateCode: string) => {
-            const info = usStates.find((state) => state.isoCode === stateCode);
-            return info?.name ?? stateCode;
+    const formatCountryLabel = useCallback(
+        (countryCode: string) => {
+            const info = countries.find((country) => country.isoCode === countryCode);
+            return info?.name ?? countryCode;
         },
-        [usStates]
+        [countries]
     );
+
+    const formatStateLabel = useCallback((countryCode: string, stateCode: string) => {
+        const stateList = State.getStatesOfCountry(countryCode);
+        const info = stateList.find((state) => state.isoCode === stateCode);
+        return info?.name ?? stateCode;
+    }, []);
 
     return (
         <div className="flex flex-col gap-6">
@@ -150,7 +153,8 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
                     <AddressCard
                         key={address.id}
                         address={address}
-                        stateLabel={formatStateLabel(address.state)}
+                        stateLabel={formatStateLabel(address.country, address.state)}
+                        countryLabel={formatCountryLabel(address.country)}
                         selected={selectedShippingId === address.id}
                         onSelect={() => setSelectedShippingId(address.id)}
                         onEdit={() => openEditModal(address)}
@@ -183,7 +187,8 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
                             <AddressCard
                                 key={`billing-${address.id}`}
                                 address={address}
-                                stateLabel={formatStateLabel(address.state)}
+                                stateLabel={formatStateLabel(address.country, address.state)}
+                                countryLabel={formatCountryLabel(address.country)}
                                 selected={selectedBillingId === address.id}
                                 onSelect={() => setSelectedBillingId(address.id)}
                                 onEdit={() => openEditModal(address)}
@@ -205,15 +210,15 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
                     initialValues={
                         editingAddress
                             ? {
-                                  label: editingAddress.label,
-                                  phoneNumber: editingAddress.phoneNumber,
-                                  country: editingAddress.country,
-                                  state: editingAddress.state,
-                                  city: editingAddress.city,
-                                  streetAddress: editingAddress.streetAddress,
-                                  streetAddress2: editingAddress.streetAddress2,
-                                  zipCode: editingAddress.zipCode,
-                              }
+                                label: editingAddress.label,
+                                phoneNumber: editingAddress.phoneNumber,
+                                country: editingAddress.country,
+                                state: editingAddress.state,
+                                city: editingAddress.city,
+                                streetAddress: editingAddress.streetAddress,
+                                streetAddress2: editingAddress.streetAddress2,
+                                zipCode: editingAddress.zipCode,
+                            }
                             : undefined
                     }
                     onSubmit={handleSaveAddress}
@@ -276,8 +281,8 @@ function AddressCard({ address, stateLabel, selected, onSelect, onEdit, onDelete
                 }}
             />
             <div className="flex flex-1 flex-col">
-                <p className="text-sm font-semibold text-[var(--Neutral-900)]">{address.label}</p>
-                <p className="text-xs text-[var(--Neutral-500)]">{concatenatedAddress}</p>
+                <p className="text-[1rem] font-semibold text-[var(--Neutral-900)]">{address.label}</p>
+                <p className="text-[0.75rem] text-[var(--Neutral-500)]">{concatenatedAddress}</p>
             </div>
             <IconButton onClick={openMenu} size="small" sx={{ color: 'var(--Neutral-500)' }}>
                 <HiDotsHorizontal />
@@ -323,7 +328,7 @@ function AddAddressRow({ onClick }: AddAddressRowProps) {
         <button
             type="button"
             onClick={onClick}
-            className="flex w-full items-center justify-between rounded-2xl border border-dashed border-[var(--Neutral-200)] bg-white px-4 py-3 text-left text-[var(--secondary-500-main)]"
+            className="flex cursor-pointer w-full items-center justify-between rounded-2xl border border-dashed border-[var(--Neutral-200)] bg-white px-4 py-3 text-left text-[var(--secondary-500-main)]"
         >
             <div>
                 <p className="font-semibold">Add New Address</p>

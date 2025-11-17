@@ -1,16 +1,6 @@
 import Joi from 'joi';
 import { matchIsValidTel } from 'mui-tel-input';
 
-export type AddressFormValues = {
-    label: string;
-    phoneNumber: string;
-    country: string;
-    state: string;
-    city: string;
-    streetAddress: string;
-    streetAddress2?: string;
-    zipCode: string;
-};
 
 export const addressFormSchema = Joi.object<AddressFormValues>({
     label: Joi.string().trim().min(2).max(60).required().messages({

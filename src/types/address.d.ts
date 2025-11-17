@@ -1,4 +1,4 @@
-export type SavedAddress = {
+type SavedAddress = {
     id: string;
     label: string;
     phoneNumber: string;
@@ -12,16 +12,26 @@ export type SavedAddress = {
     updatedAt: string;
 };
 
-export type AddressSelectionValue = {
+type AddressSelectionValue = {
     shipping: SavedAddress | null;
     billing: SavedAddress | null;
     billingSameAsShipping: boolean;
 };
 
-export type CheckoutSelectedAddresses = {
+type CheckoutSelectedAddresses = {
     shipping: SavedAddress;
     billing: SavedAddress;
     billingSameAsShipping: boolean;
 };
 
+type AddressFormValues = {
+    label: string;
+    phoneNumber: string;
+    country: string;
+    state: string;
+    city: string;
+    streetAddress: string;
+    streetAddress2?: string;
+    zipCode: string;
+};
 

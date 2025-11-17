@@ -62,6 +62,14 @@ export default function CheckoutPage() {
         () => cart.some((ci) => ci.fulfillmentMethod === 'delivery' || ci.fulfillmentMethod === 'shipping'),
         [cart]
     );
+    const hasShipping = useMemo(
+        () => cart.some((ci) => ci.fulfillmentMethod === 'shipping'),
+        [cart]
+    );
+    const hasDelivery = useMemo(
+        () => cart.some((ci) => ci.fulfillmentMethod === 'delivery'),
+        [cart]
+    );
 
     return (
         <div className="baseContainer py-[2.5rem]">
@@ -131,6 +139,8 @@ export default function CheckoutPage() {
                         totals={totals}
                         isLoading={isLoading}
                         hasShippingOrDelivery={hasShippingOrDelivery}
+                        hasShipping={hasShipping}
+                        hasDelivery={hasDelivery}
                         cap={5}
                     />
                 </aside>

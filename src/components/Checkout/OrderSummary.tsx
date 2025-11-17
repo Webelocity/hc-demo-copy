@@ -10,6 +10,8 @@ type OrderSummaryProps = {
     totals?: CartTotals;
     isLoading: boolean;
     hasShippingOrDelivery: boolean;
+    hasShipping: boolean;
+    hasDelivery: boolean;
     cap?: number;
 };
 
@@ -18,6 +20,8 @@ export default function OrderSummary({
     totals,
     isLoading,
     hasShippingOrDelivery,
+    hasShipping,
+    hasDelivery,
     cap = 5,
 }: OrderSummaryProps) {
     return (
@@ -75,12 +79,24 @@ export default function OrderSummary({
                         {isLoading ? (
                             <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                         ) : (
-                            'Calculated at checkout'
+                            totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
                         )}
                     </span>
                 </div>
+                {hasDelivery ? (
+                    <div className="flex items-center justify-between">
+                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Delivery</span>
+                        <span className="text-sm font-medium">
+                            {isLoading ? (
+                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                            ) : (
+                                'Calculated at checkout'
+                            )}
+                        </span>
+                    </div>
+                ) : null}
 
-                {hasShippingOrDelivery ? (
+                {hasShipping ? (
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-[var(--Colors-Neutral-700)]">Shipping</span>
                         <span className="text-sm font-medium">
@@ -96,7 +112,7 @@ export default function OrderSummary({
                 <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
                     <span className="text-base font-bold">Total</span>
                     <span className="text-base font-bold">
-                        ${Number(totals?.subTotal ?? 0).toFixed(2)}
+                        ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCost ?? 0))).toFixed(2)}
                     </span>
                 </div>
             </div>

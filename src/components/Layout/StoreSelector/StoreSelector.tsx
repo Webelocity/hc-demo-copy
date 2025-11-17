@@ -16,7 +16,7 @@ interface StoreSelectorProps {
 export default function StoreSelector({ isOpen, onClose }: StoreSelectorProps) {
     const [selectedStore, setSelectedStore] = useAtom(selectedStoreAtom);
     const [tempSelection, setTempSelection] = useState<StoreId>(selectedStore);
-    const stores = getAllStores();
+    const stores = getAllStores().filter((store) => store.name !== "Do it Best");
 
     // Update temp selection when modal opens or selected store changes
     useEffect(() => {

@@ -5,14 +5,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { TextField, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import { MuiTelInput } from 'mui-tel-input';
 import { joiResolver } from '@hookform/resolvers/joi';
-import { State } from 'country-state-city';
+import { Country, State } from 'country-state-city';
 import Button from '@/components/shared/Button';
-import { addressFormSchema, type AddressFormValues } from './addressForm.schema';
+import { addressFormSchema } from './addressForm.schema';
 
 const defaultValues: AddressFormValues = {
     label: '',
     phoneNumber: '',
-    country: 'United States',
+    country: 'US',
     state: '',
     city: '',
     streetAddress: '',
@@ -26,23 +26,67 @@ type AddressFormProps = {
     onCancel: () => void;
 };
 
+const COUNTRY_OPTIONS = [
+    { label: 'United States', value: 'US' },
+    { label: 'Canada', value: 'CA' },
+];
+
 export default function AddressForm({ initialValues, onSubmit, onCancel }: AddressFormProps) {
     const {
         control,
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
+        watch,
+        setValue,
     } = useForm<AddressFormValues>({
         resolver: joiResolver(addressFormSchema),
         defaultValues: initialValues ?? defaultValues,
         mode: 'onSubmit',
     });
 
-    const usStates = useMemo(() => State.getStatesOfCountry('US'), []);
+    const countries = useMemo(() => COUNTRY_OPTIONS, []);
+    const selectedCountry = watch('country', defaultValues.country);
+    const selectedState = watch('state');
+    const countryStates = useMemo(
+        () => State.getStatesOfCountry(selectedCountry ?? defaultValues.country),
+        [selectedCountry],
+    );
 
     useEffect(() => {
-        reset(initialValues ?? defaultValues);
-    }, [initialValues, reset]);
+        const nextValues = initialValues ? { ...initialValues } : { ...defaultValues };
+        if (initialValues?.country) {
+            const match = countries.find(
+                (country) =>
+                    country.value === initialValues.country ||
+                    country.label.toLowerCase() === initialValues.country.toLowerCase()
+            );
+            if (match) {
+                nextValues.country = match.value;
+            }
+        }
+        const statesForInitialCountry = State.getStatesOfCountry(nextValues.country ?? defaultValues.country);
+        if (initialValues?.state) {
+            const stateMatch = statesForInitialCountry.find(
+                (state) => state.isoCode === initialValues.state || state.name === initialValues.state
+            );
+            if (stateMatch) {
+                nextValues.state = stateMatch.isoCode;
+            }
+        }
+        reset(nextValues);
+    }, [initialValues, reset, countries]);
+
+    useEffect(() => {
+        if (!selectedCountry) {
+            setValue('state', '');
+            return;
+        }
+        const nextStates = State.getStatesOfCountry(selectedCountry);
+        if (selectedState && !nextStates.some((state) => state.isoCode === selectedState)) {
+            setValue('state', '');
+        }
+    }, [selectedCountry, selectedState, setValue]);
 
     const submitAddress = handleSubmit(onSubmit);
 
@@ -81,7 +125,17 @@ export default function AddressForm({ initialValues, onSubmit, onCancel }: Addre
                     name="country"
                     control={control}
                     render={({ field }) => (
-                        <TextField {...field} label="Country" error={!!errors.country} helperText={errors.country?.message} />
+                        <FormControl error={!!errors.country}>
+                            <InputLabel>Country</InputLabel>
+                            <Select label="Country" {...field}>
+                                {countries.map((country) => (
+                                    <MenuItem key={country.value} value={country.value}>
+                                        {country.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>{errors.country?.message}</FormHelperText>
+                        </FormControl>
                     )}
                 />
                 <Controller
@@ -91,7 +145,7 @@ export default function AddressForm({ initialValues, onSubmit, onCancel }: Addre
                         <FormControl error={!!errors.state}>
                             <InputLabel>State</InputLabel>
                             <Select label="State" {...field}>
-                                {usStates.map((state) => (
+                                {countryStates.map((state) => (
                                     <MenuItem key={state.isoCode} value={state.isoCode}>
                                         {state.name}
                                     </MenuItem>

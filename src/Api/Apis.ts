@@ -2,6 +2,7 @@ import { constructQueryParams, fetchWithStoreId } from "./helpers";
 import { MOCK_PRODUCT, getMockProductWithPrices } from "@/mocks/products";
 import { getMockCartTotals } from "@/mocks/cart";
 import type { CartState } from "@/atoms/cartAtom";
+import type { CheckoutShippingLocation } from "@/types/checkout";
 
 // Toggle to use mock data (set to false when backend is ready)
 const USE_MOCK_DATA = false;
@@ -186,13 +187,32 @@ export type CartTotalsProductItem = {
 export type CartTotals = {
     productItems: CartTotalsProductItem[];
     subTotalDiscount: number;
+    deliveryCost: number;
+    taxAmount: number;
     additionalCosts: Record<string, number>;
     subTotal: number;
 };
 
-export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [], selectedStore?: string): Promise<CartTotals> => {
+export const fetchCartTotals = async (
+    cart: CartState,
+    discountIds: string[] = [],
+    selectedStore?: string,
+    shippingLocation?: CheckoutShippingLocation
+): Promise<CartTotals> => {
     // Map cart to API body
-    const requestBody = {
+    const requestBody: {
+        items: {
+            quantity: number;
+            product: { productVariantId: string };
+            fulfillmentMethod: string;
+        }[];
+        discountIds: string[];
+        storeAddressId?: string;
+        country?: string;
+        state?: string;
+        zip?: string;
+        shippingAddress?: CheckoutShippingLocation;
+    } = {
         items: cart.map((item) => ({
             quantity: item.quantity,
             product: {
@@ -201,16 +221,15 @@ export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [
             fulfillmentMethod: (item.fulfillmentMethod ?? 'pickup'),
         })),
         discountIds,
-        orderType: 'Pickup',
-        // Hard-code order type for now as requested
         storeAddressId: selectedStore,
     };
 
-    if (USE_MOCK_DATA) {
-        // simulate latency
-        await new Promise((r) => setTimeout(r, 350));
-        return getMockCartTotals(cart, discountIds);
+    if (shippingLocation) {
+        requestBody.country = shippingLocation.country;
+        requestBody.state = shippingLocation.state;
+        requestBody.zip = shippingLocation.zipCode;
     }
+
 
     const pathname = `/cart/calculate-prices`;
     const response = await fetchWithStoreId<CartTotals>(pathname, {
