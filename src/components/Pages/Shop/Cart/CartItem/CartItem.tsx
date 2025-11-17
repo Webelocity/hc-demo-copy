@@ -1,4 +1,4 @@
-import { type CartItem, increaseQuantityAtom, decreaseQuantityAtom, deleteFromCartAtom } from "@/atoms/cartAtom";
+import { type CartItem, increaseQuantityAtom, decreaseQuantityAtom, deleteFromCartAtom, updateFulfillmentAtom } from "@/atoms/cartAtom";
 import FallBackImage from "@/components/shared/FallBackImage";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
@@ -12,6 +12,7 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     const increaseQuantity = useSetAtom(increaseQuantityAtom);
     const decreaseQuantity = useSetAtom(decreaseQuantityAtom);
     const deleteFromCartAction = useSetAtom(deleteFromCartAtom);
+    const updateFulfillment = useSetAtom(updateFulfillmentAtom);
     const router = useRouter();
     const [quantity, setQuantity] = useState(item.quantity);
     const debouncedQuantity = useDebounce(quantity, 2000);
@@ -101,7 +102,7 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
                         </div>
                     </div>
 
-                    <div>
+                    {item.variant.attribute && <div>
                         {Object.entries(item.variant.attribute).map(([key, value]) => (
                             <div key={key}>
                                 <p className="text-[0.75rem] text-[var(--Colors-Neutral-700)] font-medium">
@@ -109,7 +110,7 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
                                 </p>
                             </div>
                         ))}
-                    </div>
+                    </div>}
 
                     {/* Fulfillment Method */}
                     {item.variant.supportedFulfillmentMethods?.length ? (
@@ -117,13 +118,24 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
                             {item.variant.supportedFulfillmentMethods.map((method) => {
                                 const isSelected = item.fulfillmentMethod === method;
                                 return (
-                                    <span
+                                    <button
                                         key={method}
-                                        className={`text-[0.875rem] ${isSelected ? "bg-[var(--primary-500-main)] text-white" : "text-black"
-                                            } py-[0.25rem] px-[0.5rem] rounded-[var(--Radius-md)]`}
+                                        type="button"
+
+                                        onClick={() => {
+                                            if (isSelected) return;
+                                            updateFulfillment({
+                                                variantId: item.variant._id,
+                                                fromFulfillmentMethod: item.fulfillmentMethod,
+                                                toFulfillmentMethod: method,
+                                            });
+                                        }}
+                                        className={`text-[0.875rem] cursor-pointer ${isSelected ? "bg-[var(--primary-500-main)] text-white" : "text-black"
+                                            } py-[0.25rem] px-[0.5rem] rounded-[var(--Radius-md)] border border-[var(--Colors-Neutral-100)]`}
+                                        aria-pressed={isSelected}
                                     >
                                         {method}
-                                    </span>
+                                    </button>
                                 );
                             })}
                         </div>

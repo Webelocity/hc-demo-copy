@@ -137,4 +137,43 @@ export const deleteFromCartAtom = atom(
     }
 );
 
+type UpdateFulfillmentPayload = {
+    variantId: string;
+    fromFulfillmentMethod: FulfillmentMethodEnum | null;
+    toFulfillmentMethod: FulfillmentMethodEnum;
+};
+
+export const updateFulfillmentAtom = atom(
+    null,
+    (get, set, payload: UpdateFulfillmentPayload) => {
+        const { variantId, fromFulfillmentMethod, toFulfillmentMethod } = payload;
+        set(cartAtom, (prev) => {
+            const fromIndex = prev.findIndex(
+                (ci) =>
+                    ci.variant._id === variantId &&
+                    ci.fulfillmentMethod === fromFulfillmentMethod
+            );
+            if (fromIndex < 0) return prev;
+            const toIndex = prev.findIndex(
+                (ci) =>
+                    ci.variant._id === variantId &&
+                    ci.fulfillmentMethod === toFulfillmentMethod
+            );
+            const next = [...prev];
+            if (toIndex >= 0) {
+                const mergedQty = next[fromIndex].quantity + next[toIndex].quantity;
+                next[toIndex] = { ...next[toIndex], quantity: mergedQty };
+                next.splice(fromIndex, 1);
+            } else {
+                next[fromIndex] = {
+                    ...next[fromIndex],
+                    fulfillmentMethod: toFulfillmentMethod,
+                };
+            }
+            console.log('cart (update fulfillment)', next);
+            return next;
+        });
+    }
+);
+
 

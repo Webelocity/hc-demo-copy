@@ -5,6 +5,8 @@ import { useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { cartAtom, type CartState } from '@/atoms/cartAtom';
 import { fetchCartTotals, type CartTotals } from '@/Api/Apis';
+import { appliedDiscountIdsAtom } from '@/atoms/discountAtom';
+import { selectedStoreAtom } from '@/atoms/storeAtom';
 
 function fingerprintCart(cart: CartState) {
     // Create a stable key for caching. Include only fields that affect pricing.
@@ -20,12 +22,14 @@ function fingerprintCart(cart: CartState) {
 
 export function useCartTotals() {
     const cart = useAtomValue(cartAtom);
+    const appliedDiscountIds = useAtomValue(appliedDiscountIdsAtom);
     const setCart = useSetAtom(cartAtom);
+    const selectedStore = useAtomValue(selectedStoreAtom);
     const fp = useMemo(() => fingerprintCart(cart), [cart]);
 
     const query = useQuery({
-        queryKey: ['cartTotals', fp],
-        queryFn: () => fetchCartTotals(cart),
+        queryKey: ['cartTotals', fp, appliedDiscountIds],
+        queryFn: () => fetchCartTotals(cart, appliedDiscountIds),
         enabled: cart.length > 0,
         // Cache for 10 minutes so subsequent views use cached values
         staleTime: 10 * 60 * 1000,

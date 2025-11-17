@@ -11,6 +11,17 @@ export const CUstomMUITheme = createTheme({
         },
     },
     components: {
+        MuiCssBaseline: {
+            styleOverrides: {
+                // Remove browser autofill blue/yellow background and enforce our colors
+                'input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, textarea:-webkit-autofill, textarea:-webkit-autofill:hover, textarea:-webkit-autofill:focus, select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus': {
+                    WebkitTextFillColor: 'var(--Neutral-700)',
+                    caretColor: 'var(--Neutral-700)',
+                    WebkitBoxShadow: '0 0 0 1000px white inset',
+                    boxShadow: '0 0 0 1000px white inset',
+                },
+            },
+        },
         // Date picker input wrappers (outer input styles)
         MuiPickersOutlinedInput: {
             styleOverrides: {

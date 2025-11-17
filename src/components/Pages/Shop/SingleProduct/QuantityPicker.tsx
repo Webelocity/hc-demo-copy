@@ -57,9 +57,6 @@ export default function QuantityPicker({
     };
 
     const addToCart = () => {
-        console.log('selectedFulfillmentMethod', selectedFulfillmentMethod);
-        console.log('selectedVariant', selectedVariant);
-        console.log('localQty', localQty);
 
         if (!selectedVariant) {
             console.warn('No selectedVariant to add to cart');

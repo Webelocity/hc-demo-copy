@@ -26,6 +26,10 @@ export default function CartDrawer() {
         router.push('/shop/catalogue')
         handleClose();
     }
+    const navigateToCart = () => {
+        router.push('/cart')
+        handleClose();
+    }
     return (
         <Drawer
             anchor="right"
@@ -93,14 +97,20 @@ export default function CartDrawer() {
                                     <span className="text-sm font-semibold">${(totals?.subTotal ?? 0).toFixed(2)}</span>
                                 )}
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
-                                {isLoading ? (
+
+                            {isLoading ? (
+                                <div className="flex items-center justify-between">
+                                    <span className="inline-block h-[1rem] w-[5rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                                     <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                                ) : (
-                                    <span className="text-sm font-semibold">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
-                                )}
-                            </div>
+                                </div>
+                            ) : (
+                                (totals?.subTotalDiscount ?? 0) > 0 ? (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
+                                        <span className="text-sm font-semibold">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
+                                    </div>
+                                ) : null
+                            )}
                             <div className="flex items-center justify-between">
                                 <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
                                 {isLoading ? (
@@ -122,7 +132,7 @@ export default function CartDrawer() {
                         </div>
                     </div>
                     <div className='flex items-center gap-[1rem] px-4 py-4'>
-                        <Button variant="outline" fullWidth onClick={navigateToCatalogue}>
+                        <Button variant="outline" fullWidth onClick={navigateToCart}>
                             View Cart                </Button>
                         <Button variant="primary" fullWidth>
                             Proceed to Checkout

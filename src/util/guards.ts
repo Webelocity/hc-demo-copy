@@ -1,13 +1,13 @@
 export const isCategory = (obj: Category | Subcategory | ChildSubCategory): obj is Category => {
-    return (obj as Category).categorySubCategories !== undefined;
+    return Array.isArray((obj as any).categorySubCategories);
 };
 
-// Type guard to check if the object is a Subcategory
 export const isSubcategory = (obj: Category | Subcategory | ChildSubCategory): obj is Subcategory => {
-    return (obj as Subcategory).parentCategory !== undefined && (obj as Subcategory).parentSubCategory !== undefined;
+    return Array.isArray((obj as any).subCategoryProducts);
 };
 
-// Type guard to check if the object is a ChildSubCategory
 export const isChildSubCategory = (obj: Category | Subcategory | ChildSubCategory): obj is ChildSubCategory => {
-    return (obj as ChildSubCategory).childSubCategories !== undefined;
+    return !isCategory(obj) && !isSubcategory(obj);
+    // Or, if reliable in your data model:
+    // return 'parentSubCategory' in (obj as any) && (obj as any).parentSubCategory != null;
 };

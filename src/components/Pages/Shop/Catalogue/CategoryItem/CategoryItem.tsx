@@ -76,11 +76,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category, level, selectedSu
             }
 
             if (isCategory(cat)) {
-                return cat.categorySubCategories.some(sub => checkIfDescendantActive(sub));
+                return cat?.categorySubCategories?.some(sub => checkIfDescendantActive(sub));
             } else if (isSubcategory(cat)) {
-                return cat.childSubCategories.some(child => checkIfDescendantActive(child));
+                console.log(cat?.childSubCategories);
+                return cat?.childSubCategories?.some(child => checkIfDescendantActive(child));
             } else if (isChildSubCategory(cat)) {
-                return cat.childSubCategories.some(child => checkIfDescendantActive(child));
+                return cat?.childSubCategories?.some(child => checkIfDescendantActive(child));
             }
             return false;
         };
@@ -206,7 +207,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({ category, level, selectedSu
                             }`}
                         style={{ fontFamily: 'var(--font-figtree)' }}
                     >
-                        {category.name} ({isSubcategory(category) ? category.subCategoryProducts.length : category.productCount})
+                        {category.name} ({isSubcategory(category) ? category?.subCategoryProducts?.length : category.productCount})
                     </span>
                 </label>
             </div>

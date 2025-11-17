@@ -4,12 +4,16 @@ import Button from "./Button";
 import { LuShoppingCart } from "react-icons/lu";
 import FallBackImage from "./FallBackImage";
 import { useRouter } from "next/navigation";
+import { useSetAtom } from "jotai";
+import { addToCartAtom } from "@/atoms/cartAtom";
 interface ProductCardProps {
     product?: Product;
 }
 export default function ProductCard({ product }: ProductCardProps) {
     const router = useRouter();
     const isTrackQuantity = product?.trackQuantity;
+    const addToCartAction = useSetAtom(addToCartAtom);
+
     const renderStock = () => {
         if (isTrackQuantity) {
             if (product?.inventoryCount > 0) {
@@ -36,7 +40,15 @@ export default function ProductCard({ product }: ProductCardProps) {
         router.push(`/product/${product?._id}`);
     }
     const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!product) return;
         e.stopPropagation();
+        addToCartAction({
+            productId: product?._id ?? '',
+            variant: product.lowestPriceVariant,
+            quantity: 1,
+            fulfillmentMethod: null,
+        });
+
         console.log('add to cart');
     }
     return (

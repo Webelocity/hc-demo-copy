@@ -32,6 +32,9 @@ function CatalogueContent() {
         isLoading: isSubcatLoading,
     } = useSubcategory(isSubcatActive);
 
+    console.log(selectedSubCat);
+    console.log(isSubcatActive);
+
     // derive filters for Sort
     const filters = useMemo(() => {
         const out: Record<string, any> = {};

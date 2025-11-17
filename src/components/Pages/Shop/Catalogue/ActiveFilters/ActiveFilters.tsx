@@ -44,6 +44,7 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
 
             // Handle subcategory
             if (key === 'subcats' && selectedSubCat) {
+
                 filters.push({
                     key,
                     value,

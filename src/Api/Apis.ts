@@ -4,7 +4,7 @@ import { getMockCartTotals } from "@/mocks/cart";
 import type { CartState } from "@/atoms/cartAtom";
 
 // Toggle to use mock data (set to false when backend is ready)
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 export const getCategories = async (): Promise<Category[]> => {
     const response = await fetchWithStoreId<Category[]>('/categories');
@@ -190,7 +190,7 @@ export type CartTotals = {
     subTotal: number;
 };
 
-export const fetchCartTotals = async (cart: CartState, discountIds: string[] = []): Promise<CartTotals> => {
+export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [], selectedStore?: string): Promise<CartTotals> => {
     // Map cart to API body
     const requestBody = {
         items: cart.map((item) => ({
@@ -203,6 +203,7 @@ export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [
         discountIds,
         // Hard-code order type for now as requested
         orderType: "Pickup",
+        storeAddressId: selectedStore,
     };
 
     if (USE_MOCK_DATA) {
@@ -221,3 +222,37 @@ export const fetchCartTotals = async (cart: CartState, discountIds: string[] = [
     }
     return response;
 }
+
+export const validatePromoCode = async (
+    discountCode: string,
+    totalPrice: number,
+    cartItemsLength: number,
+    zipCode?: string
+): Promise<Discount> => {
+    const pathname = "/discounts/validate";
+
+    const requestBody = {
+        purchaseAmount: totalPrice,
+        purchaseQuantity: cartItemsLength,
+        zipCode,
+    };
+
+    try {
+        const response = await fetchWithStoreId<Discount>(pathname, {
+            method: "POST",
+            body: requestBody,
+            query: `code=${discountCode}`,
+        });
+
+        if (!response) {
+            throw new Error("Invalid or expired promo code");
+        }
+
+        return response;
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+        throw new Error("An unknown error occurred");
+    }
+};
