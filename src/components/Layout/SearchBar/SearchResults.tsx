@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from './SearchResults.module.css';
+import FallBackImage from '@/components/shared/FallBackImage';
 
 interface SearchResultsProps {
   results: ApiResponse<Product> | undefined;
@@ -39,6 +40,9 @@ export default function SearchResults({
     router.push(`/shop?${params.toString()}`);
     onClose();
   };
+
+  console.log('SearchResults render:', SearchResults);
+
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />
@@ -93,7 +97,7 @@ export default function SearchResults({
                       />
                     ) : (
                       <div className={styles.imagePlaceholder}>
-                        <span>No image</span>
+                        <FallBackImage />
                       </div>
                     )}
                   </div>
