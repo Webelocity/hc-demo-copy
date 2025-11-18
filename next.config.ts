@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'shippo-static.s3.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };

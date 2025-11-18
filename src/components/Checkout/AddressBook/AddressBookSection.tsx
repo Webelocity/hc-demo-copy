@@ -1,6 +1,6 @@
 'use client';
 
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { MouseEvent } from 'react';
 import { Checkbox, FormControlLabel, Radio, IconButton, Menu, MenuItem } from '@mui/material';
@@ -8,6 +8,7 @@ import Button from '@/components/shared/Button';
 import Modal from '@/components/shared/Modal';
 import AddressForm from './AddressForm';
 import { addressBookAtom } from '@/atoms/addressBookAtom';
+import { selectedAddressesAtom } from '@/atoms/checkoutSelectionAtom';
 import { Country, State } from 'country-state-city';
 import { toast } from 'react-toastify';
 import { HiDotsHorizontal } from 'react-icons/hi';
@@ -25,6 +26,7 @@ const generateAddressId = () => {
 
 export default function AddressBookSection({ onSelectionChange }: AddressBookSectionProps) {
     const [addresses, setAddresses] = useAtom(addressBookAtom);
+    const setSelectedAddresses = useSetAtom(selectedAddressesAtom);
     const [selectedShippingId, setSelectedShippingId] = useState<string | null>(addresses[0]?.id ?? null);
     const [selectedBillingId, setSelectedBillingId] = useState<string | null>(addresses[0]?.id ?? null);
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -60,11 +62,13 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
     useEffect(() => {
         const shipping = addresses.find((addr) => addr.id === selectedShippingId) ?? null;
         const billing = billingSameAsShipping ? shipping : addresses.find((addr) => addr.id === selectedBillingId) ?? null;
-        onSelectionChange({
+        const selection = {
             shipping,
             billing,
             billingSameAsShipping,
-        });
+        };
+        onSelectionChange(selection);
+        setSelectedAddresses(selection);
     }, [addresses, billingSameAsShipping, onSelectionChange, selectedBillingId, selectedShippingId]);
 
     const openCreateModal = () => {
@@ -232,13 +236,14 @@ export default function AddressBookSection({ onSelectionChange }: AddressBookSec
 type AddressCardProps = {
     address: SavedAddress;
     stateLabel: string;
+    countryLabel: string;
     selected: boolean;
     onSelect: () => void;
     onEdit: () => void;
     onDelete: () => void;
 };
 
-function AddressCard({ address, stateLabel, selected, onSelect, onEdit, onDelete }: AddressCardProps) {
+function AddressCard({ address, stateLabel, countryLabel, selected, onSelect, onEdit, onDelete }: AddressCardProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -258,7 +263,7 @@ function AddressCard({ address, stateLabel, selected, onSelect, onEdit, onDelete
         address.streetAddress2,
         address.city,
         stateLabel,
-        address.country,
+        countryLabel,
         address.zipCode,
     ]
         .filter(Boolean)

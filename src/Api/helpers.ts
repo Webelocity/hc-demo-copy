@@ -59,8 +59,10 @@ export const fetchWithStoreId = async <T>(
     const data: T = await response.json();
 
     if (!response.ok) {
-        const ErrorResponse = (data as APIErrorResponse)
-        throw new Error(ErrorResponse.message);
+        const ErrorResponse = (data as APIErrorResponse);
+        const err = new Error(ErrorResponse.message);
+        (err as any).status = response.status;
+        throw err;
     }
     return data;
 };

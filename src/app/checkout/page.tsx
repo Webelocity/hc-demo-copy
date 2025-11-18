@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAtomValue } from 'jotai';
 import { cartAtom } from '@/atoms/cartAtom';
 import { useCartTotals } from '@/hooks/useCartTotals';
@@ -10,7 +10,9 @@ import FulfillmentSection from '@/components/Checkout/FulfillmentSection';
 import PaymentSection from '@/components/Checkout/PaymentSection';
 import OrderSummary from '@/components/Checkout/OrderSummary';
 import ContactConfirmation from '@/components/Checkout/ContactConfirmation';
+import FulfillmentConfirmation from '@/components/Checkout/FulfillmentConfirmation';
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
+import ErrorModal from '@/components/shared/ErrorModal';
 
 type StepId = 'contact' | 'fulfillment' | 'payment';
 
@@ -57,7 +59,12 @@ export default function CheckoutPage() {
     };
 
     const cart = useAtomValue(cartAtom);
-    const { data: totals, isLoading } = useCartTotals();
+    const { data: totals, isLoading, error: totalsError } = useCartTotals();
+    const [totalsErrorOpen, setTotalsErrorOpen] = useState<boolean>(false);
+    const handleCloseTotalsError = () => {
+        console.log('handleCloseTotalsError');
+        setTotalsErrorOpen(false);
+    };
     const hasShippingOrDelivery = useMemo(
         () => cart.some((ci) => ci.fulfillmentMethod === 'delivery' || ci.fulfillmentMethod === 'shipping'),
         [cart]
@@ -70,6 +77,17 @@ export default function CheckoutPage() {
         () => cart.some((ci) => ci.fulfillmentMethod === 'delivery'),
         [cart]
     );
+
+    // Auto-open modal for 404 delivery-not-available errors if present
+    const totalsErrorStatus = (totalsError as any)?.status as number | undefined;
+
+    useEffect(() => {
+        if (totalsErrorStatus === 404 && !totalsErrorOpen) {
+            // Avoid re-render loops: open once
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            setTotalsErrorOpen(true);
+        }
+    }, [totalsError]);
 
     return (
         <div className="baseContainer py-[2.5rem]">
@@ -110,14 +128,16 @@ export default function CheckoutPage() {
                         isOpen={!completedById.fulfillment && openById.fulfillment}
                         isCompleted={completedById.fulfillment}
                         completedContent={
-                            <>
-                                Done
-                            </>
+                            <FulfillmentConfirmation cart={cart} deliveryCost={totals?.deliveryCosts} />
                         }
                         onToggle={() => setOpenById((prev) => ({ ...prev, fulfillment: !prev.fulfillment }))}
                         onEdit={() => editById('fulfillment')}
                     >
-                        <FulfillmentSection isCompleted={completedById.fulfillment} onComplete={() => setComplete('fulfillment')} />
+                        <FulfillmentSection
+                            isCompleted={completedById.fulfillment}
+                            onComplete={() => setComplete('fulfillment')}
+                            setOpenById={setOpenById}
+                        />
                     </AccordionSection>
 
                     <AccordionSection
@@ -134,6 +154,13 @@ export default function CheckoutPage() {
                 </div>
 
                 <aside className="flex-1">
+                    {/*
+                        Compute whether all steps are completed to enable place order
+                    */}
+                    {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
+                    {
+                        null
+                    }
                     <OrderSummary
                         cart={cart}
                         totals={totals}
@@ -141,10 +168,25 @@ export default function CheckoutPage() {
                         hasShippingOrDelivery={hasShippingOrDelivery}
                         hasShipping={hasShipping}
                         hasDelivery={hasDelivery}
+                        totalsError={totalsError}
+                        onTotalsErrorDetails={() => setTotalsErrorOpen(true)}
+                        contact={contactData}
+                        allCompleted={completedById.contact && completedById.fulfillment && completedById.payment}
                         cap={5}
                     />
                 </aside>
             </div>
+
+            <ErrorModal
+                open={totalsErrorOpen}
+                onClose={handleCloseTotalsError}
+                title={totalsErrorStatus === 404 ? 'Delivery Not Available' : 'Checkout Error'}
+                message={
+                    totalsError
+                        ? (totalsError as Error).message
+                        : 'An unknown error occurred while calculating totals.'
+                }
+            />
         </div>
     );
 }

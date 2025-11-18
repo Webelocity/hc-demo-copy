@@ -187,10 +187,39 @@ export type CartTotalsProductItem = {
 export type CartTotals = {
     productItems: CartTotalsProductItem[];
     subTotalDiscount: number;
-    deliveryCost: number;
+    deliveryCosts: number;
     taxAmount: number;
     additionalCosts: Record<string, number>;
     subTotal: number;
+};
+
+// Shipping Options
+export type ShippingOption = {
+    estimatedDays: number;
+    image: string;
+    name: string;
+    price: number;
+    duration: string;
+    carrierCode: string;
+    serviceCode: string;
+    metadata: string;
+    objectId: string;
+    shipmentGateway: string;
+    version: string;
+};
+
+export const fetchShippingOptions = async (
+    body: Record<string, any>
+): Promise<ShippingOption[]> => {
+    const pathname = "/shipping/get-shipping-rates";
+    const response = await fetchWithStoreId<ShippingOption[]>(pathname, {
+        method: "POST",
+        body,
+    });
+    if (!response) {
+        throw new Error("Error fetching shipping options");
+    }
+    return response;
 };
 
 export const fetchCartTotals = async (

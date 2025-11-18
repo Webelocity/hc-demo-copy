@@ -6,7 +6,7 @@ import { LuPhone, LuMapPin, LuMap } from 'react-icons/lu';
 import { MdOutlineMail } from 'react-icons/md';
 import { HiOutlineHome } from 'react-icons/hi2';
 import type { CheckoutContactFormData } from './ContactSection.schema';
-import { State } from 'country-state-city';
+import { Country, State } from 'country-state-city';
 import type { IconType } from 'react-icons';
 
 type ContactConfirmationProps = {
@@ -18,13 +18,19 @@ export default function ContactConfirmation({ contact, showAddresses }: ContactC
     const { firstName, lastName, email, phoneNumber, selectedAddresses } = contact;
     const contactFullName = `${firstName} ${lastName}`.trim();
     const canShowAddresses = showAddresses && selectedAddresses && selectedAddresses.shipping && selectedAddresses.billing;
-    const usStates = useMemo(() => State.getStatesOfCountry('US'), []);
-    const getStateLabel = useCallback(
+    const countries = useMemo(() => Country.getAllCountries(), []);
+    const getStateLabel = useCallback((code: string, countryCode: string) => {
+        if (!code) return '';
+        const states = State.getStatesOfCountry(countryCode);
+        const match = states.find((state) => state.isoCode === code);
+        return match?.name ?? code;
+    }, []);
+    const getCountryLabel = useCallback(
         (code: string) => {
-            const match = usStates.find((state) => state.isoCode === code);
+            const match = countries.find((country) => country.isoCode === code);
             return match?.name ?? code;
         },
-        [usStates]
+        [countries]
     );
 
     const contactCards = [
@@ -49,6 +55,7 @@ export default function ContactConfirmation({ contact, showAddresses }: ContactC
                             address={selectedAddresses.shipping}
                             contactName={contactFullName}
                             getStateLabel={getStateLabel}
+                            getCountryLabel={getCountryLabel}
                         />
                     ) : (
                         <div className="grid gap-4 md:grid-cols-2">
@@ -57,12 +64,14 @@ export default function ContactConfirmation({ contact, showAddresses }: ContactC
                                 address={selectedAddresses.shipping}
                                 contactName={contactFullName}
                                 getStateLabel={getStateLabel}
+                                getCountryLabel={getCountryLabel}
                             />
                             <AddressInfoSection
                                 title="Billing Address"
                                 address={selectedAddresses.billing}
                                 contactName={contactFullName}
                                 getStateLabel={getStateLabel}
+                                getCountryLabel={getCountryLabel}
                             />
                         </div>
                     )}
@@ -90,10 +99,11 @@ type AddressInfoSectionProps = {
     title: string;
     address: SavedAddress;
     contactName: string;
-    getStateLabel: (code: string) => string;
+    getStateLabel: (code: string, countryCode: string) => string;
+    getCountryLabel: (code: string) => string;
 };
 
-function AddressInfoSection({ title, address, contactName, getStateLabel }: AddressInfoSectionProps) {
+function AddressInfoSection({ title, address, contactName, getStateLabel, getCountryLabel }: AddressInfoSectionProps) {
     const rows = [
         { icon: FaRegCircleUser, text: contactName },
         {
@@ -102,7 +112,7 @@ function AddressInfoSection({ title, address, contactName, getStateLabel }: Addr
         },
         {
             icon: LuMapPin,
-            text: `${address.city}, ${getStateLabel(address.state)}`,
+            text: `${address.city}, ${getStateLabel(address.state, address.country)}, ${getCountryLabel(address.country)}`,
         },
         { icon: LuMap, text: address.zipCode },
     ];

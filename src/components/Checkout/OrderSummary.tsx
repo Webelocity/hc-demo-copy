@@ -4,6 +4,12 @@ import Image from 'next/image';
 import FallBackImage from '@/components/shared/FallBackImage';
 import type { CartItem } from '@/atoms/cartAtom';
 import type { CartTotals } from '@/Api/Apis';
+import { useAtomValue } from 'jotai';
+import { selectedShippingOptionAtom } from '@/atoms/shippingAtom';
+import Button from '../shared/Button';
+import { appliedDiscountIdsAtom } from '@/atoms/discountAtom';
+import { selectedAddressesAtom } from '@/atoms/checkoutSelectionAtom';
+import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
 
 type OrderSummaryProps = {
     cart: CartItem[];
@@ -12,6 +18,10 @@ type OrderSummaryProps = {
     hasShippingOrDelivery: boolean;
     hasShipping: boolean;
     hasDelivery: boolean;
+    totalsError?: Error | null;
+    onTotalsErrorDetails?: () => void;
+    contact?: CheckoutContactFormData | null;
+    allCompleted?: boolean;
     cap?: number;
 };
 
@@ -22,8 +32,54 @@ export default function OrderSummary({
     hasShippingOrDelivery,
     hasShipping,
     hasDelivery,
+    totalsError,
+    onTotalsErrorDetails,
+    contact,
+    allCompleted = false,
     cap = 5,
 }: OrderSummaryProps) {
+    const selectedShipping = useAtomValue(selectedShippingOptionAtom);
+    const discountIds = useAtomValue(appliedDiscountIdsAtom);
+    const selectedAddresses = useAtomValue(selectedAddressesAtom);
+    const handlePlaceOrder = () => {
+        const items = cart.map((ci) => ({
+            quantity: ci.quantity,
+            product: { productVariantId: ci.variant._id },
+            fulfilmentMethod: ci.fulfillmentMethod ?? 'pickup',
+        }));
+
+        const shipping = selectedAddresses?.shipping;
+        const billing = selectedAddresses?.billing ?? (selectedAddresses?.billingSameAsShipping ? selectedAddresses?.shipping : undefined);
+
+        const user = {
+            firstName: contact?.firstName ?? undefined,
+            lastName: contact?.lastName ?? undefined,
+            email: contact?.email ?? undefined,
+            phone: contact?.phoneNumber ?? undefined,
+            country: shipping?.country ?? 'CA',
+            province: shipping?.state ?? undefined,
+            city: shipping?.city ?? undefined,
+            address: shipping ? `${shipping.streetAddress}${shipping.streetAddress2 ? `, ${shipping.streetAddress2}` : ''}` : undefined,
+            zipCode: shipping?.zipCode ?? undefined,
+            billingFirstName: contact?.firstName ?? undefined,
+            billingLastName: contact?.lastName ?? undefined,
+            billingEmail: contact?.email ?? undefined,
+            billingPhone: contact?.phoneNumber ?? undefined,
+            billingCountry: billing?.country ?? undefined,
+            billingProvince: billing?.state ?? undefined,
+            billingCity: billing?.city ?? undefined,
+            billingAddress: billing ? `${billing.streetAddress}${billing.streetAddress2 ? `, ${billing.streetAddress2}` : ''}` : undefined,
+            billingZipCode: billing?.zipCode ?? undefined,
+        };
+
+        const payload = {
+            items,
+            shippingOption: selectedShipping ?? null,
+            discountsApplied: discountIds,
+            user,
+        };
+        console.log('place_order_payload', payload);
+    };
     return (
         <div className="p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[1rem]">
             <h2 className="text-[1.125rem] font-semibold">Order Summary</h2>
@@ -54,68 +110,95 @@ export default function OrderSummary({
                 ))}
             </div>
 
-            <div className="flex flex-col gap-2 pt-2 border-t border-[var(--Colors-Neutral-100)]">
-                <div className="flex items-center justify-between">
-                    <span className="text-sm text-[var(--Colors-Neutral-700)]">Subtotal</span>
-                    {isLoading ? (
-                        <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                    ) : (
-                        <span className="text-sm font-medium">
-                            ${(((totals?.subTotal ?? 0) + (totals?.subTotalDiscount ?? 0))).toFixed(2)}
-                        </span>
-                    )}
-                </div>
-
-                {(totals?.subTotalDiscount ?? 0) > 0 ? (
+            {!totalsError ? (
+                <div className="flex flex-col gap-2 pt-2 border-t border-[var(--Colors-Neutral-100)]">
                     <div className="flex items-center justify-between">
-                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
-                        <span className="text-sm font-medium">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
-                    </div>
-                ) : null}
-
-                <div className="flex items-center justify-between">
-                    <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
-                    <span className="text-sm font-medium">
+                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Subtotal</span>
                         {isLoading ? (
                             <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                         ) : (
-                            totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
+                            <span className="text-sm font-medium">
+                                ${(((totals?.subTotal ?? 0) + (totals?.subTotalDiscount ?? 0))).toFixed(2)}
+                            </span>
                         )}
-                    </span>
-                </div>
-                {hasDelivery ? (
+                    </div>
+
+                    {(totals?.subTotalDiscount ?? 0) > 0 ? (
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Discount</span>
+                            <span className="text-sm font-medium">-${(totals?.subTotalDiscount ?? 0).toFixed(2)}</span>
+                        </div>
+                    ) : null}
+
                     <div className="flex items-center justify-between">
-                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Delivery</span>
+                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
                         <span className="text-sm font-medium">
                             {isLoading ? (
                                 <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                             ) : (
-                                'Calculated at checkout'
+                                totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
                             )}
                         </span>
                     </div>
-                ) : null}
+                    {hasDelivery ? (
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Delivery</span>
+                            <span className="text-sm font-medium">
+                                {isLoading ? (
+                                    <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                                ) : (
+                                    totals?.deliveryCosts && `$${totals?.deliveryCosts.toFixed(2)}`
+                                )}
+                            </span>
+                        </div>
+                    ) : null}
 
-                {hasShipping ? (
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Shipping</span>
-                        <span className="text-sm font-medium">
+                    {hasShipping ? (
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm text-[var(--Colors-Neutral-700)]">Shipping</span>
                             {isLoading ? (
                                 <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                            ) : selectedShipping ? (
+                                <span className="text-sm font-medium">${Number(selectedShipping.price ?? 0).toFixed(2)}</span>
                             ) : (
-                                'Calculated at checkout'
+                                <span className="text-sm font-medium text-[var(--Colors-Neutral-600)]">Choose Shipping Option</span>
                             )}
+                        </div>
+                    ) : null}
+
+                    <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
+                        <span className="text-base font-bold">Total</span>
+                        <span className="text-base font-bold">
+                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0))).toFixed(2)}
                         </span>
                     </div>
-                ) : null}
-
-                <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
-                    <span className="text-base font-bold">Total</span>
-                    <span className="text-base font-bold">
-                        ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCost ?? 0))).toFixed(2)}
-                    </span>
                 </div>
-            </div>
+            ) : (
+                <div className="flex flex-col gap-2 pt-2 border-t border-[var(--Colors-Neutral-100)]">
+                    <div className="rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] p-4 text-[0.95rem] text-[var(--Colors-Error-600)]">
+                        An error occurred while calculating totals.
+                        {onTotalsErrorDetails ? (
+                            <button
+                                type="button"
+                                className="ml-2 underline text-[var(--primary-600-main)] cursor-pointer"
+                                onClick={onTotalsErrorDetails}
+                            >
+                                View more
+                            </button>
+                        ) : null}
+                    </div>
+                </div>
+            )}
+
+            <Button
+                variant="primary"
+                size="small"
+                onClick={handlePlaceOrder}
+                disabled={isLoading || !!totalsError}
+
+            >
+                Place Order
+            </Button>
         </div>
     );
 }
