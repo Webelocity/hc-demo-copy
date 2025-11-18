@@ -326,3 +326,65 @@ export const versapayConfirmMethod = async (
         return { ok: true, mocked: true };
     }
 };
+
+/**
+ * Process VersaPay payment for an order
+ * @param paymentToken - Token from VersaPay Collect.js tokenization
+ * @param orderId - Order ID from created order
+ * @param amount - Total amount to charge
+ * @param billingAddressId - Billing address ID
+ */
+export const processVersapayPayment = async (
+    paymentToken: string,
+    orderId: string,
+    amount: number,
+    billingAddressId?: string // Optional - backend will fetch from user if not provided
+): Promise<{ success: boolean; message?: string; data?: any }> => {
+    try {
+        const payload: any = {
+            paymentToken,
+            orderId,
+            amount,
+        };
+        
+        // Only include billingAddressId if provided
+        if (billingAddressId) {
+            payload.billingAddressId = billingAddressId;
+        }
+        
+        const result = await versapayConfirmMethod(payload);
+
+        // Check if payment was successful
+        if (result?.success === true || result?.ok === true) {
+            return { success: true, data: result };
+        }
+
+        return {
+            success: false,
+            message: result?.message || 'VersaPay payment processing failed',
+        };
+    } catch (error: any) {
+        console.error('VersaPay payment error:', error);
+        return {
+            success: false,
+            message: error?.message || 'Failed to process VersaPay payment',
+        };
+    }
+};
+
+/**
+ * Create a guest order
+ */
+export const CreateGuestOrder = async (
+    body: Record<string, any>
+): Promise<any> => {
+    const pathname = '/orders/create-guest-order';
+    const response = await fetchWithStoreId<any>(pathname, {
+        method: 'POST',
+        body,
+    });
+    if (!response) {
+        throw new Error('Error Creating Order');
+    }
+    return response;
+};
