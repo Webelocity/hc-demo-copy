@@ -12,8 +12,8 @@ export default function Navbar() {
     setIsMegaMenuOpen(false);
   }
   return (
-    <nav className={"relative"}>
-      <div className="hidden lg:flex baseContainer justify-between items-center py-[1rem]">
+    <nav className={"relative baseContainer py-[1rem]"}>
+      <div className="hidden lg:flex  justify-between items-center maxWidth">
         <div className="flex items-center">
           <Button
             variant={isMegaMenuOpen ? "secondary" : "outline"}

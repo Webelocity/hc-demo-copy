@@ -4,13 +4,13 @@ import Link from "next/link";
 
 export default function ServiceList() {
   return (
-    <div className="baseContainer bg-[var(--Secondary-50)] w-full py-[3rem] flex flex-col gap-[3rem]">
+    <div className="baseContainer maxWidth bg-[var(--Secondary-50)] w-full py-[3rem] flex flex-col gap-[3rem]">
       <div className="flex flex-col w-full">
         <h1 className="text-[2.5rem] font-bold text-center text-black">
           Our Comprehensive Services
         </h1>
         <p className="text-[1.5rem] text-[var(--Neutral-500)] font-normal text-center">
-           for Contractors & Homeowners
+          for Contractors & Homeowners
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1.75rem]">

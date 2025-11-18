@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   transpilePackages: ['mui-tel-input'],
   poweredByHeader: false,
+
   images: {
     remotePatterns: [
       {

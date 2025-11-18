@@ -40,7 +40,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
 
     return (
         <div className={`baseContainer ${styles.megaMenu} ${isOpen ? styles.open : ''}`}>
-            <div className="w-full flex bg-white border-[1.5px] border-solid border-[var(--Secondary-100)] rounded-[var(--Radius-md)] p-[0.5rem]">
+            <div className="w-full maxWidth flex bg-white border-[1.5px] border-solid border-[var(--Secondary-100)] rounded-[var(--Radius-md)] p-[0.5rem]">
                 {/* Left side - Categories */}
                 <div className="flex flex-col gap-[0.5rem] p-[0.5rem] flex-1 border-r border-solid border-r-[var(--Secondary-100)]">
                     {isLoading ? (

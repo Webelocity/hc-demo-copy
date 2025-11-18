@@ -50,7 +50,7 @@ export default function Categories() {
     ]
     return (
         <div className="baseContainer !my-[2.5rem]">
-            <div className="p-[2.5rem] rounded-[var(--Radius-md)] bg-[var(--Teritary-100)] flex flex-col gap-[3rem]">
+            <div className="p-[2.5rem] maxWidth rounded-[var(--Radius-md)] bg-[var(--Teritary-100)] flex flex-col gap-[3rem]">
                 <h1 className="text-[2.5rem] font-bold">Featured Categories </h1>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[1.25rem] justify-center">
                     {/* category card */}

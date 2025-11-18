@@ -65,9 +65,7 @@
 html {
   font-size: calc(1px * var(--base)) !important;
   font-family: var(--font-figtree);
-  @media (min-width: 1921px) {
-    font-size: 0.83333vw !important;
-  }
+ 
 }
 
 body {
@@ -86,7 +84,16 @@ body {
     padding-left: 6%;
     padding-right: 6%;
   }
+  
+
+  
 }
+.maxWidth {
+  max-width: 1920px;
+  margin: auto;
+}
+
+
 
 /* Gallery slides - show only active or targeted slide */
 .slides .slide {

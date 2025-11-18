@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function QuoteRequest() {
     return (
         <div className="baseContainer py-[2.5rem]">
-            <div className=" bg-[var(--secondary-500-main)] flex flex-col md:flex-row justify-between items-center gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
+            <div className="maxWidth bg-[var(--secondary-500-main)] flex flex-col md:flex-row justify-between items-center gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
                 <div className="flex flex-col gap-[1.5rem] flex-[1.8] p-[2.5rem]">
                     <h3 className="text-[2.5rem] font-bold text-white text-center md:text-start">
                         Quote Request

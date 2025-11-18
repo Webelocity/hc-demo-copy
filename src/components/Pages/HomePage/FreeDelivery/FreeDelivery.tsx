@@ -19,7 +19,7 @@ export default function FreeDelivery() {
     ];
     return (
         <div className="baseContainer py-[5rem]">
-            <div className="flex flex-col ">
+            <div className="flex flex-col maxWidth">
                 <div className="flex flex-col-reverse lg:flex-row justify-between  items-center p-[2.5rem] w-full bg-[var(--Teritary-100)] rounded-t-[var(--Radius-md)] border-t border-r border-l border-[var(--Teritary-100)]">
                     <div className="flex flex-col gap-[1rem] w-full lg:w-1/2 flex-[2]">
                         <p className="text-[2.5rem] font-bold">Free Delivery</p>

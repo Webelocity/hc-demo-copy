@@ -3,7 +3,7 @@ import Button from "@/components/shared/Button";
 export default function Paint() {
     return (
         <div className="baseContainer py-[2.5rem] ">
-            <div className="p-[2.5rem] flex flex-col gap-[1.5rem] aspect-[1352/288] bg-[url('/assets/image/HomePage/Paint.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat">
+            <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] aspect-[1352/288] bg-[url('/assets/image/HomePage/Paint.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat">
                 <h1 className="text-[2.5rem] font-bold text-white text-center">
                     Customize Your Paint Mixing for the Perfect Color
                 </h1>

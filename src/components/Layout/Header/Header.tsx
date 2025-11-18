@@ -32,8 +32,8 @@ export default function Header() {
 
     return (
         <>
-            <div className="relative">
-                <header className="baseContainer py-[1rem] flex items-center justify-between gap-[1.5rem]">
+            <div className="relative baseContainer py-[1rem]">
+                <header className="maxWidth flex items-center justify-between gap-[1.5rem]">
 
                     <div className="flex items-center gap-[1rem]">
                         {isDrawerOpen ? (

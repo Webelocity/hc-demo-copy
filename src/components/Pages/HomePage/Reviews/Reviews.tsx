@@ -56,7 +56,7 @@ export default function Reviews() {
     ]
     return (
         <div className="baseContainer py-[5rem]">
-            <div className="flex flex-col gap-[3rem] bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] p-[2.5rem]">
+            <div className="flex maxWidth flex-col gap-[3rem] bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] p-[2.5rem]">
 
                 <p className="font-bold text-[2.5rem] text-black">What Our Customers Say</p>
                 <ReUsableSwiper

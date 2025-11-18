@@ -18,7 +18,7 @@ export default function Rent() {
     ];
     return (
         <div className="baseContainer py-[2.5rem]">
-            <div className="p-[2.5rem] flex flex-col lg:flex-row justify-between items-center gap-[5rem] aspect-[1352/457] bg-[url('/assets/image/HomePage/Tools.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat">
+            <div className="p-[2.5rem] maxWidth flex flex-col lg:flex-row justify-between items-center gap-[5rem] aspect-[1352/457] bg-[url('/assets/image/HomePage/Tools.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat">
                 <div className="flex flex-col gap-[1.5rem] flex-[1]">
                     <p className="font-bold text-[2.5rem] text-white">Rent the Tools You Need Without Breaking the Bank</p>
                     <p className="text-[var(--Neutral-200)] text-[1.125rem]">Complete your project without buying expensive equipment! Browse our growing selection of rental tools — from pneumatic nailers to shop vacs. Rent for a day, a week, or longer..</p>
