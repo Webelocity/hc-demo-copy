@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import type { CheckoutSelectedAddresses } from '@/types/address';
 
 export interface CheckoutContactFormData {
     firstName: string;

@@ -5,10 +5,10 @@ import {
   fetchProductsByCategoryId,
   getCategories,
 } from '@/Api/Apis';
-import debounce from '@/util/debounce';
+import useDebounce from '@/hooks/useDebounce';
 import { CircularProgress, MenuItem, Select, TextField } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { useMemo, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { CiSearch } from 'react-icons/ci';
 import { GoChevronDown } from 'react-icons/go';
 import styles from './SearchBar.module.css';
@@ -18,21 +18,15 @@ import { useRouter } from 'next/navigation';
 export default function Searchbar() {
   const [selectedOption, setSelectedOption] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const debounceSearch = useMemo(() => {
-    return debounce((term: string) => {
-      setDebouncedSearchTerm(term);
-    }, 500);
-  }, []);
+  const debouncedSearchTerm = useDebounce<string>(searchTerm, 500);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const term = event.target.value;
     setSearchTerm(term);
-    debounceSearch(term);
     setIsDropdownOpen(true);
   };
 
