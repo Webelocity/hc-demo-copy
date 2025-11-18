@@ -10,6 +10,11 @@ import Button from '../shared/Button';
 import { appliedDiscountIdsAtom } from '@/atoms/discountAtom';
 import { selectedAddressesAtom } from '@/atoms/checkoutSelectionAtom';
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
+import { versapayTokenAtom, versapayValidAtom } from '@/atoms/paymentAtom';
+import { useState } from 'react';
+import { processVersapayPayment } from '@/Api/Apis';
+import { toast } from 'react-toastify';
+import { useRouter } from 'next/navigation';
 
 type OrderSummaryProps = {
     cart: CartItem[];
@@ -41,7 +46,12 @@ export default function OrderSummary({
     const selectedShipping = useAtomValue(selectedShippingOptionAtom);
     const discountIds = useAtomValue(appliedDiscountIdsAtom);
     const selectedAddresses = useAtomValue(selectedAddressesAtom);
-    const handlePlaceOrder = () => {
+    const versapayToken = useAtomValue(versapayTokenAtom);
+    const versapayValid = useAtomValue(versapayValidAtom);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const router = useRouter();
+
+    const handlePlaceOrder = async () => {
         const items = cart.map((ci) => ({
             quantity: ci.quantity,
             product: { productVariantId: ci.variant._id },
@@ -51,34 +61,111 @@ export default function OrderSummary({
         const shipping = selectedAddresses?.shipping;
         const billing = selectedAddresses?.billing ?? (selectedAddresses?.billingSameAsShipping ? selectedAddresses?.shipping : undefined);
 
-        const user = {
-            firstName: contact?.firstName ?? undefined,
-            lastName: contact?.lastName ?? undefined,
-            email: contact?.email ?? undefined,
-            phone: contact?.phoneNumber ?? undefined,
-            country: shipping?.country ?? 'CA',
-            province: shipping?.state ?? undefined,
-            city: shipping?.city ?? undefined,
-            address: shipping ? `${shipping.streetAddress}${shipping.streetAddress2 ? `, ${shipping.streetAddress2}` : ''}` : undefined,
-            zipCode: shipping?.zipCode ?? undefined,
-            billingFirstName: contact?.firstName ?? undefined,
-            billingLastName: contact?.lastName ?? undefined,
-            billingEmail: contact?.email ?? undefined,
-            billingPhone: contact?.phoneNumber ?? undefined,
-            billingCountry: billing?.country ?? undefined,
-            billingProvince: billing?.state ?? undefined,
-            billingCity: billing?.city ?? undefined,
-            billingAddress: billing ? `${billing.streetAddress}${billing.streetAddress2 ? `, ${billing.streetAddress2}` : ''}` : undefined,
-            billingZipCode: billing?.zipCode ?? undefined,
-        };
+        // For pickup orders, we need minimal billing address for payment processing
+        // Use contact info if no explicit billing address
+        const billingInfo = hasShipping 
+            ? billing // Use actual billing for shipping orders
+            : { // For pickup, create minimal billing from contact
+                country: 'CA',
+                state: contact?.province || 'ON',
+                city: contact?.city || '',
+                streetAddress: contact?.address || '',
+                zipCode: contact?.postalCode || ''
+            };
 
+        // Build the order payload matching the backend DTO structure
         const payload = {
-            items,
-            shippingOption: selectedShipping ?? null,
-            discountsApplied: discountIds,
-            user,
+            // Profile type
+            profileType: 'personal',
+            
+            // User information
+            firstName: contact?.firstName,
+            lastName: contact?.lastName,
+            email: contact?.email,
+            phone: contact?.phoneNumber,
+            
+            // Address information (only for shipping orders)
+            country: shipping?.country ?? 'CA',
+            province: shipping?.state,
+            city: shipping?.city,
+            address: shipping ? `${shipping.streetAddress}${shipping.streetAddress2 ? `, ${shipping.streetAddress2}` : ''}` : undefined,
+            zipCode: shipping?.zipCode,
+            
+            // Billing address - always include for payment processing
+            billingCountry: billingInfo?.country || 'CA',
+            billingProvince: billingInfo?.state || 'ON',
+            billingCity: billingInfo?.city || 'Toronto',
+            billingAddress: billingInfo ? `${billingInfo.streetAddress}${billingInfo.streetAddress2 ? `, ${billingInfo.streetAddress2}` : ''}` : '123 Main St',
+            billingZipCode: billingInfo?.zipCode || 'M5H 2N2',
+            
+            // Order details
+            selectedProducts: items,
+            bundles: [],
+            customProducts: [],
+            discountsApplied: discountIds.map(id => ({ _id: id })),
+            shippingOption: selectedShipping ? {
+                carrierCode: selectedShipping.carrierCode,
+                serviceCode: selectedShipping.serviceCode,
+                metadata: selectedShipping.metadata,
+                objectId: selectedShipping.objectId,
+                shipmentGateway: selectedShipping.shipmentGateway,
+                version: selectedShipping.version,
+            } : undefined,
+            
+            // Payment information
+            orderPaymentMethod: versapayValid ? 'Versapay' : 'Cash',
+            deliveryOption: hasShipping ? 'shipping' : 'pickup',
+            isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
         };
+        
         console.log('place_order_payload', payload);
+        setIsProcessing(true);
+
+        try {
+            // Import CreateGuestOrder dynamically to avoid SSR issues
+            const { CreateGuestOrder } = await import('@/Api/Apis');
+            
+            // Create the order first
+            const order = await CreateGuestOrder(payload);
+            
+            if (!order?._id) {
+                throw new Error('Failed to create order - no order ID returned');
+            }
+
+            console.log('Order created successfully:', order._id);
+
+            // If VersaPay payment is selected and token is available, process payment
+            if (versapayValid && versapayToken) {
+                console.log('Processing VersaPay payment for order:', order._id);
+                
+                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0);
+                
+                // The backend will automatically fetch the billing address from the user
+                const paymentResult = await processVersapayPayment(
+                    versapayToken,
+                    order._id,
+                    grandTotal
+                );
+
+                if (!paymentResult.success) {
+                    throw new Error(paymentResult.message || 'VersaPay payment failed');
+                }
+
+                console.log('VersaPay payment processed successfully');
+            }
+
+            // Success - redirect to order confirmation or homepage
+            toast.success('Order placed successfully!');
+            // TODO: Create order confirmation page at /orderconfirmation/[id]
+            // For now, redirect to homepage
+            router.push('/');
+            
+        } catch (error: any) {
+            console.error('Error placing order:', error);
+            toast.error(error?.message || 'Failed to place order. Please try again.');
+        } finally {
+            setIsProcessing(false);
+        }
     };
     return (
         <div className="p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[1rem]">
@@ -194,10 +281,9 @@ export default function OrderSummary({
                 variant="primary"
                 size="small"
                 onClick={handlePlaceOrder}
-                disabled={isLoading || !!totalsError}
-
+                disabled={isLoading || !!totalsError || isProcessing || !allCompleted}
             >
-                Place Order
+                {isProcessing ? 'Processing...' : 'Place Order'}
             </Button>
         </div>
     );

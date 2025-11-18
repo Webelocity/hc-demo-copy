@@ -248,12 +248,18 @@ export default function VersapayComponent({ setIsVersapayValid, setVersapayToken
                 </div>
 
                 <button
-                    className="px-3 py-2 rounded-md bg-[var(--primary-600-main)] text-white text-sm disabled:opacity-60"
+                    className="w-full px-4 py-3 rounded-lg font-semibold text-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={{
+                        backgroundColor: loading || !scriptLoaded ? '#9CA3AF' : '#065f46',
+                        color: '#ffffff',
+                        border: 'none',
+                        cursor: loading || !scriptLoaded ? 'not-allowed' : 'pointer',
+                    }}
                     onClick={handleGenerateToken}
                     type="submit"
                     disabled={loading || !scriptLoaded}
                 >
-                    {loading ? "Validating..." : !scriptLoaded ? "Loading..." : "Validate Payment Card"}
+                    {loading ? "Validating..." : !scriptLoaded ? "Loading Payment Form..." : "Validate Payment Card"}
                 </button>
             </form>
 
