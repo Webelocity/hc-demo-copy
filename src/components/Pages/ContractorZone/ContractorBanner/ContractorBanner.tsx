@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function ContractorBanner() {
     return (
         <div className="baseContainer py-[2.5rem] ">
-            <div className="p-[2.5rem] flex flex-col justify-start items-center lg:items-start aspect-[1304/416] bg-[url('/assets/image/ContractorZone/contractorzone.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat ">
+            <div className="p-[2.5rem] maxWidth flex flex-col justify-start items-center lg:items-start aspect-[1304/416] bg-[url('/assets/image/ContractorZone/contractorzone.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat ">
                 <h1 className="text-[3rem] font-bold text-white leading-[1.2] text-center lg:text-start w-full lg:w-[50%] ">
                     Exclusive Access for
                 </h1>

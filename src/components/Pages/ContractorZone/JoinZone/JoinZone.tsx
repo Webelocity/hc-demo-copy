@@ -20,7 +20,7 @@ export default function JoinZone() {
 
   return (
     <div className="baseContainer py-[2.5rem]">
-      <div className="relative rounded-[var(--Radius-md)] overflow-hidden">
+      <div className="relative maxWidth rounded-[var(--Radius-md)] overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <Image

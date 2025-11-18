@@ -169,7 +169,7 @@ export default function OrderSummary({
                     <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
                         <span className="text-base font-bold">Total</span>
                         <span className="text-base font-bold">
-                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0))).toFixed(2)}
+                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (selectedShipping?.price ?? 0))).toFixed(2)}
                         </span>
                     </div>
                 </div>

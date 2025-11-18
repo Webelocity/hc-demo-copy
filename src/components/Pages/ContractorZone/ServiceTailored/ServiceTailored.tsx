@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function ServiceTailored() {
     return (
         <div className="baseContainer py-[2.5rem]">
-            <div className="flex flex-col items-center gap-[1.5rem] bg-[var(--Teritary-100)] rounded-[var(--Radius-md)] p-[2.5rem]">
+            <div className="maxWidth flex flex-col items-center gap-[1.5rem] bg-[var(--Teritary-100)] rounded-[var(--Radius-md)] p-[2.5rem]">
                 <div className="flex flex-col items-center">
                     <p className="text-[2.5rem] font-bold">Services Tailored to the Pro</p>
                     <p className="text-[1.5rem] text-[var(--Neutral-500)]">Contractors, Builders & Commercial Customers</p>

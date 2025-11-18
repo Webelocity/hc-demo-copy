@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function ReachOut() {
   return (
     <div className="baseContainer py-[2.5rem] ">
-      <div className="flex flex-col md:flex-row gap-[2.5rem] p-[1.5rem] md:p-[2.5rem] bg-[var(--primary-500-main)] rounded-[var(--Radius-md)]">
+      <div className="maxWidth flex flex-col md:flex-row gap-[2.5rem] p-[1.5rem] md:p-[2.5rem] bg-[var(--primary-500-main)] rounded-[var(--Radius-md)]">
         <div className="flex-[1] flex flex-col gap-[1rem]">
           <h3 className="text-[2.5rem] text-white font-bold text-start">
             Reach Out to Our Showroom & Design Center
