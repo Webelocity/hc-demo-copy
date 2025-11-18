@@ -60,14 +60,14 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
 
     const canDecrement = quantity > 1;
     const canIncrement = quantity < maxQty;
-
+    const thumbnail = item.variant.productMedia[0]?.file || item.variant.thumbnail?.file;
     return (
         <div className="flex flex-col gap-[0.5rem] p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)]">
             <div className="flex gap-[0.5rem]">
                 <div className="flex-1 relative cursor-pointer" onClick={handleProductClick}>
-                    {item.variant.thumbnail?.file ? (
+                    {thumbnail ? (
                         <Image
-                            src={item.variant.thumbnail.file}
+                            src={thumbnail}
                             alt={item.variant.name}
                             fill
                             className="object-contain"

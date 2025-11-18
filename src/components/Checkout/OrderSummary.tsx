@@ -88,9 +88,9 @@ export default function OrderSummary({
                 {cart.slice(0, cap).map((item: CartItem) => (
                     <div key={`${item.variant._id}-${item.fulfillmentMethod ?? 'none'}`} className="flex items-center gap-[0.75rem]">
                         <div className="relative h-14 w-14 rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] overflow-hidden bg-white">
-                            {item.variant.thumbnail?.file ? (
+                            {item.variant.productMedia[0]?.file ? (
                                 <Image
-                                    src={item.variant.thumbnail.file}
+                                    src={item.variant.productMedia[0].file}
                                     alt={item.variant.name}
                                     fill
                                     className="object-contain"

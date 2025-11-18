@@ -79,9 +79,9 @@ function MiniItems({ items }: { items: CartItem[] }) {
             {items.map((item) => (
                 <div key={`${item.variant._id}-${item.fulfillmentMethod ?? 'none'}`} className="flex items-center gap-[0.5rem]">
                     <div className="relative h-10 w-10 rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] overflow-hidden bg-white shrink-0">
-                        {item.variant.thumbnail?.file ? (
+                        {item.variant.productMedia[0]?.file ? (
                             <Image
-                                src={item.variant.thumbnail.file}
+                                src={item.variant.productMedia[0].file}
                                 alt={item.variant.name}
                                 fill
                                 className="object-contain"

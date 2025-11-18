@@ -9,13 +9,14 @@ type FulfillmentItemProps = {
 };
 
 export default function FulfillmentItem({ item }: FulfillmentItemProps) {
+    const thumbnail = item.variant.productMedia[0]?.file
     return (
         <div className="flex flex-col gap-[0.5rem]">
             <div className="flex gap-[0.5rem]">
                 <div className="relative h-16 w-16 rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] overflow-hidden bg-white shrink-0">
-                    {item.variant.thumbnail?.file ? (
+                    {thumbnail ? (
                         <Image
-                            src={item.variant.thumbnail.file}
+                            src={thumbnail}
                             alt={item.variant.name}
                             fill
                             className="object-contain"
