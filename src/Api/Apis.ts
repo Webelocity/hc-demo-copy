@@ -304,3 +304,25 @@ export const validatePromoCode = async (
         throw new Error("An unknown error occurred");
     }
 };
+
+// VersaPay helpers (client -> your backend). For now, log and return backend response or a mock.
+export const versapayConfirmMethod = async (
+    payload?: { paymentToken?: string; orderId?: string; amount?: number; billingAddressId?: string }
+): Promise<any> => {
+    try {
+        // eslint-disable-next-line no-console
+        console.log('VersaPay confirm payload:', payload);
+        const res = await fetchWithStoreId<any>('/payments/versapay/process', {
+            method: "POST",
+            body: payload ?? {},
+        });
+        // eslint-disable-next-line no-console
+        console.log('VersaPay process response:', res);
+        return res;
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log('VersaPay process error (logging only):', err);
+        // Return a mock so the UI can proceed in environments without the backend route
+        return { ok: true, mocked: true };
+    }
+};

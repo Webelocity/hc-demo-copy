@@ -60,7 +60,6 @@ export default function FulfillmentSection({ isCompleted, onComplete, setOpenByI
             },
         };
     }, [effectiveShippingAddress, shippingItems]);
-    console.log('requestBody', requestBody);
     const shippingQuery = useQuery({
         queryKey: ['shippingOptions', requestBody],
         queryFn: async () => {
