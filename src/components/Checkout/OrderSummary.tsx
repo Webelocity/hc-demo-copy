@@ -110,7 +110,55 @@ export default function OrderSummary({
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
         };
 
+
         console.log('place_order_payload', payload);
+        setIsProcessing(true);
+
+        try {
+            // Import CreateGuestOrder dynamically to avoid SSR issues
+            const { CreateGuestOrder } = await import('@/Api/Apis');
+
+            // Create the order first
+            const order = await CreateGuestOrder(payload);
+
+            if (!order?._id) {
+                throw new Error('Failed to create order - no order ID returned');
+            }
+
+            console.log('Order created successfully:', order._id);
+
+            // If VersaPay payment is selected and token is available, process payment
+            if (versapayValid && versapayToken) {
+                console.log('Processing VersaPay payment for order:', order._id);
+
+                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
+
+                // The backend will automatically fetch the billing address from the user
+                const paymentResult = await processVersapayPayment(
+                    versapayToken,
+                    order._id,
+                    grandTotal
+                );
+
+                if (!paymentResult.success) {
+                    throw new Error(paymentResult.message || 'VersaPay payment failed');
+                }
+
+                console.log('VersaPay payment processed successfully');
+            }
+
+            // Success - redirect to order confirmation or homepage
+            toast.success('Order placed successfully!');
+            // TODO: Create order confirmation page at /orderconfirmation/[id]
+            // For now, redirect to homepage
+            router.push('/');
+
+        } catch (error: any) {
+            console.error('Error placing order:', error);
+            toast.error(error?.message || 'Failed to place order. Please try again.');
+        } finally {
+            setIsProcessing(false);
+        }
         setIsProcessing(true);
 
         try {
@@ -249,6 +297,7 @@ export default function OrderSummary({
                         <span className="text-base font-bold">Total</span>
                         <span className="text-base font-bold">
                             ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (selectedShipping?.price ?? 0))).toFixed(2)}
+                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0))).toFixed(2)}
                         </span>
                     </div>
                 </div>
