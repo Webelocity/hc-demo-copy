@@ -20,18 +20,21 @@ export default function ProductCard({ product }: ProductCardProps) {
     const wishlist = useAtomValue(wishlistAtom);
 
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
+    const selectedVariant = product?.lowestPriceVariant || product?.productVariants?.[0];
+    const isSelectedVariantOutOfStock = Boolean(
+        isTrackQuantity && selectedVariant && ((selectedVariant.inventoryCount ?? 0) <= 0)
+    );
 
     const renderStock = () => {
         if (isTrackQuantity) {
-            if (product?.inventoryCount > 0) {
+            if (product?.inventoryCount && product.inventoryCount > 0) {
                 return <div className="flex justify-start items-center gap-[0.5rem]">
                     <span className="text-[0.75rem] font-semibold">In stock</span>
                 </div>
-            } else {
-                return <div className="flex justify-start items-center gap-[0.5rem]">
-                    <span className="text-[0.75rem] font-semibold">Out of stock</span>
-                </div>
             }
+            return <div className="flex justify-start items-center gap-[0.5rem]">
+                <span className="text-[0.75rem] font-semibold">Out of stock</span>
+            </div>
         }
     }
     const showVariants = () => {
@@ -49,9 +52,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!product) return;
         e.stopPropagation();
+        if (isSelectedVariantOutOfStock) return;
 
-        // Use lowestPriceVariant if available, otherwise fall back to first variant
-        const variant = product.lowestPriceVariant || product.productVariants?.[0];
+        // Use lowestPriceVariant if available, otherwise fall back to first variant (computed above)
+        const variant = selectedVariant;
 
         if (!variant) {
             console.error('No variant available for product:', product._id);

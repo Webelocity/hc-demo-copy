@@ -11,7 +11,7 @@ import { appliedDiscountIdsAtom, appliedDiscountsAtom } from '@/atoms/discountAt
 import { selectedAddressesAtom } from '@/atoms/checkoutSelectionAtom';
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
 import { versapayCardSummaryAtom, versapayTokenAtom, versapayValidAtom } from '@/atoms/paymentAtom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { processVersapayPayment } from '@/Api/Apis';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
@@ -58,6 +58,13 @@ export default function OrderSummary({
     const setVersapaySummary = useSetAtom(versapayCardSummaryAtom);
     const [isProcessing, setIsProcessing] = useState(false);
     const router = useRouter();
+
+    // Clear any selected shipping option if no items require shipping
+    useEffect(() => {
+        if (!hasShipping && selectedShipping) {
+            setSelectedShipping(null);
+        }
+    }, [hasShipping, selectedShipping, setSelectedShipping]);
 
     const handlePlaceOrder = async () => {
         const items = cart.map((ci) => ({
@@ -187,6 +194,18 @@ export default function OrderSummary({
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-[0.95rem] font-medium truncate">{item.variant.name}</p>
+                            <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
+                                SKU: <span className="!text-black font-normal">{item.variant.sku}</span>
+                            </p>
+                            {item.variant.attribute ? (
+                                <div className="flex flex-wrap gap-x-2">
+                                    {Object.entries(item.variant.attribute).map(([key, value]) => (
+                                        <p key={key} className="text-[0.75rem] text-[var(--Colors-Neutral-700)]">
+                                            {key}: {String(value)}
+                                        </p>
+                                    ))}
+                                </div>
+                            ) : null}
                             <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">Qty: {item.quantity}</p>
                         </div>
                         <div className="text-[0.95rem] font-semibold">
@@ -255,7 +274,7 @@ export default function OrderSummary({
                     <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
                         <span className="text-base font-bold">Total</span>
                         <span className="text-base font-bold">
-                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (selectedShipping?.price ?? 0))).toFixed(2)}
+                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0))).toFixed(2)}
                         </span>
                     </div>
                 </div>

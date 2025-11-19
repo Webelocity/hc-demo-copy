@@ -92,6 +92,168 @@ export default function OrderPage() {
 
     const money = (val?: number) => `$${Number(val ?? 0).toFixed(2)}`;
 
+    function SkeletonLine({ className = "" }: { className?: string }) {
+        return <div className={`animate-pulse rounded bg-[var(--Colors-Neutral-100)] ${className}`} />;
+    }
+
+    function HeaderSkeleton() {
+        return (
+            <div className="flex flex-col items-center justify-center gap-[1rem]">
+                <div className="h-16 w-16 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                <SkeletonLine className="h-5 w-40" />
+                <SkeletonLine className="h-8 w-[70%] max-w-[30rem]" />
+                <SkeletonLine className="h-4 w-[80%] max-w-[40rem]" />
+                <SkeletonLine className="h-4 w-[70%] max-w-[32rem]" />
+                <div className="h-10 w-44 rounded bg-[var(--primary-500-main)]/20 animate-pulse" />
+            </div>
+        );
+    }
+
+    function ItemRowSkeleton() {
+        return (
+            <div className="flex items-start gap-[0.75rem] rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] p-[0.75rem] bg-white">
+                <div className="h-14 w-14 rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] bg-[var(--Colors-Neutral-100)] animate-pulse shrink-0" />
+                <div className="flex-1 flex items-start justify-between gap-[0.5rem] min-w-0">
+                    <div className="flex-1 flex flex-col gap-[0.4rem] min-w-0">
+                        <SkeletonLine className="h-4 w-[70%]" />
+                        <SkeletonLine className="h-3 w-[40%]" />
+                        <SkeletonLine className="h-3 w-[60%]" />
+                    </div>
+                    <div className="flex flex-col items-end gap-[0.4rem] shrink-0">
+                        <SkeletonLine className="h-3 w-12" />
+                        <SkeletonLine className="h-4 w-16" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function ItemsSkeleton() {
+        return (
+            <section className="p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)]">
+                <div className="mb-[0.75rem]">
+                    <SkeletonLine className="h-5 w-28" />
+                </div>
+                <div className="flex flex-col gap-[0.75rem]">
+                    <div className="rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)]">
+                        <header className="flex items-center justify-between gap-[0.75rem] p-[0.75rem]">
+                            <SkeletonLine className="h-4 w-28" />
+                            <SkeletonLine className="h-4 w-16" />
+                        </header>
+                        <div className="p-[0.75rem] border-t border-[var(--Colors-Neutral-100)] flex flex-col gap-[0.75rem]">
+                            <ItemRowSkeleton />
+                            <ItemRowSkeleton />
+                            <ItemRowSkeleton />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    function OrderSummarySkeleton() {
+        return (
+            <div className="flex-1 sticky top-[2rem] h-fit p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[1rem]">
+                <SkeletonLine className="h-5 w-40" />
+                <div className="flex flex-col gap-2 pt-1">
+                    <div className="flex items-center justify-between">
+                        <SkeletonLine className="h-4 w-24" />
+                        <SkeletonLine className="h-4 w-16" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <SkeletonLine className="h-4 w-24" />
+                        <SkeletonLine className="h-4 w-16" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <SkeletonLine className="h-4 w-16" />
+                        <SkeletonLine className="h-4 w-16" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <SkeletonLine className="h-4 w-20" />
+                        <SkeletonLine className="h-4 w-16" />
+                    </div>
+                    <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
+                        <SkeletonLine className="h-5 w-16" />
+                        <SkeletonLine className="h-5 w-20" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    function FulfillmentSkeleton() {
+        return (
+            <section className="order-1 lg:order-2 flex-1 p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[0.75rem]">
+                <SkeletonLine className="h-5 w-40" />
+                <div className="rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] p-[0.75rem] flex flex-col gap-[0.75rem]">
+                    <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                            <SkeletonLine className="h-6 w-10" />
+                            <SkeletonLine className="h-4 w-40" />
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <SkeletonLine className="h-4 w-16" />
+                            <SkeletonLine className="h-4 w-20" />
+                        </div>
+                    </div>
+                    <div className="border-t border-[var(--Colors-Neutral-100)] pt-[0.75rem]">
+                        <div className="grid grid-cols-1 gap-[0.5rem] sm:grid-cols-2">
+                            <SkeletonLine className="h-9 w-full rounded-xl" />
+                            <SkeletonLine className="h-9 w-full rounded-xl" />
+                            <SkeletonLine className="h-9 w-full rounded-xl" />
+                            <SkeletonLine className="h-9 w-full rounded-xl" />
+                            <SkeletonLine className="h-9 w-full rounded-xl" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    function RatingSkeleton() {
+        return (
+            <section className="order-2 lg:order-1 flex-1 p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col items-center gap-[1rem]">
+                <SkeletonLine className="h-6 w-[80%] max-w-[28rem]" />
+                <div className="flex items-center justify-center gap-2">
+                    <div className="h-10 w-10 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                    <div className="h-10 w-10 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                    <div className="h-10 w-10 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                    <div className="h-10 w-10 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                    <div className="h-10 w-10 rounded-full bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                </div>
+                <div className="h-10 w-32 rounded bg-[var(--primary-500-main)]/20 animate-pulse" />
+            </section>
+        );
+    }
+
+    const isPending = isOrderLoading || !fetchedOrder;
+
+    if (isPending) {
+        return (
+            <div className="baseContainer py-[2.5rem]">
+                <div className="maxWidth flex flex-col gap-[2rem]">
+                    <HeaderSkeleton />
+
+                    <div className="flex flex-col lg:flex-row gap-[1.5rem]">
+                        <div className="flex-[2] flex flex-col gap-[1rem]">
+                            <ItemsSkeleton />
+                        </div>
+                        <aside className="w-full lg:w-[28rem] flex-shrink-0">
+                            <OrderSummarySkeleton />
+                        </aside>
+                    </div>
+
+                    <div className="border-t border-[var(--Colors-Neutral-100)]" />
+
+                    <div className="flex flex-col lg:flex-row gap-[1.5rem]">
+                        <RatingSkeleton />
+                        <FulfillmentSkeleton />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="baseContainer py-[2.5rem]">
             <div className="maxWidth flex flex-col gap-[2rem]">

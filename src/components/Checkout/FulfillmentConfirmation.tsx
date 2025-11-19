@@ -75,7 +75,7 @@ export default function FulfillmentConfirmation({ cart, deliveryCost }: Fulfillm
 
 function MiniItems({ items }: { items: CartItem[] }) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-[0.5rem]">
+        <div className="grid grid-cols-1 gap-[0.5rem]">
             {items.map((item) => (
                 <div key={`${item.variant._id}-${item.fulfillmentMethod ?? 'none'}`} className="flex items-center gap-[0.5rem]">
                     <div className="relative h-10 w-10 rounded-[var(--Radius-xs)] border border-[var(--Colors-Neutral-100)] overflow-hidden bg-white shrink-0">
