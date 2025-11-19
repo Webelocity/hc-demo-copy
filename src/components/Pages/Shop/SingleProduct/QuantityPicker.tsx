@@ -11,16 +11,22 @@ import Image from 'next/image';
 import { useAtom, useSetAtom } from 'jotai';
 import { cartAtom, addToCartAtom } from '@/atoms/cartAtom';
 
+import { wishlistAtom, toggleWishlistAtom } from '@/atoms/wishlistAtom';
+import { FaHeart } from "react-icons/fa";
+import { LuHeart } from "react-icons/lu";
+
 export default function QuantityPicker({
     productId,
     variantId,
     quantity,
-    selectedVariant
+    selectedVariant,
+    product
 }: {
     productId: string;
     variantId: string;
     quantity: number;
     selectedVariant: ProductVariant | undefined;
+    product: Product;
 }) {
     const router = useRouter();
     const params = useSearchParams();
@@ -69,6 +75,16 @@ export default function QuantityPicker({
             quantity: localQty,
             fulfillmentMethod: selectedFulfillmentMethod,
         });
+    }
+
+    const [wishlist] = useAtom(wishlistAtom);
+    const toggleWishlist = useSetAtom(toggleWishlistAtom);
+    const isWishlisted = wishlist.some((item) => item._id === product?._id);
+
+    const handleWishlistToggle = () => {
+        if (product) {
+            toggleWishlist(product);
+        }
     }
 
     return (
@@ -126,7 +142,13 @@ export default function QuantityPicker({
                     </button>
                 </div>
                 <Button className='flex-[1.5]' variant="primary" onClick={addToCart}>   <LuShoppingCart className="text-xl cursor-pointer" />Add to cart</Button>
-                <Button className='flex-[0.3]' variant="primary" >  <Image className='!relative !w-[1.5rem] !h-[1.5rem]' src="/assets/image/Shop/clipboard.svg" alt="heart" fill /> </Button>
+                <Button className='flex-[0.3]' variant="primary" onClick={handleWishlistToggle}>
+                    {isWishlisted ? (
+                        <FaHeart className="text-xl text-red-500" />
+                    ) : (
+                        <LuHeart className="text-xl text-white" />
+                    )}
+                </Button>
             </div>
         </>
 

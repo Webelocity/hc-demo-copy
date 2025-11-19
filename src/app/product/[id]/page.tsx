@@ -113,6 +113,7 @@ export default async function ProductPage({
                             variantId={variantId}
                             quantity={qty}
                             selectedVariant={selectedVariant}
+                            product={product}
                         />
                         <BulkTable product={product} />
 

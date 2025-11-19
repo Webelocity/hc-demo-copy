@@ -67,7 +67,40 @@ export const addToCartAtom = atom(null, (get, set, payload: AddToCartPayload) =>
         console.log('cart (next)', next);
         return next;
     });
-    // Open the cart drawer whenever an item is added
+    set(cartDrawerOpenAtom, true);
+});
+
+export const addAllToCartAtom = atom(null, (get, set, items: AddToCartPayload[]) => {
+    set(cartAtom, (prev) => {
+        const next = [...prev];
+        items.forEach(({ productId, variant, quantity, fulfillmentMethod }) => {
+            const index = next.findIndex(
+                (item) =>
+                    item.variant._id === variant._id &&
+                    item.fulfillmentMethod === fulfillmentMethod
+            );
+
+            const qtyToAdd = Math.max(1, Math.floor(quantity));
+            if (index >= 0) {
+                const current = next[index];
+                const maxQty = variant.trackQuantity ? variant.inventoryCount : Number.POSITIVE_INFINITY;
+                const newQty = Math.min(current.quantity + qtyToAdd, maxQty);
+                next[index] = { ...current, quantity: newQty };
+            } else {
+                next.push({
+                    productId,
+                    variant,
+                    quantity: qtyToAdd,
+                    fulfillmentMethod,
+                    isValid: true,
+                    addedAt: new Date().toISOString(),
+                });
+            }
+        });
+        console.log('cart (add all)', next);
+        return next;
+    });
+    toast.success(`${items.length} items added to cart successfully`);
     set(cartDrawerOpenAtom, true);
 });
 
