@@ -1,11 +1,14 @@
 import { Rating } from "@mui/material";
 import Image from "next/image";
 import Button from "./Button";
-import { LuShoppingCart } from "react-icons/lu";
+import { LuShoppingCart, LuHeart } from "react-icons/lu";
+import { FaHeart } from "react-icons/fa";
 import FallBackImage from "./FallBackImage";
 import { useRouter } from "next/navigation";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { addToCartAtom } from "@/atoms/cartAtom";
+import { toggleWishlistAtom, wishlistAtom } from "@/atoms/wishlistAtom";
+
 interface ProductCardProps {
     product?: Product;
 }
@@ -13,6 +16,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const router = useRouter();
     const isTrackQuantity = product?.trackQuantity;
     const addToCartAction = useSetAtom(addToCartAtom);
+    const toggleWishlist = useSetAtom(toggleWishlistAtom);
+    const wishlist = useAtomValue(wishlistAtom);
+
+    const isWishlisted = wishlist.some((item) => item._id === product?._id);
 
     const renderStock = () => {
         if (isTrackQuantity) {
@@ -42,9 +49,18 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!product) return;
         e.stopPropagation();
+
+        // Use lowestPriceVariant if available, otherwise fall back to first variant
+        const variant = product.lowestPriceVariant || product.productVariants?.[0];
+
+        if (!variant) {
+            console.error('No variant available for product:', product._id);
+            return;
+        }
+
         addToCartAction({
             productId: product?._id ?? '',
-            variant: product.lowestPriceVariant,
+            variant: variant,
             quantity: 1,
             fulfillmentMethod: null,
         });
@@ -57,11 +73,30 @@ export default function ProductCard({ product }: ProductCardProps) {
         const last = path[path.length - 1];
         return (last as any)?.name ?? '';
     };
+
+    const handleWishlistToggle = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
+        if (product) {
+            toggleWishlist(product);
+        }
+    }
+
     return (
-        <div className="p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer"
+        <div className="p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group"
 
             onClick={navigateToProduct}
         >
+            <div
+                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={handleWishlistToggle}
+            >
+                {isWishlisted ? (
+                    <FaHeart className="text-red-500 text-lg" />
+                ) : (
+                    <LuHeart className="text-gray-400 text-lg hover:text-red-500 transition-colors" />
+                )}
+            </div>
+
             <div className="flex justify-between items-center relative w-[11.5rem] h-[4.3rem] m-auto">
                 {product?.thumbnail?.file ? <Image src={product.thumbnail.file} fill alt="product-card" /> : <FallBackImage />}
             </div>
