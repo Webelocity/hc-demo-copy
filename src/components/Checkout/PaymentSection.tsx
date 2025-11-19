@@ -57,13 +57,16 @@ export default function PaymentSection({ isCompleted, onComplete }: PaymentSecti
                             size="small"
                             onClick={() => {
                                 if (!isValid) {
+                                    // Ensure local and global validity are false so the warning shows reliably
+                                    setIsValid(false);
+                                    setValidAtom(false);
                                     toast.error('Please validate your card first');
                                     return;
                                 }
                                 onComplete();
                             }}
                         >
-                            Proceed to Payment
+                            Confirm Payment Method
                         </Button>
                     </div>
                 </>

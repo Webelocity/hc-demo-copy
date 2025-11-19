@@ -106,25 +106,18 @@ export const fetchSubcategoryById = async (
 
 export const fetchSingleProductById = async (
     productId: string | undefined,
-    params: Record<string, string | number | boolean> = {}
+    storeAddressId: string | undefined,
+    params: Record<string, string | number | boolean> = {},
 ): Promise<Product> => {
     if (!productId) {
         // Could throw here or handle the error so the function never returns `undefined`
         throw new Error("No productId provided");
     }
 
-    // Use mock data if enabled (import directly, no HTTP call needed)
-    if (USE_MOCK_DATA) {
-        // Simulate network delay for realistic testing
-        await new Promise(resolve => setTimeout(resolve, 300));
+    console.log('storeAddressId', storeAddressId);
 
-        if (productId === MOCK_PRODUCT._id || productId === MOCK_PRODUCT.id || productId === 'prod_12345') {
-            return MOCK_PRODUCT;
-        }
-        throw new Error(`Mock product not found with ID ${productId}. Use 'prod_12345' for testing.`);
-    }
 
-    const query = constructQueryParams(params);
+    const query = constructQueryParams({ ...params, storeAddressId: storeAddressId ?? "" });
     const pathname = `/products/singleProduct/${productId}`;
 
     const response = await fetchWithStoreId<Product>(pathname, {
@@ -346,12 +339,12 @@ export const processVersapayPayment = async (
             orderId,
             amount,
         };
-        
+
         // Only include billingAddressId if provided
         if (billingAddressId) {
             payload.billingAddressId = billingAddressId;
         }
-        
+
         const result = await versapayConfirmMethod(payload);
 
         // Check if payment was successful
@@ -385,6 +378,23 @@ export const CreateGuestOrder = async (
     });
     if (!response) {
         throw new Error('Error Creating Order');
+    }
+    return response;
+};
+
+export const fetchOrderById = async (
+    orderId: string,
+    email: string
+): Promise<Order> => {
+    const pathname = `/orders/get-guest-order/${orderId}`;
+    const response = await fetchWithStoreId<Order>(pathname, {
+        method: "POST",
+        body: {
+            email,
+        },
+    });
+    if (!response) {
+        throw new Error("Error Fetching Order");
     }
     return response;
 };

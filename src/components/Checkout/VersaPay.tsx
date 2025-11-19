@@ -113,6 +113,18 @@ export default function VersapayComponent({
                         ...prev,
                         [field]: status ? null : message || "Invalid field",
                     }));
+                    if (status === false) {
+                        // Stop loading immediately if validation fails inside the iframe
+                        setLoading(false);
+                        setIsVersapayValid(false);
+                        setVersapayToken(null);
+                        setCardSummary(null);
+                        if (message) {
+                            toast.error(message);
+                        } else {
+                            toast.error("Please correct the highlighted fields.");
+                        }
+                    }
                 },
                 fieldsAvailableCallback: () => {
                     console.log("CollectJS fields are now available and rendered");
@@ -201,6 +213,13 @@ export default function VersapayComponent({
             "CollectJS available:",
             !!window.CollectJS
         );
+
+        // Pre-check for any known validation errors and prevent stuck loading
+        const hasErrors = Object.values(fieldErrors).some((v) => v);
+        if (hasErrors) {
+            toast.error("Please correct the highlighted fields.");
+            return;
+        }
 
         if (!formReady || !window.CollectJS) {
             toast.error("Payment form is still loading. Please wait...");

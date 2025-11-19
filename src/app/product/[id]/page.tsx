@@ -10,6 +10,7 @@ import ProductDetails from '@/components/Pages/Shop/SingleProduct/ProductDetails
 import Gallery from '@/components/Pages/Shop/SingleProduct/Gallery';
 import { Rating } from '@mui/material';
 import BulkTable from '@/components/Pages/Shop/SingleProduct/BulkTable';
+import { cookies } from 'next/headers';
 
 
 export const revalidate = 300;
@@ -26,9 +27,10 @@ export default async function ProductPage({
 }) {
     const { id } = await params;
     const { q, variant_Id } = await searchParams;
-
+    const cookieStore = await cookies()
+    const storeAddressId = cookieStore.get('storeAddressId')?.value;
     try {
-        const product = await fetchSingleProductById(id);
+        const product = await fetchSingleProductById(id, storeAddressId);
         // decide default variant (your priority rule)
         const defaultVariant = product.lowestPriceVariant ?? product.productVariants[0];
 
@@ -49,10 +51,10 @@ export default async function ProductPage({
             return (last as any)?.name ?? '';
         };
         const renderStock = () => {
-            if (product?.trackQuantity) {
-                if (product?.inventoryCount > 0) {
+            if (product?.trackQuantity && selectedVariant) {
+                if (selectedVariant?.inventoryCount > 0) {
                     return <div className="flex justify-start items-center gap-[0.5rem]">
-                        <span className="text-[0.75rem] font-semibold">{product?.inventoryCount} In stock</span>
+                        <span className="text-[0.75rem] font-semibold">{selectedVariant?.inventoryCount} In stock</span>
                     </div>
                 } else {
                     return <div className="flex justify-start items-center gap-[0.5rem]">

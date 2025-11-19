@@ -51,6 +51,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         console.log('add to cart');
     }
+    const getLastDefaultPathName = (p?: Product) => {
+        const path = p?.defaultPath;
+        if (!Array.isArray(path) || path.length === 0) return '';
+        const last = path[path.length - 1];
+        return (last as any)?.name ?? '';
+    };
     return (
         <div className="p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer"
 
@@ -60,7 +66,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 {product?.thumbnail?.file ? <Image src={product.thumbnail.file} fill alt="product-card" /> : <FallBackImage />}
             </div>
             <div className="flex flex-col gap-[0.25rem]">
-                <span className="py-[0.25rem] px-[0.5rem] rounded-[1.125rem] bg-[var(--Colors-Neutral-50)] w-fit">Category</span>
+                <span className="py-[0.25rem] px-[0.5rem] rounded-[1.125rem] bg-[var(--Colors-Neutral-50)] w-fit">{getLastDefaultPathName(product)}</span>
                 <span className="text-[0.875rem] font-semibold ">{product?.name}</span>
                 <div className="flex items-center gap-[0.25rem] text-[0.75rem] ">
                     <span className="text-[var(--Colors-Neutral-500)]">SKU: </span>

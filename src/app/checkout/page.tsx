@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { cartAtom } from '@/atoms/cartAtom';
 import { useCartTotals } from '@/hooks/useCartTotals';
 import AccordionSection from '@/components/shared/AccordionSection';
@@ -14,7 +14,7 @@ import FulfillmentConfirmation from '@/components/Checkout/FulfillmentConfirmati
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
 import ErrorModal from '@/components/shared/ErrorModal';
 import VersaPaySuccess from '@/components/Checkout/VersaPaySuccess';
-import { versapayCardSummaryAtom } from '@/atoms/paymentAtom';
+import { versapayCardSummaryAtom, versapayTokenAtom, versapayValidAtom } from '@/atoms/paymentAtom';
 
 type StepId = 'contact' | 'fulfillment' | 'payment';
 
@@ -41,6 +41,7 @@ export default function CheckoutPage() {
         fulfillment: false,
         payment: false,
     });
+    const [paymentResetCounter, setPaymentResetCounter] = useState<number>(0);
     const [contactData, setContactData] = useState<CheckoutContactFormData | null>(null);
 
     const setComplete = (id: StepId) => {
@@ -55,15 +56,37 @@ export default function CheckoutPage() {
             return nextCompleted;
         });
     };
+    const setVersapayToken = useSetAtom(versapayTokenAtom);
+    const setVersapayValid = useSetAtom(versapayValidAtom);
+    const setVersapaySummary = useSetAtom(versapayCardSummaryAtom);
+
     const editById = (id: StepId) => {
         setCompletedById((prev) => ({ ...prev, [id]: false }));
         setOpenById((prev) => ({ ...prev, [id]: true }));
+        if (id === 'payment') {
+            // Clear any previously saved VersaPay state so the user starts fresh
+            setVersapayToken(null);
+            setVersapayValid(false);
+            setVersapaySummary(null);
+            setPaymentResetCounter((c) => c + 1);
+        }
     };
 
     const cart = useAtomValue(cartAtom);
     const cardSummary = useAtomValue(versapayCardSummaryAtom);
     const { data: totals, isLoading, error: totalsError } = useCartTotals();
     const [totalsErrorOpen, setTotalsErrorOpen] = useState<boolean>(false);
+
+    // Hard redirect to cart if checkout is opened with an empty cart
+    useEffect(() => {
+        if (Array.isArray(cart) && cart.length === 0) {
+            // Hard replace so user can't navigate back to empty checkout
+            if (typeof window !== 'undefined') {
+                window.location.replace('/cart');
+            }
+        }
+    }, [cart]);
+
     const handleCloseTotalsError = () => {
         console.log('handleCloseTotalsError');
         setTotalsErrorOpen(false);
@@ -149,36 +172,32 @@ export default function CheckoutPage() {
                         title={STEPS[2].title}
                         isOpen={!completedById.payment && openById.payment}
                         isCompleted={completedById.payment}
-                        completedContent={<VersaPaySuccess summary={cardSummary} />}
+                        completedContent={cardSummary ? <VersaPaySuccess summary={cardSummary} /> : null}
                         onToggle={() => setOpenById((prev) => ({ ...prev, payment: !prev.payment }))}
                         onEdit={() => editById('payment')}
                     >
-                        <PaymentSection isCompleted={completedById.payment} onComplete={() => setComplete('payment')} />
+                        <PaymentSection
+                            key={paymentResetCounter}
+                            isCompleted={completedById.payment}
+                            onComplete={() => setComplete('payment')}
+                        />
                     </AccordionSection>
                 </div>
 
-                <aside className="flex-1">
-                    {/*
-                        Compute whether all steps are completed to enable place order
-                    */}
-                    {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
-                    {
-                        null
-                    }
-                    <OrderSummary
-                        cart={cart}
-                        totals={totals}
-                        isLoading={isLoading}
-                        hasShippingOrDelivery={hasShippingOrDelivery}
-                        hasShipping={hasShipping}
-                        hasDelivery={hasDelivery}
-                        totalsError={totalsError}
-                        onTotalsErrorDetails={() => setTotalsErrorOpen(true)}
-                        contact={contactData}
-                        allCompleted={completedById.contact && completedById.fulfillment && completedById.payment}
-                        cap={5}
-                    />
-                </aside>
+
+                <OrderSummary
+                    cart={cart}
+                    totals={totals}
+                    isLoading={isLoading}
+                    hasShippingOrDelivery={hasShippingOrDelivery}
+                    hasShipping={hasShipping}
+                    hasDelivery={hasDelivery}
+                    totalsError={totalsError}
+                    onTotalsErrorDetails={() => setTotalsErrorOpen(true)}
+                    contact={contactData}
+                    allCompleted={completedById.contact && completedById.fulfillment && completedById.payment}
+                    cap={5}
+                />
             </div>
 
             <ErrorModal

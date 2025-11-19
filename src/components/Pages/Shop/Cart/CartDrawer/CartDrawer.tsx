@@ -30,6 +30,10 @@ export default function CartDrawer() {
         router.push('/cart')
         handleClose();
     }
+    const navigateToCheckout = () => {
+        router.push('/checkout')
+        handleClose();
+    }
     return (
         <Drawer
             anchor="right"
@@ -134,7 +138,7 @@ export default function CartDrawer() {
                     <div className='flex items-center gap-[1rem] px-4 py-4'>
                         <Button variant="outline" fullWidth onClick={navigateToCart}>
                             View Cart                </Button>
-                        <Button variant="primary" fullWidth>
+                        <Button onClick={navigateToCheckout} variant="primary" fullWidth>
                             Proceed to Checkout
                         </Button>
                     </div>

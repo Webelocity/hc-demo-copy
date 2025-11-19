@@ -135,7 +135,7 @@ export default function LocationsSelector() {
     <div className="baseContainer">
       <div className="flex maxWidth flex-col lg:flex-row gap-[1.5rem] items-center justify-center  py-[2.5rem]">
         <div className="flex-1 flex flex-col gap-[1rem] w-full">
-          {stores.map((store) => {
+          {stores.filter((store) => store.name !== "Do it Best").map((store) => {
             const isMyStore = selectedStore === store.id;
             return (
               <div

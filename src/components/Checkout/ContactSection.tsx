@@ -12,7 +12,7 @@ import Button from '@/components/shared/Button';
 import AddressBookSection from './AddressBook/AddressBookSection';
 import type React from 'react';
 import { useSetAtom } from 'jotai';
-import { checkoutShippingLocationAtom } from '@/atoms/checkoutAtom';
+import { checkoutContactEmailAtom, checkoutShippingLocationAtom } from '@/atoms/checkoutAtom';
 
 type ContactSectionProps = {
     isCompleted: boolean;
@@ -29,11 +29,13 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
         billingSameAsShipping: true,
     });
     const setShippingLocation = useSetAtom(checkoutShippingLocationAtom);
+    const setCheckoutEmail = useSetAtom(checkoutContactEmailAtom);
 
     const {
         control,
         handleSubmit,
         formState: { errors, isSubmitting },
+        watch,
     } = useForm<CheckoutContactFormData>({
         resolver: joiResolver(checkoutContactSchema),
         defaultValues: {
@@ -45,6 +47,12 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
         },
         mode: 'onSubmit',
     });
+
+    // Persist email to atom on every change (override on set)
+    const watchedEmail = watch('email');
+    useEffect(() => {
+        setCheckoutEmail(watchedEmail || null);
+    }, [watchedEmail, setCheckoutEmail]);
 
     useEffect(() => {
         if (!requiresAddress) {
@@ -76,6 +84,9 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
                 billingSameAsShipping: addressSelection.billingSameAsShipping,
             };
         }
+
+        // Ensure latest email is saved (override)
+        setCheckoutEmail(data.email || null);
 
         onSubmitData({
             ...data,

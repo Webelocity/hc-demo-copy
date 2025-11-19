@@ -7,6 +7,8 @@ import Modal from '@/components/shared/Modal';
 import Button from '@/components/shared/Button';
 import { Radio } from '@mui/material';
 import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface StoreSelectorProps {
     isOpen: boolean;
@@ -17,6 +19,9 @@ export default function StoreSelector({ isOpen, onClose }: StoreSelectorProps) {
     const [selectedStore, setSelectedStore] = useAtom(selectedStoreAtom);
     const [tempSelection, setTempSelection] = useState<StoreId>(selectedStore);
     const stores = getAllStores().filter((store) => store.name !== "Do it Best");
+    const router = useRouter();
+    const location = usePathname();
+
 
     // Update temp selection when modal opens or selected store changes
     useEffect(() => {
@@ -34,6 +39,12 @@ export default function StoreSelector({ isOpen, onClose }: StoreSelectorProps) {
         setTempSelection(selectedStore); // Reset to current selection
         onClose();
     };
+    useEffect(() => {
+        Cookies.set('storeAddressId', selectedStore, { expires: 7 });
+        if (location.includes('/product/')) {
+            router.refresh();
+        }
+    }, [selectedStore]);
 
     return (
         <Modal open={isOpen} onClose={handleCancel} title="Select Your Store" maxWidth="xs" >

@@ -4,17 +4,18 @@ import Image from 'next/image';
 import FallBackImage from '@/components/shared/FallBackImage';
 import type { CartItem } from '@/atoms/cartAtom';
 import type { CartTotals } from '@/Api/Apis';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { selectedShippingOptionAtom } from '@/atoms/shippingAtom';
 import Button from '../shared/Button';
-import { appliedDiscountIdsAtom } from '@/atoms/discountAtom';
+import { appliedDiscountIdsAtom, appliedDiscountsAtom } from '@/atoms/discountAtom';
 import { selectedAddressesAtom } from '@/atoms/checkoutSelectionAtom';
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
-import { versapayTokenAtom, versapayValidAtom } from '@/atoms/paymentAtom';
+import { versapayCardSummaryAtom, versapayTokenAtom, versapayValidAtom } from '@/atoms/paymentAtom';
 import { useState } from 'react';
 import { processVersapayPayment } from '@/Api/Apis';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import { cartAtom } from '@/atoms/cartAtom';
 
 type OrderSummaryProps = {
     cart: CartItem[];
@@ -48,6 +49,13 @@ export default function OrderSummary({
     const selectedAddresses = useAtomValue(selectedAddressesAtom);
     const versapayToken = useAtomValue(versapayTokenAtom);
     const versapayValid = useAtomValue(versapayValidAtom);
+    const setCart = useSetAtom(cartAtom);
+    const setSelectedShipping = useSetAtom(selectedShippingOptionAtom);
+    const setAppliedDiscounts = useSetAtom(appliedDiscountsAtom);
+    const setSelectedAddresses = useSetAtom(selectedAddressesAtom);
+    const setVersapayToken = useSetAtom(versapayTokenAtom);
+    const setVersapayValid = useSetAtom(versapayValidAtom);
+    const setVersapaySummary = useSetAtom(versapayCardSummaryAtom);
     const [isProcessing, setIsProcessing] = useState(false);
     const router = useRouter();
 
@@ -147,58 +155,9 @@ export default function OrderSummary({
                 console.log('VersaPay payment processed successfully');
             }
 
-            // Success - redirect to order confirmation or homepage
+            // Success - redirect to order confirmation page
             toast.success('Order placed successfully!');
-            // TODO: Create order confirmation page at /orderconfirmation/[id]
-            // For now, redirect to homepage
-            router.push('/');
-
-        } catch (error: any) {
-            console.error('Error placing order:', error);
-            toast.error(error?.message || 'Failed to place order. Please try again.');
-        } finally {
-            setIsProcessing(false);
-        }
-        setIsProcessing(true);
-
-        try {
-            // Import CreateGuestOrder dynamically to avoid SSR issues
-            const { CreateGuestOrder } = await import('@/Api/Apis');
-
-            // Create the order first
-            const order = await CreateGuestOrder(payload);
-
-            if (!order?._id) {
-                throw new Error('Failed to create order - no order ID returned');
-            }
-
-            console.log('Order created successfully:', order._id);
-
-            // If VersaPay payment is selected and token is available, process payment
-            if (versapayValid && versapayToken) {
-                console.log('Processing VersaPay payment for order:', order._id);
-
-                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
-
-                // The backend will automatically fetch the billing address from the user
-                const paymentResult = await processVersapayPayment(
-                    versapayToken,
-                    order._id,
-                    grandTotal
-                );
-
-                if (!paymentResult.success) {
-                    throw new Error(paymentResult.message || 'VersaPay payment failed');
-                }
-
-                console.log('VersaPay payment processed successfully');
-            }
-
-            // Success - redirect to order confirmation or homepage
-            toast.success('Order placed successfully!');
-            // TODO: Create order confirmation page at /orderconfirmation/[id]
-            // For now, redirect to homepage
-            router.push('/');
+            router.push(`/order/${order._id}`);
 
         } catch (error: any) {
             console.error('Error placing order:', error);
@@ -208,7 +167,7 @@ export default function OrderSummary({
         }
     };
     return (
-        <div className="p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[1rem]">
+        <div className="flex-1 sticky top-[2rem] h-fit p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)] flex flex-col gap-[1rem]">
             <h2 className="text-[1.125rem] font-semibold">Order Summary</h2>
 
             <div className="flex flex-col gap-[0.75rem]">
@@ -297,7 +256,6 @@ export default function OrderSummary({
                         <span className="text-base font-bold">Total</span>
                         <span className="text-base font-bold">
                             ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (selectedShipping?.price ?? 0))).toFixed(2)}
-                            ${Number(((totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0))).toFixed(2)}
                         </span>
                     </div>
                 </div>
