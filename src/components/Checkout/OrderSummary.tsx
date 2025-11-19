@@ -63,41 +63,33 @@ export default function OrderSummary({
 
         // For pickup orders, we need minimal billing address for payment processing
         // Use contact info if no explicit billing address
-        const billingInfo = hasShipping 
-            ? billing // Use actual billing for shipping orders
-            : { // For pickup, create minimal billing from contact
-                country: 'CA',
-                state: contact?.province || 'ON',
-                city: contact?.city || '',
-                streetAddress: contact?.address || '',
-                zipCode: contact?.postalCode || ''
-            };
+
 
         // Build the order payload matching the backend DTO structure
         const payload = {
             // Profile type
             profileType: 'personal',
-            
+
             // User information
             firstName: contact?.firstName,
             lastName: contact?.lastName,
             email: contact?.email,
             phone: contact?.phoneNumber,
-            
+
             // Address information (only for shipping orders)
             country: shipping?.country ?? 'CA',
             province: shipping?.state,
             city: shipping?.city,
             address: shipping ? `${shipping.streetAddress}${shipping.streetAddress2 ? `, ${shipping.streetAddress2}` : ''}` : undefined,
             zipCode: shipping?.zipCode,
-            
+
             // Billing address - always include for payment processing
-            billingCountry: billingInfo?.country || 'CA',
-            billingProvince: billingInfo?.state || 'ON',
-            billingCity: billingInfo?.city || 'Toronto',
-            billingAddress: billingInfo ? `${billingInfo.streetAddress}${billingInfo.streetAddress2 ? `, ${billingInfo.streetAddress2}` : ''}` : '123 Main St',
-            billingZipCode: billingInfo?.zipCode || 'M5H 2N2',
-            
+            billingCountry: billing?.country,
+            billingProvince: billing?.state,
+            billingCity: billing?.city,
+            billingAddress: billing?.streetAddress,
+            billingZipCode: billing?.zipCode,
+
             // Order details
             selectedProducts: items,
             bundles: [],
@@ -111,23 +103,23 @@ export default function OrderSummary({
                 shipmentGateway: selectedShipping.shipmentGateway,
                 version: selectedShipping.version,
             } : undefined,
-            
+
             // Payment information
             orderPaymentMethod: versapayValid ? 'Versapay' : 'Cash',
             deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
         };
-        
+
         console.log('place_order_payload', payload);
         setIsProcessing(true);
 
         try {
             // Import CreateGuestOrder dynamically to avoid SSR issues
             const { CreateGuestOrder } = await import('@/Api/Apis');
-            
+
             // Create the order first
             const order = await CreateGuestOrder(payload);
-            
+
             if (!order?._id) {
                 throw new Error('Failed to create order - no order ID returned');
             }
@@ -137,9 +129,9 @@ export default function OrderSummary({
             // If VersaPay payment is selected and token is available, process payment
             if (versapayValid && versapayToken) {
                 console.log('Processing VersaPay payment for order:', order._id);
-                
+
                 const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0);
-                
+
                 // The backend will automatically fetch the billing address from the user
                 const paymentResult = await processVersapayPayment(
                     versapayToken,
@@ -159,7 +151,7 @@ export default function OrderSummary({
             // TODO: Create order confirmation page at /orderconfirmation/[id]
             // For now, redirect to homepage
             router.push('/');
-            
+
         } catch (error: any) {
             console.error('Error placing order:', error);
             toast.error(error?.message || 'Failed to place order. Please try again.');

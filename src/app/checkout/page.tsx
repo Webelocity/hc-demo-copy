@@ -13,6 +13,8 @@ import ContactConfirmation from '@/components/Checkout/ContactConfirmation';
 import FulfillmentConfirmation from '@/components/Checkout/FulfillmentConfirmation';
 import type { CheckoutContactFormData } from '@/components/Checkout/ContactSection.schema';
 import ErrorModal from '@/components/shared/ErrorModal';
+import VersaPaySuccess from '@/components/Checkout/VersaPaySuccess';
+import { versapayCardSummaryAtom } from '@/atoms/paymentAtom';
 
 type StepId = 'contact' | 'fulfillment' | 'payment';
 
@@ -59,6 +61,7 @@ export default function CheckoutPage() {
     };
 
     const cart = useAtomValue(cartAtom);
+    const cardSummary = useAtomValue(versapayCardSummaryAtom);
     const { data: totals, isLoading, error: totalsError } = useCartTotals();
     const [totalsErrorOpen, setTotalsErrorOpen] = useState<boolean>(false);
     const handleCloseTotalsError = () => {
@@ -146,6 +149,7 @@ export default function CheckoutPage() {
                         title={STEPS[2].title}
                         isOpen={!completedById.payment && openById.payment}
                         isCompleted={completedById.payment}
+                        completedContent={<VersaPaySuccess summary={cardSummary} />}
                         onToggle={() => setOpenById((prev) => ({ ...prev, payment: !prev.payment }))}
                         onEdit={() => editById('payment')}
                     >
