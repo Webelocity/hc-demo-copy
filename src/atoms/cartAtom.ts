@@ -72,7 +72,7 @@ export const addToCartAtom = atom(null, (get, set, payload: AddToCartPayload) =>
 
 export const addAllToCartAtom = atom(null, (get, set, items: AddToCartPayload[]) => {
     set(cartAtom, (prev) => {
-        let next = [...prev];
+        const next = [...prev];
         items.forEach(({ productId, variant, quantity, fulfillmentMethod }) => {
             const index = next.findIndex(
                 (item) =>
