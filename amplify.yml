@@ -7,6 +7,7 @@ frontend:
         - node --version
         - npm --version
         - npm install
+        - npm ls lightningcss || echo "lightningcss check"
     build:
       commands:
         - npm run build
