@@ -130,7 +130,7 @@ export default function OrderSummary({
             if (versapayValid && versapayToken) {
                 console.log('Processing VersaPay payment for order:', order._id);
 
-                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0);
+                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
 
                 // The backend will automatically fetch the billing address from the user
                 const paymentResult = await processVersapayPayment(
