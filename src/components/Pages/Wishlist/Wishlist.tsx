@@ -14,6 +14,7 @@ import { IoMdSearch } from "react-icons/io";
 import { LuShoppingCart } from "react-icons/lu";
 import { addToCartAtom, addAllToCartAtom } from '@/atoms/cartAtom';
 import { BsGridFill, BsListUl } from "react-icons/bs";
+import CustomNoData from '@/components/shared/CustomNoData';
 
 export default function Wishlist() {
     const wishlist = useAtomValue(wishlistAtom);
@@ -23,10 +24,22 @@ export default function Wishlist() {
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string | 'all'>('all');
 
     // Filter Logic
     const filteredWishlist = useMemo(() => {
         let result = [...wishlist];
+
+        // Category filter (from derived categories of each product)
+        if (selectedCategory !== 'all') {
+            result = result.filter(p => {
+                const defaultPathNames = (p.defaultPath ?? []).map((d: { name: string }) => d?.name).filter(Boolean);
+                // Also consider product variant categories if available
+                const variantCategories = (p.productVariants?.[0]?.parentCategory ?? []) as string[];
+                const categories = new Set<string>([...defaultPathNames, ...(variantCategories ?? [])]);
+                return categories.has(selectedCategory);
+            });
+        }
 
         // Search (Local state + URL param if we wanted, but local is smoother for this)
         if (searchTerm) {
@@ -56,7 +69,7 @@ export default function Wishlist() {
         // Add other sort cases as needed
 
         return result;
-    }, [wishlist, searchTerm, searchParams]);
+    }, [wishlist, searchTerm, searchParams, selectedCategory]);
 
     const handleAddAllToCart = () => {
         const itemsToAdd = filteredWishlist
@@ -74,8 +87,17 @@ export default function Wishlist() {
         addAllToCartAction(itemsToAdd);
     };
 
-    // Mock Categories for the top bar
-    const categories = ["Plumbing", "Electrical", "Fasteners", "Construction Materials"];
+    // Derive categories from wishlist items
+    const categories = useMemo(() => {
+        const set = new Set<string>();
+        wishlist.forEach((p: any) => {
+            const defaultPathNames = (p?.defaultPath ?? []).map((d: { name: string }) => d?.name).filter(Boolean);
+            defaultPathNames.forEach((n: string) => set.add(n));
+            const variantCategories = (p?.productVariants?.[0]?.parentCategory ?? []) as string[];
+            variantCategories?.forEach((n: string) => set.add(n));
+        });
+        return Array.from(set);
+    }, [wishlist]);
 
     if (wishlist.length === 0) {
         return (
@@ -113,8 +135,25 @@ export default function Wishlist() {
             <div className="flex flex-col lg:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg border border-gray-100">
                 {/* Categories */}
                 <div className="flex gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
+                    <button
+                        key="all"
+                        onClick={() => setSelectedCategory('all')}
+                        className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === 'all'
+                            ? 'border-gray-400 bg-gray-100'
+                            : 'border-gray-200 hover:bg-gray-50'
+                            }`}
+                    >
+                        All
+                    </button>
                     {categories.map(cat => (
-                        <button key={cat} className="px-4 py-2 rounded-full border border-gray-200 text-sm whitespace-nowrap hover:bg-gray-50">
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(prev => (prev === cat ? 'all' : cat))}
+                            className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === cat
+                                ? 'border-gray-400 bg-gray-100'
+                                : 'border-gray-200 hover:bg-gray-50'
+                                }`}
+                        >
                             {cat}
                         </button>
                     ))}
@@ -134,19 +173,19 @@ export default function Wishlist() {
                         className="!border !border-gray-200 !rounded-md !px-3 !py-1 !text-sm w-full sm:w-64"
                         disableUnderline
                     />
-                    
+
                     <div className="flex items-center gap-4">
                         <SortDropdown />
                         <AvailabilityDropdown />
-                        
+
                         <div className="flex border border-gray-200 rounded-md overflow-hidden">
-                            <button 
+                            <button
                                 onClick={() => setViewMode('list')}
                                 className={`p-2 ${viewMode === 'list' ? 'bg-gray-100' : 'bg-white'}`}
                             >
                                 <BsListUl />
                             </button>
-                            <button 
+                            <button
                                 onClick={() => setViewMode('grid')}
                                 className={`p-2 ${viewMode === 'grid' ? 'bg-gray-100' : 'bg-white'}`}
                             >
@@ -158,11 +197,15 @@ export default function Wishlist() {
             </div>
 
             {/* Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filteredWishlist.map((product) => (
-                    <ProductCard key={product._id} product={product} />
-                ))}
-            </div>
+            {filteredWishlist.length === 0 ? (
+                <CustomNoData text="No results found for your selection" />
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {filteredWishlist.map((product) => (
+                        <ProductCard key={product._id} product={product} />
+                    ))}
+                </div>
+            )}
         </div>
     );
 }
