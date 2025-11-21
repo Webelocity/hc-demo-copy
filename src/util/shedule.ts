@@ -221,7 +221,6 @@ export function getAllStores(): StoreLocation[] {
 // Get store by ID
 export function getStoreById(storeId: StoreId | string): StoreLocation {
   const normalizedStoreId = normalizeStoreId(storeId);
-  console.log("storeId", normalizedStoreId);
   const store = STORES[normalizedStoreId];
 
   // Safety check: ensure the store exists

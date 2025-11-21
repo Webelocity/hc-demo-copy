@@ -24,7 +24,6 @@ const sanitizeForId = (value: string) =>
 export default function ProductDetails({ product }: ProductDetailsProps) {
     const tabs = React.useMemo<ProductTab[]>(() => {
         const sections: ProductTab[] = [];
-        console.log(product);
         if (product.description) {
             sections.push({
                 key: 'description',

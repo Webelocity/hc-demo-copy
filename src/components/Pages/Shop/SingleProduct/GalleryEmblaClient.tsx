@@ -58,7 +58,6 @@ export default function GalleryEmblaClient({ rootId }: { rootId: string }) {
             btn.addEventListener("click", (e) => {
                 e.preventDefault();
                 const src = (btn as HTMLButtonElement).dataset.src || "";
-                console.log("[Thumb click] src:", src);
                 embla.scrollTo(i);
             });
         });

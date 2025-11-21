@@ -68,7 +68,6 @@ export default function VersapayComponent({
                     color: "#9CA3AF",
                 },
                 callback: (response: any) => {
-                    console.log("VersaPay callback:", response);
                     setLoading(false);
 
                     if (response.token) {
@@ -127,7 +126,6 @@ export default function VersapayComponent({
                     }
                 },
                 fieldsAvailableCallback: () => {
-                    console.log("CollectJS fields are now available and rendered");
                     setFormReady(true);
                 },
                 fields: {
@@ -148,8 +146,6 @@ export default function VersapayComponent({
                     },
                 },
             });
-
-            console.log("CollectJS configured successfully");
         } catch (err) {
             console.error("Error configuring CollectJS:", err);
             toast.error("Failed to initialize payment form");
@@ -172,7 +168,6 @@ export default function VersapayComponent({
 
         // If script already exists, just configure again
         if (existingScript) {
-            console.log("Collect.js script already exists");
             if (window.CollectJS) {
                 configureCollectJs();
             }
@@ -186,7 +181,6 @@ export default function VersapayComponent({
         script.async = true;
 
         script.onload = () => {
-            console.log("VersaPay Collect.js loaded successfully");
             if (window.CollectJS) {
                 configureCollectJs();
             } else {
@@ -201,19 +195,10 @@ export default function VersapayComponent({
         };
 
         document.body.appendChild(script);
-        console.log("Collect.js script added to document");
     }, [configureCollectJs]);
 
     const handleGenerateToken = (e?: React.MouseEvent) => {
         if (e) e.preventDefault();
-
-        console.log(
-            "Generate token clicked. Form ready:",
-            formReady,
-            "CollectJS available:",
-            !!window.CollectJS
-        );
-
         // Pre-check for any known validation errors and prevent stuck loading
         const hasErrors = Object.values(fieldErrors).some((v) => v);
         if (hasErrors) {

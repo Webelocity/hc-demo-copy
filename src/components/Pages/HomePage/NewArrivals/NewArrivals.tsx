@@ -33,7 +33,6 @@ export default function NewArrivals() {
         refetchOnWindowFocus: false,
     });
     const router = useRouter();
-    console.log(productsResponse?.data);
     return (
         <div className="baseContainer py-[5rem]">
             <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">

@@ -126,7 +126,6 @@ export default function OrderSummary({
         };
 
 
-        console.log('place_order_payload', payload);
         setIsProcessing(true);
 
         try {
@@ -140,11 +139,9 @@ export default function OrderSummary({
                 throw new Error('Failed to create order - no order ID returned');
             }
 
-            console.log('Order created successfully:', order._id);
 
             // If VersaPay payment is selected and token is available, process payment
             if (versapayValid && versapayToken) {
-                console.log('Processing VersaPay payment for order:', order._id);
 
                 const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
 
@@ -158,8 +155,6 @@ export default function OrderSummary({
                 if (!paymentResult.success) {
                     throw new Error(paymentResult.message || 'VersaPay payment failed');
                 }
-
-                console.log('VersaPay payment processed successfully');
             }
 
             // Success - redirect to order confirmation page
