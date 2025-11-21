@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function PerfectColorBanner() {
   return (
     <div className="baseContainer py-[1.5rem] md:py-[3rem]">
-      <div className="relative bg-[var(--Secondary-600)] rounded-[1.5rem] overflow-hidden min-h-[253px] md:min-h-[395px]">
+      <div className="relative maxWidth bg-[var(--Secondary-600)] rounded-[1.5rem] overflow-hidden min-h-[253px] md:min-h-[395px]">
         <div className="flex flex-col md:flex-row items-end justify-between relative">
           {/* Content Section */}
           <div className="flex flex-col gap-[1.5rem] max-w-full md:max-w-[46%] p-[1.5rem] md:p-[2.5rem] z-10 relative">

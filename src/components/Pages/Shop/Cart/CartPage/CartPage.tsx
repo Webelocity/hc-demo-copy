@@ -61,7 +61,7 @@ export default function CartPage() {
 
     return (
         <div className="baseContainer py-[2.5rem]">
-            <div className="flex flex-col lg:flex-row gap-[1.5rem]">
+            <div className="flex maxWidth flex-col lg:flex-row gap-[1.5rem]">
                 <motion.div className="flex-1 flex flex-col gap-[1rem]" layout>
                     <h1 className="text-[1.75rem] font-bold">Cart</h1>
                     <AnimatePresence initial={false}>

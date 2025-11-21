@@ -108,42 +108,45 @@ function CatalogueContent() {
     };
 
     return (
-        <div className="baseContainer py-[2.5rem] flex gap-[1.5rem]">
-            {!isMobile && <Filters
-                setFilters={setFilters}
-                selectedSubCat={selectedSubCat}
-                setSelectedSubCat={handleSetSubcat}
-            />}
+        <div className="baseContainer">
+            <div className=" maxWidth py-[2.5rem] flex gap-[1.5rem]">
+                {!isMobile && <Filters
+                    setFilters={setFilters}
+                    selectedSubCat={selectedSubCat}
+                    setSelectedSubCat={handleSetSubcat}
+                />}
 
-            <div className="flex-[3] flex flex-col gap-[1rem]">
-                <div className="flex items-center justify-between w-full">
-                    <div className="flex flex-col items-start gap-[0.5rem]">
-                        <h1 className="text-[2rem] font-bold">All products</h1>
-                        {renderPaginationInfo()}
+                <div className="flex-[3] flex flex-col gap-[1rem]">
+                    <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col items-start gap-[0.5rem]">
+                            <h1 className="text-[2rem] font-bold">All products</h1>
+                            {renderPaginationInfo()}
 
+                        </div>
+                        {/* sort and availabilty */}
+                        <div className="flex items-center gap-[1rem]">
+                            {isMobile ? <Filters
+                                setFilters={setFilters}
+                                selectedSubCat={selectedSubCat}
+                                setSelectedSubCat={handleSetSubcat}
+                            /> : <>
+                                <SortDropdown />
+                                <AvailabilityDropdown />
+                            </>}
+
+                        </div>
                     </div>
-                    {/* sort and availabilty */}
-                    <div className="flex items-center gap-[1rem]">
-                        {isMobile ? <Filters
-                            setFilters={setFilters}
-                            selectedSubCat={selectedSubCat}
-                            setSelectedSubCat={handleSetSubcat}
-                        /> : <>
-                            <SortDropdown />
-                            <AvailabilityDropdown />
-                        </>}
 
-                    </div>
+                    {/* Active Filters */}
+                    <ActiveFilters selectedSubCat={selectedSubCat} />
+
+                    <ProductPages ProductsAPI={ProductsAPI} isLoading={isProductsLoading} handlePage={handlePage} />
+
+                    {/* your grid/list */}
                 </div>
-
-                {/* Active Filters */}
-                <ActiveFilters selectedSubCat={selectedSubCat} />
-
-                <ProductPages ProductsAPI={ProductsAPI} isLoading={isProductsLoading} handlePage={handlePage} />
-
-                {/* your grid/list */}
             </div>
         </div>
+
     );
 }
 

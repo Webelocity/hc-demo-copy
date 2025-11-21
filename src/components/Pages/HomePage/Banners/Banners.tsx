@@ -6,7 +6,7 @@ export default function Banners() {
         <div className="baseContainer">
             <div className="maxWidth  flex flex-col gap-[1.5rem] py-[1.5rem]">
                 <div className=" flex flex-col lg:flex-row gap-[1.5rem]">
-                    <div className="flex flex-col py-[4rem] px-[2.5rem]  items-start flex-[6] aspect-[815/368] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/winter.svg')] bg-cover bg-center bg-no-repeat">
+                    <div className="flex flex-col py-[4rem] px-[2.5rem]  items-start flex-[6] aspect-[815/368] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/winter.png')] bg-cover bg-center bg-no-repeat">
                         <h1 className="text-[2.5rem] font-bold text-white" >
                             Winter Essentials Sale!
                         </h1>
@@ -33,7 +33,7 @@ export default function Banners() {
                     </div>
                 </div>
                 <div className="flex flex-col lg:flex-row gap-[1.5rem]">
-                    <div className="p-[1.5rem] flex flex-col items-center gap-[1rem] flex-[1] aspect-[721/404] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/lighting.svg')] bg-cover bg-center bg-no-repeat ">
+                    <div className="p-[1.5rem] flex flex-col items-center gap-[1rem] flex-[1] aspect-[721/404] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/lighting.png')] bg-cover bg-center bg-no-repeat ">
                         <h1 className="text-[2.5rem] font-bold text-white text-center lg:text-start" >Brighten Up Your Space and get </h1>
                         <span className="flex flex-col lg:flex-row items-center gap-[0.5rem]">
                             <span className="text-[2rem] font-bold text-white rounded-[var(--Radius-md)] bg-[var(--primary-500-main)] p-[0.8rem]">
@@ -52,7 +52,7 @@ export default function Banners() {
                             </Button>
                         </div>
                     </div>
-                    <div className="p-[1.5rem] flex flex-col items-center gap-[1rem] flex-[0.9] aspect-[721/404] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/Contractorcard.svg')] bg-cover bg-center bg-no-repeat ">
+                    <div className="p-[1.5rem] flex flex-col items-center gap-[1rem] flex-[0.9] aspect-[721/404] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/Contractorcard.png')] bg-cover bg-center bg-no-repeat ">
                         <div className="flex flex-col lg:flex-row items-center gap-[1rem]">
                             <span className="text-[2.5rem] font-bold text-white">Join the </span>
                             <span className="text-[2.5rem] font-bold text-white rounded-[var(--Radius-md)] bg-[var(--secondary-500-main)] p-[0.8rem]">

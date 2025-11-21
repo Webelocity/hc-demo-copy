@@ -1,7 +1,7 @@
 export default function AboutUsBanner() {
   return (
     <div className="baseContainer flex flex-col gap-[1.5rem] items-center justify-end p-[1.5rem]">
-      <div className="min-h-[25rem] w-full p-[1.5rem] rounded-[var(--Radius-md)] flex items-center justify-center bg-[url('/assets/image/AboutUs/banner.svg')] bg-cover bg-center bg-no-repeat relative overflow-hidden">
+      <div className="min-h-[25rem] maxWidth w-full p-[1.5rem] rounded-[var(--Radius-md)] flex items-center justify-center bg-[url('/assets/image/AboutUs/banner.svg')] bg-cover bg-center bg-no-repeat relative overflow-hidden">
         {/* Overlay */}
         <div className="absolute inset-0 bg-[rgba(0,0,0,0.2)] rounded-[var(--Radius-md)]" />
 

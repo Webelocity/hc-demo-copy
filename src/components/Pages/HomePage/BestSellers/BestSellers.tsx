@@ -1,8 +1,11 @@
 'use client';
 
+import { fetchAllProducts } from "@/Api/Apis";
 import Button from "@/components/shared/Button";
 import ProductCard from "@/components/shared/productCard";
 import ReUsableSwiper from "@/components/shared/ReUsableSwiper/reUsableSwiper";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 // Temporary mock data - replace with your actual data
 const mockProducts = [
@@ -19,6 +22,17 @@ const mockProducts = [
 ];
 
 export default function BestSellers() {
+    const {
+        data: productsResponse,
+        isLoading,
+        isError,
+    } = useQuery<ApiResponse<Product>>({
+        queryKey: ['BestSellers'],
+        queryFn: () => fetchAllProducts({ sort: "best_selling" }),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+    const router = useRouter();
     return (
         <div className="baseContainer py-[5rem]">
             <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
@@ -26,15 +40,17 @@ export default function BestSellers() {
                     <h3 className="text-[2.5rem] font-bold text-start">
                         Best Sellers
                     </h3>
-                    <Button variant="secondary">Explore More </Button>
+                    <Button onClick={() => router.push('/shop/catalogue?sort=best-selling')} variant="secondary">Explore More </Button>
                 </div>
 
                 <ReUsableSwiper
                     className="swiper-pagination-best-sellers"
-                    data={mockProducts}
+                    data={productsResponse?.data ?? []}
+                    isLoading={isLoading}
                     renderSlide={(product) => (
-                        <ProductCard key={product.id} />
+                        <ProductCard product={product} key={product._id} />
                     )}
+                    slideStyles="!h-[-webkit-fill-available]"
                     swiperOptions={{
                         spaceBetween: 20,
                         slidesPerView: 5,

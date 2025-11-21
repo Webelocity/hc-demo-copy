@@ -5,7 +5,7 @@ interface ContactUsProps {
 }
 export default function ContactUs({ version = "home" }: ContactUsProps) {
   return (
-    <div className="baseContainer">
+    <div className="baseContainer ">
       <div
         className={`  maxWidth flex flex-col ${version === "contact"
           ? "lg:flex-row-reverse "

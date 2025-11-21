@@ -64,74 +64,77 @@ export default async function ProductPage({
             }
         }
         return (
-            <div className='baseContainer py-[2.5rem]  flex flex-col  gap-[1.5rem]'>
-                {/* Product Gallery */}
-                <div className='w-full flex flex-col lg:flex-row gap-[1.5rem]'>
-                    <div className='flex-1' >
-                        <Gallery product={product} selectedVariant={selectedVariant} />
+            <div className='baseContainer'>
+                <div className='maxWidth py-[2.5rem]  flex flex-col  gap-[1.5rem]'>
+                    {/* Product Gallery */}
+                    <div className='w-full flex flex-col lg:flex-row gap-[1.5rem]'>
+                        <div className='flex-1' >
+                            <Gallery product={product} selectedVariant={selectedVariant} />
 
-                    </div>
-                    <div className='flex-1 p-[1.5rem] flex flex-col gap-[0.75rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] lg:rounded-[0.75rem]'>
-                        <h1 className='text-[1.75rem] text-start font-bold'>{product.name}</h1>
-                        <div className="flex justify-start items-center gap-[0.4rem]">
-                            <Rating size="medium" name="half-rating-read" defaultValue={product?.rating} precision={0.5} readOnly />
-                            <span className="text-[0.75rem] text-[var(--Neutral-500)]">{product?.rating} ({product?.totalSold})</span>
                         </div>
-                        {renderStock()}
-                        <div className='flex flex-col gap-[1rem] py-[1rem]'>
-                            <span className='text-[0.875rem] font-semibold text-start'>Specifications:</span>
-                            <div className='flex justify-between items-center'>
-                                <span className='text-[0.75rem] font-medium'>SKU:</span>
-                                <span className='text-[0.75rem] font-medium'>{product?.sku}</span>
+                        <div className='flex-1 p-[1.5rem] flex flex-col gap-[0.75rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] lg:rounded-[0.75rem]'>
+                            <h1 className='text-[1.75rem] text-start font-bold'>{product.name}</h1>
+                            <div className="flex justify-start items-center gap-[0.4rem]">
+                                <Rating size="medium" name="half-rating-read" defaultValue={product?.rating} precision={0.5} readOnly />
+                                <span className="text-[0.75rem] text-[var(--Neutral-500)]">{product?.rating} ({product?.totalSold})</span>
                             </div>
-                            <div className='flex justify-between items-center'>
-                                <span className='text-[0.75rem] font-medium'>Brand:</span>
-                                <span className='text-[0.75rem] font-medium'>{product?.brand}</span>
+                            {renderStock()}
+                            <div className='flex flex-col gap-[1rem] py-[1rem]'>
+                                <span className='text-[0.875rem] font-semibold text-start'>Specifications:</span>
+                                <div className='flex justify-between items-center'>
+                                    <span className='text-[0.75rem] font-medium'>SKU:</span>
+                                    <span className='text-[0.75rem] font-medium'>{product?.sku}</span>
+                                </div>
+                                <div className='flex justify-between items-center'>
+                                    <span className='text-[0.75rem] font-medium'>Brand:</span>
+                                    <span className='text-[0.75rem] font-medium'>{product?.brand}</span>
+                                </div>
+                                <div className='flex justify-between items-center'>
+                                    <span className='text-[0.75rem] font-medium'>Category:</span>
+                                    <span className='text-[0.75rem] font-medium'>{getLastDefaultPathName(product)}</span>
+                                </div>
                             </div>
-                            <div className='flex justify-between items-center'>
-                                <span className='text-[0.75rem] font-medium'>Category:</span>
-                                <span className='text-[0.75rem] font-medium'>{getLastDefaultPathName(product)}</span>
-                            </div>
-                        </div>
-                        <VariantAttributes
-                            product={product}
-                            currentVariantId={variantId}
-                        />
+                            <VariantAttributes
+                                product={product}
+                                currentVariantId={variantId}
+                            />
 
-                    </div>
-                    <div className='flex-1 p-[1.5rem] flex flex-col gap-[0.75rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] lg:rounded-[0.75rem]'>
-                        <Suspense key={`${variantId}-${qty}`} fallback={<PricingSkeleton />}>
-                            <SelectedVariantAndPrice
+                        </div>
+                        <div className='flex-1 p-[1.5rem] flex flex-col gap-[0.75rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] lg:rounded-[0.75rem]'>
+                            <Suspense key={`${variantId}-${qty}`} fallback={<PricingSkeleton />}>
+                                <SelectedVariantAndPrice
+                                    productId={product._id}
+                                    variantId={variantId}
+                                    quantity={qty}
+                                />
+                            </Suspense>
+
+                            <QuantityPicker
                                 productId={product._id}
                                 variantId={variantId}
                                 quantity={qty}
+                                selectedVariant={selectedVariant}
+                                product={product}
                             />
-                        </Suspense>
-
-                        <QuantityPicker
-                            productId={product._id}
-                            variantId={variantId}
-                            quantity={qty}
-                            selectedVariant={selectedVariant}
-                            product={product}
-                        />
-                        <BulkTable product={product} />
+                            <BulkTable product={product} />
 
 
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+                    <div className="mt-8 border-t pt-8">
+                        <ProductDetails product={product} />
                     </div>
                 </div>
-
-
-
-
-
-
-
-
-                <div className="mt-8 border-t pt-8">
-                    <ProductDetails product={product} />
-                </div>
             </div>
+
         );
     } catch (error: any) {
         console.error(error);

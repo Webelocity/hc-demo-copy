@@ -6,8 +6,8 @@ import Image from "next/image";
 export default function BulkOrdersSection() {
   return (
     <section className="baseContainer">
-      <div className="max-w-[84.5rem] mx-auto">
-        <div 
+      <div className="maxWidth mx-auto">
+        <div
           className="relative w-full rounded-[1rem] overflow-hidden flex flex-col md:flex-row gap-0 md:gap-[2.5rem] items-stretch min-h-[20rem] md:h-[24.19rem]"
           style={{
             backgroundColor: 'var(--primary-500-main)',
@@ -15,17 +15,17 @@ export default function BulkOrdersSection() {
         >
           {/* Content */}
           <div className="flex flex-col gap-[1.5rem] p-[1.5rem] md:pl-[2.5rem] md:pr-0 md:py-0 flex-1 justify-center order-1 md:order-1">
-            <h2 
+            <h2
               className="text-white font-bold leading-[1.2] text-[1.5rem] md:text-[2.5rem]"
-              style={{ 
+              style={{
                 fontFamily: 'var(--font-sora)',
                 letterSpacing: '0.03rem',
               }}
             >
               Bulk Orders & Job-Lot Quantities
             </h2>
-            
-            <p 
+
+            <p
               className="text-[1.125rem] leading-[1.5]"
               style={{
                 color: 'var(--Neutral-100, #ededf0)',
@@ -36,9 +36,9 @@ export default function BulkOrdersSection() {
               Our bulk order service makes it easy to get high-volume products at competitive pricing for your large projects. From lumber and hardware to specialized tools and supplies, we can handle large quantities for your construction or renovation projects.
             </p>
 
-            <Button 
-              variant="secondary" 
-              sx={{ 
+            <Button
+              variant="secondary"
+              sx={{
                 alignSelf: 'flex-start',
                 backgroundColor: 'var(--Secondary-100)',
                 '&:hover': {

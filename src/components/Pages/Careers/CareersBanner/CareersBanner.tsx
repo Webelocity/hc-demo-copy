@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function CareersBanner() {
   return (
     <div className="baseContainer py-[2.5rem]">
-      <div className="h-[25rem] p-[2.5rem] rounded-[var(--Radius-md)] flex flex-col items-start justify-center bg-[url('/assets/image/Careers/careers.svg')] bg-cover bg-center bg-no-repeat">
+      <div className="h-[25rem] maxWidth p-[2.5rem] rounded-[var(--Radius-md)] flex flex-col items-start justify-center bg-[url('/assets/image/Careers/careers.svg')] bg-cover bg-center bg-no-repeat">
         <span className="w-full text-[var(--Secondary-600)] font-bold text-[3rem]">
           Home Central Stores{" "}
           <p className="inline text-[var(--primary-500-main)]">Careers</p>

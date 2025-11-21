@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Oppurtunities() {
   return (
     <div className="baseContainer py-[2.5rem]">
-      <div className="flex flex-col md:flex-row items-start gap-[2.5rem] baseContainer py-[2.5rem] bg-[var(--Secondary-600)] rounded-[var(--Radius-lg)]">
+      <div className="maxWidth flex flex-col md:flex-row items-start gap-[2.5rem] baseContainer py-[2.5rem] bg-[var(--Secondary-600)] rounded-[var(--Radius-lg)]">
         <div className="flex flex-col items-start gap-[2.5625rem] flex-[1] min-w-0">
           <div className="flex flex-col items-start gap-[1rem] w-full">
             <h3 className="text-[2.5rem] font-bold text-white leading-[1.2] tracking-[0.05rem]">

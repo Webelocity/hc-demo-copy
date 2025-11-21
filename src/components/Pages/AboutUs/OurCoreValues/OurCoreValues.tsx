@@ -42,7 +42,7 @@ export default function OurCoreValues() {
 
   return (
     <div className="baseContainer py-[3rem]">
-      <div className="bg-[#841618] flex gap-[2.5rem] items-center p-[2.5rem] rounded-[1.5rem] w-full">
+      <div className="maxWidth bg-[#841618] flex gap-[2.5rem] items-center p-[2.5rem] rounded-[1.5rem] w-full">
         <div className="flex flex-col lg:flex-row flex-1 flex-wrap gap-[2.5625rem] items-start min-w-px shrink-0">
           {/* Left Section - Title and Image */}
           <div className="flex flex-col flex-1 gap-[1rem] items-start min-w-[30.625rem] shrink-0">

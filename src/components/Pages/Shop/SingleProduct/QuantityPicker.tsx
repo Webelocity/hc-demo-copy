@@ -9,11 +9,12 @@ import { LuShoppingCart } from 'react-icons/lu';
 import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
 import Image from 'next/image';
 import { useAtom, useSetAtom } from 'jotai';
-import { cartAtom, addToCartAtom } from '@/atoms/cartAtom';
+import { addToCartAtom } from '@/atoms/cartAtom';
 
 import { wishlistAtom, toggleWishlistAtom } from '@/atoms/wishlistAtom';
 import { FaHeart } from "react-icons/fa";
 import { LuHeart } from "react-icons/lu";
+import { toast } from 'react-toastify';
 
 export default function QuantityPicker({
     productId,
@@ -34,7 +35,6 @@ export default function QuantityPicker({
     const inventoryCount = selectedVariant?.inventoryCount ?? 0;
     const [localQty, setLocalQty] = useState<number>(quantity);
     const [selectedFulfillmentMethod, setSelectedFulfillmentMethod] = useState<FulfillmentMethodEnum | null>(selectedVariant?.supportedFulfillmentMethods[0] ?? null);
-    const [cart] = useAtom(cartAtom);
     const addToCartAction = useSetAtom(addToCartAtom);
     useEffect(() => setLocalQty(quantity), [quantity]);
 
@@ -65,7 +65,11 @@ export default function QuantityPicker({
     const addToCart = () => {
 
         if (!selectedVariant) {
-            console.warn('No selectedVariant to add to cart');
+            toast.error('No selectedVariant to add to cart');
+            return;
+        }
+        if (trackQuantity && localQty > inventoryCount) {
+            toast.error('Quantity is greater than inventory count');
             return;
         }
 
