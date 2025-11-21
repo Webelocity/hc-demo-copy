@@ -197,7 +197,6 @@ export default function CareerForm() {
             toast.error("Please accept the certifications before submitting.");
             return;
         }
-        console.log("JobApplication submitted:", values);
         toast.success("Application submitted successfully.");
     };
 

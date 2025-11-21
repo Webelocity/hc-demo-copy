@@ -19,7 +19,6 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addToCartAction = useSetAtom(addToCartAtom);
     const toggleWishlist = useSetAtom(toggleWishlistAtom);
     const wishlist = useAtomValue(wishlistAtom);
-    console.log(product?.inventoryCount);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
     const selectedVariant = product?.lowestPriceVariant || product?.productVariants?.[0];
     const isSelectedVariantOutOfStock = Boolean(
@@ -72,8 +71,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             quantity: 1,
             fulfillmentMethod: null,
         });
-
-        console.log('add to cart');
     }
     const getLastDefaultPathName = (p?: Product) => {
         const path = p?.defaultPath;

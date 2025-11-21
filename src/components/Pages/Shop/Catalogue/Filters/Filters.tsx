@@ -40,8 +40,6 @@ const Filters: React.FC<FiltersProps> = ({
     const categoriesStatus = categories.status;
     const categoriesError = categories.error;
     const categoriesData = categories.data;
-    console.log(categoriesStatus);
-
     const isMobile = useMediaQuery('(max-width:1024px)');
     const [drawerOpen, setDrawerOpen] = useState(false);
     const searchParams = useSearchParams();

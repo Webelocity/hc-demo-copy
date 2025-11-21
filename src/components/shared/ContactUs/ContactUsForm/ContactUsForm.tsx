@@ -31,7 +31,6 @@ export default function ContactUsForm() {
     const onSubmit = async (data: ContactFormData) => {
         try {
             // TODO: Replace with your actual API call
-            console.log('Form submitted:', data);
 
             // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 1000));
