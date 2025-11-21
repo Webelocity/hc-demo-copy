@@ -27,7 +27,7 @@ export default function FreeDelivery() {
                         <Button variant="primary" className="w-fit">Shop Now</Button>
                     </div>
                     <div className="flex-[1]">
-                        <Image className="aspect-[517/295] !relative" src={'/assets/image/HomePage/delivery_truck.svg'} alt="delivery_truck" fill />
+                        <Image className="aspect-[517/295] !relative" src={'/assets/image/HomePage/delivery_truck.png'} alt="delivery_truck" fill />
                     </div>
                 </div>
                 <div className="p-[1.5rem] rounded-b-[var(--Radius-md)]  border-[var(--Teritary-100)] border-r border-b border-l">
