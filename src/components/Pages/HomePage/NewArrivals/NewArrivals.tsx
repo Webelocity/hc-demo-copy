@@ -1,8 +1,11 @@
 'use client';
 
+import { fetchAllProducts } from "@/Api/Apis";
 import Button from "@/components/shared/Button";
 import ProductCard from "@/components/shared/productCard";
 import ReUsableSwiper from "@/components/shared/ReUsableSwiper/reUsableSwiper";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 // Temporary mock data - replace with your actual data
 const mockProducts = [
@@ -19,6 +22,18 @@ const mockProducts = [
 ];
 
 export default function NewArrivals() {
+    const {
+        data: productsResponse,
+        isLoading,
+        isError,
+    } = useQuery<ApiResponse<Product>>({
+        queryKey: ['NewArrivals'],
+        queryFn: () => fetchAllProducts({ sort: "latest" }),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+    const router = useRouter();
+    console.log(productsResponse?.data);
     return (
         <div className="baseContainer py-[5rem]">
             <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
@@ -26,14 +41,16 @@ export default function NewArrivals() {
                     <h3 className="text-[2.5rem] font-bold text-start">
                         New Arrivals
                     </h3>
-                    <Button variant="secondary">View Shop</Button>
+                    <Button onClick={() => router.push('/shop/catalogue?sort=latest')} variant="secondary">View Shop</Button>
                 </div>
 
                 <ReUsableSwiper
                     className="swiper-pagination-new-arrivals"
-                    data={mockProducts}
+                    slideStyles="!h-[-webkit-fill-available]"
+                    data={productsResponse?.data ?? []}
+                    isLoading={isLoading}
                     renderSlide={(product) => (
-                        <ProductCard key={product.id} />
+                        <ProductCard product={product} key={product._id} />
                     )}
                     swiperOptions={{
                         spaceBetween: 20,

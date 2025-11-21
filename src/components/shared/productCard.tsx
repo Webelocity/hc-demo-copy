@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAtomValue, useSetAtom } from "jotai";
 import { addToCartAtom } from "@/atoms/cartAtom";
 import { toggleWishlistAtom, wishlistAtom } from "@/atoms/wishlistAtom";
+import { toast } from "react-toastify";
 
 interface ProductCardProps {
     product?: Product;
@@ -18,7 +19,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addToCartAction = useSetAtom(addToCartAtom);
     const toggleWishlist = useSetAtom(toggleWishlistAtom);
     const wishlist = useAtomValue(wishlistAtom);
-
+    console.log(product?.inventoryCount);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
     const selectedVariant = product?.lowestPriceVariant || product?.productVariants?.[0];
     const isSelectedVariantOutOfStock = Boolean(
@@ -52,7 +53,10 @@ export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
         if (!product) return;
         e.stopPropagation();
-        if (isSelectedVariantOutOfStock) return;
+        if (isSelectedVariantOutOfStock) {
+            toast.error('This product Variant is out of stock');
+            return;
+        }
 
         // Use lowestPriceVariant if available, otherwise fall back to first variant (computed above)
         const variant = selectedVariant;
@@ -86,7 +90,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <div className="p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group"
+        <div className=" p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group h-[-webkit-fill-available]"
 
             onClick={navigateToProduct}
         >

@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function CustomQuotesSection() {
   return (
     <section className="baseContainer">
-      <div className="w-full mx-auto">
+      <div className="w-full maxWidth ">
         <div
           className="relative w-full rounded-[1rem] overflow-hidden flex flex-col md:flex-row gap-0 md:gap-[2.5rem] items-stretch min-h-[20rem] md:h-[24.19rem]"
           style={{

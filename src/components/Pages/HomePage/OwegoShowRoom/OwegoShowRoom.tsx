@@ -6,8 +6,8 @@ import { HiMiniUserGroup } from "react-icons/hi2";
 
 export default function OwegoShowRoom() {
     return (
-        <div className="bg-[var(--primary-500-main)]">
-            <div className="baseContainer maxWidth  py-[5rem] flex flex-col lg:flex-row gap-[4rem] items-center">
+        <div className="baseContainer bg-[var(--primary-500-main)]">
+            <div className=" maxWidth  py-[5rem] flex flex-col lg:flex-row gap-[4rem] items-center">
                 <div className="flex flex-col gap-[1.5rem] flex-[1] ps-[1rem]">
                     <h2 className="text-[2.5rem] font-bold text-white tracking-[0.8px]">Visit Our Home Central Showroom & Design Center in Owego</h2>
 

@@ -4,7 +4,7 @@ import Image from "next/image";
 export default function StartProjectSection() {
   return (
     <div className="baseContainer py-[1.5rem] md:py-[3rem]">
-      <div className="relative rounded-[1rem] overflow-hidden lg:min-h-[400px] md:min-h-[360px]">
+      <div className="maxWidth relative rounded-[1rem] overflow-hidden lg:min-h-[400px] md:min-h-[360px]">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <Image

@@ -222,7 +222,7 @@ export default function CareerForm() {
 
     return (
         <div className="baseContainer py-[2rem]">
-            <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-[1.5rem]">
+            <div className="maxWidth grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-[1.5rem]">
                 <div>
                     <Stepper steps={steps} activeStep={activeStep} completed={completed} />
                 </div>

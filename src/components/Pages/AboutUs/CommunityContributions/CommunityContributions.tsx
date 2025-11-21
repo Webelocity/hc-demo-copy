@@ -22,7 +22,7 @@ export default function CommunityContributions() {
 
   return (
     <div className="baseContainer py-[3rem]">
-      <div className="bg-[var(--Teritary-100)] flex gap-[1rem] items-end overflow-hidden p-[2.5rem] rounded-[1rem] w-full">
+      <div className="maxWidth bg-[var(--Teritary-100)] flex gap-[1rem] items-end overflow-hidden p-[2.5rem] rounded-[1rem] w-full">
         <div className="flex flex-col lg:flex-row gap-[1.5rem] items-start w-full">
           {/* Title */}
           <h2 className="text-[2.5rem] font-bold text-black leading-[1.2] tracking-[0.05rem] w-[24.8125rem] shrink-0">

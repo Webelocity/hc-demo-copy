@@ -3,7 +3,7 @@
 export default function PoliciesSection() {
   return (
     <section className="baseContainer w-full">
-      <div className="w-full mx-auto">
+      <div className="w-full maxWidth">
         <div
           className="w-full rounded-[1.5rem] p-[1.5rem] md:p-[2.5rem]"
           style={{

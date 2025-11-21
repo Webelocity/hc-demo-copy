@@ -8,7 +8,7 @@ import Link from "next/link";
 
 export default function Faqs() {
     return (
-        <div className="mt-[1.5rem] pb-[2.5rem] w-full ">
+        <div className="mt-[1.5rem] pb-[2.5rem] w-full  baseContainer maxWidth">
             <h2 className="text-[1.75rem] font-bold mb-4">Frequently Asked Questions</h2>
 
             <div className="w-full flex flex-col gap-[1rem] py-[1rem]">

@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section className="baseContainer py-[1.5rem]">
       <div
-        className="relative w-full min-h-[22.625rem] md:min-h-[25rem] rounded-[1rem] overflow-hidden flex items-center px-[1.5rem] md:px-[2.5rem] py-[2.5rem]"
+        className="relative maxWidth w-full min-h-[22.625rem] md:min-h-[25rem] rounded-[1rem] overflow-hidden flex items-center px-[1.5rem] md:px-[2.5rem] py-[2.5rem]"
         style={{
           background:
             "url('/assets/image/SpecialOrdering/hero-placeholder.svg') no-repeat top right",

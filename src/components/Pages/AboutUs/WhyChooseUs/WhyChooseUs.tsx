@@ -65,7 +65,7 @@ export default function WhyChooseUs() {
 
   return (
     <div className="baseContainer py-[3rem] ">
-      <div className="flex flex-col gap-[1rem] items-start p-[2.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]">
+      <div className=" maxWidth flex flex-col gap-[1rem] items-start p-[2.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]">
         {/* Main Title */}
         <h2 className="text-[2.5rem] font-bold text-black leading-[1.2] tracking-[0.05rem] w-full">
           Why Choose Us
