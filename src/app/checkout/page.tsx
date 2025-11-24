@@ -88,7 +88,6 @@ export default function CheckoutPage() {
     }, [cart]);
 
     const handleCloseTotalsError = () => {
-        console.log('handleCloseTotalsError');
         setTotalsErrorOpen(false);
     };
     const hasShippingOrDelivery = useMemo(

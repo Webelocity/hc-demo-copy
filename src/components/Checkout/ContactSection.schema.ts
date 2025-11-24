@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { matchIsValidTel } from 'mui-tel-input';
 
 export interface CheckoutContactFormData {
     firstName: string;
@@ -23,8 +24,14 @@ export const checkoutContactSchema = Joi.object<CheckoutContactFormData>({
         'string.empty': 'Email is required',
         'string.email': 'Please enter a valid email address',
     }),
-    phoneNumber: Joi.string().trim().required().messages({
+    phoneNumber: Joi.string().trim().required().custom((value, helpers) => {
+        if (!matchIsValidTel(value ?? '')) {
+            return helpers.error('string.invalidPhone');
+        }
+        return value;
+    }).messages({
         'string.empty': 'Phone number is required',
+        'string.invalidPhone': 'Please enter a valid phone number',
     }),
     selectedAddresses: Joi.any().optional(),
 });

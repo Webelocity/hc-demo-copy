@@ -26,15 +26,6 @@ export default function PaymentSection({ isCompleted, onComplete }: PaymentSecti
 
     const handleSetToken = useCallback((t: string | null) => {
         setTokenAtom(t);
-        if (t) {
-            // Log freshly received token on validation
-            try {
-                // eslint-disable-next-line no-console
-                console.log('VersaPay token:', String(t).slice(0, 12) + '...');
-            } catch {
-                // ignore
-            }
-        }
     }, [setTokenAtom]);
 
     return (

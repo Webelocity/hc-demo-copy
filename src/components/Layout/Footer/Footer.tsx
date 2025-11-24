@@ -1,11 +1,13 @@
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 import Image from "next/image";
 import Link from "next/link";
 import { GoArrowUpRight } from "react-icons/go";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaCcAmex, FaCcDiscover, FaXTwitter } from "react-icons/fa6";
 import { FaFacebook } from "react-icons/fa6";
 import { FaInstagram } from "react-icons/fa6";
 
 export default function Footer() {
+  const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
   return (
     <div className="baseContainer bg-[var(--Primary-50)]">
       <footer className="maxWidth flex flex-col gap-[1.75rem] justify-between items-center pt-[6.25rem] pb-[3.5rem] ">
@@ -49,25 +51,25 @@ export default function Footer() {
                   Home
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/about-us"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   About
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/services"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   Services
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/locations"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   Locations
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/contact"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   Contact
@@ -79,7 +81,7 @@ export default function Footer() {
                   Team
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/careers"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   Careers
@@ -121,17 +123,17 @@ export default function Footer() {
                   Shop
                 </span>
                 <Link
-                  href={"/"}
+                  href={"/shop/catalogue?page=1"}
                   className="text-[0.9rem] text-[var(--Neutral-800)] flex items-center gap-[0.5rem]"
                 >
                   All Products <GoArrowUpRight className="text-2xl" />
                 </Link>
-                <Link
-                  href={"/"}
-                  className="text-[0.9rem] text-[var(--Neutral-800)]"
-                >
-                  Quote Request
-                </Link>
+                <QuoteRequestPopup
+                  dashboardUrl={Customer_Dashboard_Url}
+                  triggerLabel="Quote Request"
+                  triggerVariant="link"
+                  triggerClassName="text-start"
+                />
                 <div className="flex items-center gap-[0.5rem]">
                   <span className="relative w-[3.7rem] h-[2.7rem]">
                     <Image src="/assets/icon/VISA.svg" alt="Visa" fill />
@@ -142,6 +144,14 @@ export default function Footer() {
                       alt="Mastercard"
                       fill
                     />
+                  </span>
+                  <span>
+                    <FaCcDiscover className="text-[var(--Colors-Neutral-700)] w-[2.5rem] h-[2.5rem]" />
+
+                  </span>
+                  <span>
+                    <FaCcAmex className="text-[var(--Colors-Neutral-700)] w-[2.5rem] h-[2.5rem]" />
+
                   </span>
                 </div>
               </div>

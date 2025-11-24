@@ -41,8 +41,6 @@ export default function SearchResults({
     onClose();
   };
 
-  console.log('SearchResults render:', SearchResults);
-
   return (
     <>
       <div className={styles.overlay} onClick={onClose} />

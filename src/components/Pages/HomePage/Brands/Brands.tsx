@@ -48,7 +48,7 @@ export default function Brands() {
             <div className="flex flex-col gap-[1.5rem] items-center baseContainer">
                 <p className="font-bold text-[2.5rem] text-black">Top Brands for Every Project</p>
                 <p className="text-black text-[1rem] w-full lg:w-[70%] text-center">
-                    We provide a full suite of project services, including electricity, plumbing, and building for homes and shops.
+                    We provide quality products from trusted suppliers for all your building and home renovation projects
                 </p>
             </div>
             <div className="flex flex-col gap-[1.75rem] w-full">

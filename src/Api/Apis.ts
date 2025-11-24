@@ -114,7 +114,6 @@ export const fetchSingleProductById = async (
         throw new Error("No productId provided");
     }
 
-    console.log('storeAddressId', storeAddressId);
 
 
     const query = constructQueryParams({ ...params, storeAddressId: storeAddressId ?? "" });
@@ -304,17 +303,14 @@ export const versapayConfirmMethod = async (
 ): Promise<any> => {
     try {
         // eslint-disable-next-line no-console
-        console.log('VersaPay confirm payload:', payload);
         const res = await fetchWithStoreId<any>('/payments/versapay/process', {
             method: "POST",
             body: payload ?? {},
         });
         // eslint-disable-next-line no-console
-        console.log('VersaPay process response:', res);
         return res;
     } catch (err) {
         // eslint-disable-next-line no-console
-        console.log('VersaPay process error (logging only):', err);
         // Return a mock so the UI can proceed in environments without the backend route
         return { ok: true, mocked: true };
     }

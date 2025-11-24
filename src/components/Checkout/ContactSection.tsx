@@ -177,8 +177,9 @@ export default function ContactSection({ isCompleted, onComplete, setOpenById, o
                                 variant="outlined"
                                 fullWidth
                                 defaultCountry="US"
-                                error={!!errors.phoneNumber || fieldState.invalid}
-                                helperText={errors.phoneNumber?.message || (fieldState.invalid ? 'Please enter a valid phone number' : '')}
+                                forceCallingCode
+                                error={!!errors.phoneNumber || !!fieldState.error}
+                                helperText={errors.phoneNumber?.message || fieldState.error?.message || ''}
                                 disabled={isSubmitting}
                                 sx={{
                                     '& .MuiOutlinedInput-root': {

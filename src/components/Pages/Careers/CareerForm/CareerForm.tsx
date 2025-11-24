@@ -21,7 +21,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { MuiTelInput } from "mui-tel-input";
+import { MuiTelInput, matchIsValidTel } from "mui-tel-input";
 import DropzoneUploader from "@/components/shared/DropzoneUploader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -94,7 +94,7 @@ export default function CareerForm() {
                 additionalSkills: "",
                 retailExperience: "",
                 managementExperience: "",
-                maintenanceExperience: "",
+                warehouseDriverExperience: "",
                 inventoryExperience: "",
                 applicantNameSignature: "",
                 additionalFiles: [],
@@ -137,7 +137,6 @@ export default function CareerForm() {
             );
         } else if (activeStep === 1) {
             fieldsToValidate.push(
-                "employmentData.cv",
                 "employmentData.dateAvailableToStart",
                 "employmentData.salaryRequirement",
                 "employmentData.timeYouAreAvailableToWork",
@@ -197,7 +196,7 @@ export default function CareerForm() {
             toast.error("Please accept the certifications before submitting.");
             return;
         }
-        console.log("JobApplication submitted:", values);
+        console.log(values);
         toast.success("Application submitted successfully.");
     };
 
@@ -267,16 +266,43 @@ export default function CareerForm() {
                                     <Controller
                                         name="demographicInformation.phonePrimary"
                                         control={control}
-                                        rules={{ required: "Required" }}
+                                        rules={{
+                                            required: "Required",
+                                            validate: (value) =>
+                                                matchIsValidTel(value || "") || "Please enter a valid phone number",
+                                        }}
                                         render={({ field }) => (
-                                            <MuiTelInput {...field} defaultCountry="US" forceCallingCode label="Phone number 1" required className="w-full" error={!!errors.demographicInformation?.phonePrimary} helperText={errors.demographicInformation?.phonePrimary?.message as any} />
+                                            <MuiTelInput
+                                                {...field}
+                                                defaultCountry="US"
+                                                forceCallingCode
+                                                label="Phone number 1"
+                                                required
+                                                className="w-full"
+                                                error={!!errors.demographicInformation?.phonePrimary}
+                                                helperText={errors.demographicInformation?.phonePrimary?.message as any}
+                                            />
                                         )}
                                     />
                                     <Controller
                                         name="demographicInformation.phoneSecondary"
                                         control={control}
+                                        rules={{
+                                            validate: (value) => {
+                                                if (!value) return true;
+                                                return matchIsValidTel(value) || "Please enter a valid phone number";
+                                            },
+                                        }}
                                         render={({ field }) => (
-                                            <MuiTelInput {...field} defaultCountry="US" forceCallingCode label="Phone number 2 (optional)" className="w-full" />
+                                            <MuiTelInput
+                                                {...field}
+                                                defaultCountry="US"
+                                                forceCallingCode
+                                                label="Phone number 2 (optional)"
+                                                className="w-full"
+                                                error={!!errors.demographicInformation?.phoneSecondary}
+                                                helperText={errors.demographicInformation?.phoneSecondary?.message as any}
+                                            />
                                         )}
                                     />
                                     <Controller
@@ -338,13 +364,10 @@ export default function CareerForm() {
                             <div className="space-y-6">
                                 {/* CV uploader */}
                                 <div>
-                                    <InputLabel required>CV (PDF or DOCX)</InputLabel>
+                                    <InputLabel>CV (PDF or DOCX, optional)</InputLabel>
                                     <Controller
                                         name="employmentData.cv"
                                         control={control}
-                                        rules={{
-                                            validate: (file) => !!file || "CV is required",
-                                        }}
                                         render={({ field }) => (
                                             <DropzoneUploader
                                                 multiple={false}
@@ -365,7 +388,7 @@ export default function CareerForm() {
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4">
                                     <Controller
                                         name="employmentData.dateAvailableToStart"
                                         control={control}
@@ -387,19 +410,7 @@ export default function CareerForm() {
                                             <TextField {...field} type="text" label="Salary Requirement" required error={!!errors.employmentData?.salaryRequirement} helperText={errors.employmentData?.salaryRequirement?.message} />
                                         )}
                                     />
-                                    <Controller
-                                        name="employmentData.timeYouAreAvailableToWork"
-                                        control={control}
-                                        rules={{ required: "Required" }}
-                                        render={({ field }) => (
-                                            <DatePicker
-                                                label="When can you start"
-                                                value={field.value ? dayjs(field.value) : null}
-                                                onChange={(val) => field.onChange(val ? dayjs(val as any).format('YYYY-MM-DD') : "")}
-                                                slotProps={{ textField: { required: true, error: !!errors.employmentData?.timeYouAreAvailableToWork, helperText: errors.employmentData?.timeYouAreAvailableToWork?.message } }}
-                                            />
-                                        )}
-                                    />
+
                                 </div>
 
                                 {/* Days able to work */}
@@ -474,21 +485,7 @@ export default function CareerForm() {
                                         />
                                         <FormHelperText>{errors.employmentData?.isUsCitizen?.message}</FormHelperText>
                                     </FormControl>
-                                    <FormControl required error={!!errors.employmentData?.legallyAllowedToWorkUs}>
-                                        <p className="text-[0.875rem] text-[var(--Neutral-500)] font-medium">Have you ever worked for Home Central?<span className="text-red-600 text-[1rem] ml-1">*</span></p>
-                                        <Controller
-                                            name="employmentData.legallyAllowedToWorkUs"
-                                            control={control}
-                                            rules={{ required: "Required" }}
-                                            render={({ field }) => (
-                                                <RadioGroup row {...field}>
-                                                    <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                                                    <FormControlLabel value="no" control={<Radio />} label="No" />
-                                                </RadioGroup>
-                                            )}
-                                        />
-                                        <FormHelperText>{errors.employmentData?.legallyAllowedToWorkUs?.message}</FormHelperText>
-                                    </FormControl>
+
                                 </div>
 
                                 {/* Employment specifics */}
@@ -759,8 +756,8 @@ export default function CareerForm() {
                                     <Controller name="otherExperience.managementExperience" control={control} render={({ field }) => (
                                         <TextField {...field} label="Management Experience" />
                                     )} />
-                                    <Controller name="otherExperience.maintenanceExperience" control={control} render={({ field }) => (
-                                        <TextField {...field} label="Maintenence Experience" />
+                                    <Controller name="otherExperience.warehouseDriverExperience" control={control} render={({ field }) => (
+                                        <TextField {...field} label="Warehouse/Driver Experience" />
                                     )} />
                                     <Controller name="otherExperience.inventoryExperience" control={control} render={({ field }) => (
                                         <TextField {...field} label="Inventory Experience" />

@@ -112,7 +112,7 @@ export default function Home() {
       <FreeDelivery />
       <OwegoShowRoom />
       <BestSellers />
-      <Rent />
+      {/* <Rent /> */}
       <GiftCards />
       <Brands />
       <Reviews />

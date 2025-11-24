@@ -2,7 +2,7 @@ export type StoreId =
   | "685a6dac1e47caf847ec4d9e"
   | "69142c70e1597ae70a5390d7"
   | "69142c80e1597ae70a5390d8"
-  | "69142c8ee1597ae70a5390d9";
+  | "owego-showroom";
 
 export type StoreLocation = {
   id: StoreId;
@@ -16,6 +16,7 @@ export type StoreLocation = {
   fullAddress: string;
   lat: number;
   lng: number;
+  gmapLink?: string;
 };
 
 export const DEFAULT_STORE_ID: StoreId = "685a6dac1e47caf847ec4d9e";
@@ -49,6 +50,7 @@ export const STORES: Record<StoreId, StoreLocation> = {
     fullAddress: "199 Stage Rd. Vestal, NY 13850",
     lat: 42.08759358290779,
     lng: -76.05341079108524,
+    gmapLink: 'https://maps.app.goo.gl/ppAwPT6HT8kngzq66'
   },
   "69142c70e1597ae70a5390d7": {
     id: "69142c70e1597ae70a5390d7",
@@ -61,6 +63,7 @@ export const STORES: Record<StoreId, StoreLocation> = {
     fullAddress: "309 Owego Rd. Candor, NY 13743",
     lat: 42.21814148544821,
     lng: -76.32937882477931,
+    gmapLink: 'https://maps.app.goo.gl/THTC8MnAdF9Xxy2J7'
   },
   "685a6dac1e47caf847ec4d9e": {
     id: "685a6dac1e47caf847ec4d9e",
@@ -74,51 +77,53 @@ export const STORES: Record<StoreId, StoreLocation> = {
     fullAddress: "151 Central Ave. Owego, NY 13827",
     lat: 42.10680465663656,
     lng: -76.26674955982054,
+    gmapLink: 'https://share.google/7GYdd6jSGa7HvXLb0'
   },
-  "69142c8ee1597ae70a5390d9": {
-    id: "69142c8ee1597ae70a5390d9",
-    name: "Do it Best",
-    address: "1595 Victoria St N-3",
-    city: "Kitchener",
-    state: "ON",
-    zip: "N2B 3E6",
-    phone: "+15197427141",
+  "owego-showroom": {
+    id: "owego-showroom",
+    name: "Owego Showroom",
+    address: "133 Central Ave.",
+    city: "Owego",
+    state: "NY",
+    zip: "13827",
+    phone: "(607) 223-2360",
     fullAddress: "133 Central Ave. Owego, NY 13827",
-    lat: 42.10680465663656,
-    lng: -76.26674955982054,
+    lat: 42.1064079,
+    lng: -76.2670105,
+    gmapLink: 'https://maps.app.goo.gl/noiJnK6aACoAjGC97'
   },
 };
 
 // Store schedules - assuming same hours for all stores (Open until 6:00 PM)
 export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
   "69142c80e1597ae70a5390d8": {
-    monday: { open: "08:00", close: "18:00" },
-    tuesday: { open: "08:00", close: "18:00" },
-    wednesday: { open: "08:00", close: "18:00" },
-    thursday: { open: "08:00", close: "18:00" },
-    friday: { open: "08:00", close: "18:00" },
-    saturday: { open: "08:00", close: "18:00" },
-    sunday: { closed: true, open: "00:00", close: "00:00" },
+    monday: { open: "07:30", close: "19:00" },
+    tuesday: { open: "07:30", close: "19:00" },
+    wednesday: { open: "07:30", close: "19:00" },
+    thursday: { open: "07:30", close: "19:00" },
+    friday: { open: "07:30", close: "19:00" },
+    saturday: { open: "07:30", close: "17:00" },
+    sunday: { open: "09:00", close: "15:00" },
   },
   "69142c70e1597ae70a5390d7": {
-    monday: { open: "08:00", close: "18:00" },
-    tuesday: { open: "08:00", close: "18:00" },
-    wednesday: { open: "08:00", close: "18:00" },
-    thursday: { open: "08:00", close: "18:00" },
-    friday: { open: "08:00", close: "18:00" },
-    saturday: { open: "08:00", close: "18:00" },
-    sunday: { closed: true, open: "00:00", close: "00:00" },
+    monday: { open: "07:30", close: "19:00" },
+    tuesday: { open: "07:30", close: "19:00" },
+    wednesday: { open: "07:30", close: "19:00" },
+    thursday: { open: "07:30", close: "19:00" },
+    friday: { open: "07:30", close: "19:00" },
+    saturday: { open: "07:30", close: "17:00" },
+    sunday: { open: "09:00", close: "15:00" },
   },
   "685a6dac1e47caf847ec4d9e": {
-    monday: { open: "08:00", close: "18:00" },
-    tuesday: { open: "08:00", close: "18:00" },
-    wednesday: { open: "08:00", close: "18:00" },
-    thursday: { open: "08:00", close: "18:00" },
-    friday: { closed: true, open: "08:00", close: "18:00" },
-    saturday: { open: "08:00", close: "18:00" },
-    sunday: { closed: true, open: "00:00", close: "00:00" },
+    monday: { open: "07:30", close: "19:00" },
+    tuesday: { open: "07:30", close: "19:00" },
+    wednesday: { open: "07:30", close: "19:00" },
+    thursday: { open: "07:30", close: "19:00" },
+    friday: { open: "07:30", close: "19:00" },
+    saturday: { open: "07:30", close: "17:00" },
+    sunday: { open: "09:00", close: "15:00" },
   },
-  "69142c8ee1597ae70a5390d9": {
+  "owego-showroom": {
     monday: { open: "09:00", close: "17:00" },
     tuesday: { open: "09:00", close: "17:00" },
     wednesday: { open: "09:00", close: "17:00" },
@@ -221,7 +226,6 @@ export function getAllStores(): StoreLocation[] {
 // Get store by ID
 export function getStoreById(storeId: StoreId | string): StoreLocation {
   const normalizedStoreId = normalizeStoreId(storeId);
-  console.log("storeId", normalizedStoreId);
   const store = STORES[normalizedStoreId];
 
   // Safety check: ensure the store exists

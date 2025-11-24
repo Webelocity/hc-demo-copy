@@ -21,7 +21,7 @@
 
 /* Marquee animation - left to right */
 .marqueeLeft {
-    animation: scrollLeft 30s linear infinite;
+    animation: scrollLeft 60s linear infinite;
 }
 
 @keyframes scrollLeft {
@@ -35,7 +35,7 @@
 
 /* Marquee animation - right to left */
 .marqueeRight {
-    animation: scrollRight 30s linear infinite;
+    animation: scrollRight 60s linear infinite;
 }
 
 @keyframes scrollRight {

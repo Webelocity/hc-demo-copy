@@ -64,7 +64,6 @@ export const addToCartAtom = atom(null, (get, set, payload: AddToCartPayload) =>
             ];
         }
         toast.success(`${variant.name} added to cart successfully`);
-        console.log('cart (next)', next);
         return next;
     });
     set(cartDrawerOpenAtom, true);
@@ -97,7 +96,6 @@ export const addAllToCartAtom = atom(null, (get, set, items: AddToCartPayload[])
                 });
             }
         });
-        console.log('cart (add all)', next);
         return next;
     });
     toast.success(`${items.length} items added to cart successfully`);
@@ -125,8 +123,6 @@ export const increaseQuantityAtom = atom(
                 ...current,
                 quantity: Math.min(current.quantity + incrementBy, maxQty),
             };
-
-            console.log('cart (increase)', next);
             return next;
         });
     }
@@ -148,7 +144,6 @@ export const decreaseQuantityAtom = atom(
             const decrementBy = Math.max(1, Math.floor(amount));
             const newQty = Math.max(1, current.quantity - decrementBy);
             next[index] = { ...current, quantity: newQty };
-            console.log('cart (decrease)', next);
             return next;
         });
     }
@@ -164,7 +159,6 @@ export const deleteFromCartAtom = atom(
                     !(item.variant._id === variantId &&
                         item.fulfillmentMethod === fulfillmentMethod)
             );
-            console.log('cart (delete)', next);
             return next;
         });
     }
@@ -203,7 +197,6 @@ export const updateFulfillmentAtom = atom(
                     fulfillmentMethod: toFulfillmentMethod,
                 };
             }
-            console.log('cart (update fulfillment)', next);
             return next;
         });
     }
