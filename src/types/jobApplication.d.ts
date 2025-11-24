@@ -48,7 +48,7 @@ type OtherExperience = {
     additionalSkills?: string;
     retailExperience?: string;
     managementExperience?: string;
-    maintenanceExperience?: string;
+    warehouseDriverExperience?: string;
     inventoryExperience?: string;
     applicantNameSignature: string; // required
     additionalFiles?: File[];

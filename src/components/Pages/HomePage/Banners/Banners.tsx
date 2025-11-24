@@ -2,6 +2,7 @@ import Button from "@/components/shared/Button";
 import Image from "next/image";
 
 export default function Banners() {
+    const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
     return (
         <div className="baseContainer">
             <div className="maxWidth  flex flex-col gap-[1.5rem] py-[1.5rem]">
@@ -26,7 +27,7 @@ export default function Banners() {
                         <p className="pt-[1rem] text-[1.125rem] text-[var(--Neutral-200)] font-normal w-[100%] lg:w-[60%]">
                             Find great deals and special prices.                    </p>
                         <div className="mt-[2.5rem] ">
-                            <Button variant="primary">
+                            <Button href="/shop/catalogue?category_active=69143ed86ac9361831e465f6&page=1" variant="primary">
                                 Shop Now
                             </Button>
                         </div>
@@ -47,7 +48,7 @@ export default function Banners() {
                             From snow removal tools to heaters and cozy home must-haves, get ready for winter with special seasonal savings at Home Central Stores.
                         </p>
                         <div className="flex justify-center mt-[2.5rem]">
-                            <Button variant="primary">
+                            <Button href="/shop/catalogue?category_active=69143f1d6ac9361831e4752d&page=1" variant="primary">
                                 Shop Electrical Now
                             </Button>
                         </div>
@@ -81,7 +82,7 @@ export default function Banners() {
                             </div>
                         </div>
                         <div className="flex justify-start mt-[1.5rem] w-full">
-                            <Button variant="primary" className="w-full lg:w-auto">
+                            <Button variant="primary" href={`${Customer_Dashboard_Url}/auth/register/regular?source=home-page`} className="w-full lg:w-auto">
                                 Sign Up Now!
                             </Button>
                         </div>

@@ -98,7 +98,7 @@ export default function Categories() {
                                 <Link href={`/shop/catalogue?category_active=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
                                     <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
                                         {category.image ? (
-                                            <Image src={category.image} className="!relative !w-[6rem] !h-[6.5rem]" alt="category" fill />
+                                            <Image src={category.image} className="!relative !w-[6rem] !object-contain !h-[6.5rem]" alt="category" fill />
                                         ) : (
                                             <FallBackImage className="!w-[6rem] !h-[6.5rem]" />
                                         )}

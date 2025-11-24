@@ -1,13 +1,16 @@
 'use client';
 
 import { Button as MuiButton, ButtonProps as MuiButtonProps } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
     variant?: 'primary' | 'secondary' | 'outline';
     size?: 'small' | 'medium' | 'large';
+    href?: string;
 }
 
-export default function Button({ variant = 'primary', size = 'medium', children, sx, ...props }: ButtonProps) {
+export default function Button({ variant = 'primary', size = 'medium', children, sx, href, ...props }: ButtonProps) {
+    const router = useRouter();
     const getVariantStyles = () => {
         switch (variant) {
             case 'primary':
@@ -77,6 +80,7 @@ export default function Button({ variant = 'primary', size = 'medium', children,
 
     return (
         <MuiButton
+            onClick={() => href && router.push(href)}
             {...props}
 
             sx={{
