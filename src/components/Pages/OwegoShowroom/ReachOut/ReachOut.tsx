@@ -1,7 +1,10 @@
 import Map from "@/components/shared/ContactUs/Map/Map";
+import { STORES } from "@/util/shedule";
 import Image from "next/image";
 
+
 export default function ReachOut() {
+  const owegoShowroomLocation = STORES["owego-showroom"];
   return (
     <div className="baseContainer py-[2.5rem] ">
       <div className="maxWidth flex flex-col md:flex-row gap-[2.5rem] p-[1.5rem] md:p-[2.5rem] bg-[var(--primary-500-main)] rounded-[var(--Radius-md)]">
@@ -20,7 +23,7 @@ export default function ReachOut() {
           <p className="text-[1.75rem] text-white font-normal text-start">
             Visit Us
           </p>
-          <Map size="small" />
+          <Map size="small" customLocation={owegoShowroomLocation} />
           <div className="flex flex-col ">
             <div className="flex items-center gap-[0.25rem]">
               <Image

@@ -6,7 +6,7 @@ import { useMediaQuery } from "@mui/material";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useAtom } from "jotai";
 import { selectedStoreAtom } from "@/atoms/storeAtom";
-import { STORES } from "@/util/shedule";
+import { StoreLocation, STORES } from "@/util/shedule";
 
 type LatLng = { lat: number; lng: number };
 
@@ -35,11 +35,11 @@ const mapOptions: google.maps.MapOptions = {
 
 type MapProps = {
   size?: "small" | "medium" | "large";
-  /** Optional override; if not provided we use the selected store from the atom */
-  center?: LatLng;
+  /** Overrides the selected store location when provided */
+  customLocation?: StoreLocation;
 };
 
-const Map: React.FC<MapProps> = ({ size = "medium", center }) => {
+const Map: React.FC<MapProps> = ({ size = "medium", customLocation }) => {
   const isMobile = useMediaQuery("(max-width:1023px)", { noSsr: true });
   const [mounted, setMounted] = useState(false);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
@@ -47,8 +47,9 @@ const Map: React.FC<MapProps> = ({ size = "medium", center }) => {
   const [selectedStoreId] = useAtom(selectedStoreAtom);
   const selectedStore = STORES[selectedStoreId];
 
-  // use prop center if provided; otherwise use the selected store coords
-  const mapCenter: LatLng = center ?? { lat: selectedStore.lat, lng: selectedStore.lng };
+  // Use custom location when provided, otherwise fall back to the selected store coordinates
+  const mapCenter: LatLng =
+    customLocation ?? { lat: selectedStore.lat, lng: selectedStore.lng };
 
   const sizeMap: Record<NonNullable<MapProps["size"]>, string> = {
     small: "15rem",
@@ -66,8 +67,10 @@ const Map: React.FC<MapProps> = ({ size = "medium", center }) => {
   });
 
   const openInGoogleMaps = () => {
-    const url = `https://www.google.com/maps/search/?api=1&query=${mapCenter.lat},${mapCenter.lng}`;
-    window.open(url, "_blank", "noopener,noreferrer");
+    const url = customLocation?.gmapLink ? customLocation.gmapLink : selectedStore?.gmapLink ?? '';
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
   };
 
   if (!mounted) {

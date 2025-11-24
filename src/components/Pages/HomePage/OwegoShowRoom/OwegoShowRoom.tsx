@@ -11,19 +11,19 @@ export default function OwegoShowRoom() {
                 <div className="flex flex-col gap-[1.5rem] flex-[1] ps-[1rem]">
                     <h2 className="text-[2.5rem] font-bold text-white tracking-[0.8px]">Visit Our Home Central Showroom & Design Center in Owego</h2>
 
-                    <p className="text-[1.125rem] text-[var(--Neutral-100)]">See, experience, and choose the best kitchen, bath, and appliance solutions for your projects. Our experts are ready to guide homeowners,  contractors and vendors to the perfect products.</p>
+                    <p className="text-[1.125rem] text-[var(--Neutral-100)]">See, experience, and choose the best kitchen, bath, cabinets, countertops and fixtures solutions for your projects. Our experts are ready to guide homeowners and contractors  to the perfect products.</p>
                     <div className="flex flex-col md:flex-row gap-[1.5rem] items-center">
-                        <Button variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
+                        <Button variant="secondary" size="large" href="/owego-showroom" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
                             Explore the Showroom
                         </Button>
-                        <Link className="text-normal font-medium text-white" href="/owego-showroom">
+                        <Link className="text-normal font-medium text-white" href="/shop/catalogue?page=1">
                             Shop Products
                         </Link>
                     </div>
                     <div className="flex flex-col gap-[0.5rem] md:hidden">
                         <div className="py-[1rem] px-[1.5rem] bg-[var(--Primary-600)]  flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                             <RiDiscountPercentFill className="text-2xl text-white" />
-                            <p className="text-[1.125rem] text-white">Hands-on access to top-quality appliances and fixtures</p>
+                            <p className="text-[1.125rem] text-white">Hands-on access to top-quality cabinets , countertops and fixtures</p>
                         </div>
                         <div className=" py-[1rem] px-[1.5rem] bg-[var(--Primary-600)] flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                             <HiMiniUserGroup className="text-2xl text-white" />

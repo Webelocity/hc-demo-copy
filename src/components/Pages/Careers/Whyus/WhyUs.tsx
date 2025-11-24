@@ -26,11 +26,6 @@ export default function WhyUs() {
               locations.
             </Link>
           </p>
-          <Link href="/careers/apply">
-            <Button variant="primary" size="large">
-              Apply Now
-            </Button>
-          </Link>
         </div>
         <div className="flex-[1.5] relative w-full h-[-webkit-fill-available] relative ">
           <Image

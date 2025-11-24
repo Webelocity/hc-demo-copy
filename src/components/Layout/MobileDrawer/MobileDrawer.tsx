@@ -8,6 +8,7 @@ import { GoArrowRight, GoArrowLeft } from "react-icons/go";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { useAtomValue } from "jotai";
 import { motion, AnimatePresence } from "framer-motion";
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   );
 
   const renderMain = () => {
+    const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
     return (
       <div className="flex flex-col">
         <Link
@@ -88,9 +90,10 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
           </span>
         </Link>
         <div className="w-full mt-[3rem]">
-          <Button variant="primary" fullWidth onClick={() => onClose?.()}>
-            Request a Quote
-          </Button>
+          <QuoteRequestPopup
+            dashboardUrl={Customer_Dashboard_Url}
+            triggerLabel="Request a Quote"
+          />
         </div>
       </div>
     );
@@ -219,16 +222,16 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   return (
     <div
       className={`baseContainer absolute lg:hidden top-full left-0 w-full bg-white z-50 transition-all duration-300 ease-in-out ${isOpen
-          ? "opacity-100 visible translate-y-0"
-          : "opacity-0 invisible -translate-y-[10px]"
+        ? "opacity-100 visible translate-y-0"
+        : "opacity-0 invisible -translate-y-[10px]"
         }`}
     >
       <div className="p-[2rem] bg-[var(--Secondary-50)] flex flex-col ">
         <div className="flex text-[1.25rem] font-medium">
           <span
             className={`p-[1rem] flex-1 rounded-[var(--Radius-md)] text-center cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center ${activeTab === "main"
-                ? "bg-[var(--Secondary-100)]"
-                : "bg-transparent hover:bg-[var(--Secondary-100)]/50"
+              ? "bg-[var(--Secondary-100)]"
+              : "bg-transparent hover:bg-[var(--Secondary-100)]/50"
               }`}
             onClick={() => setActiveTab("main")}
           >
@@ -236,8 +239,8 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
           </span>
           <span
             className={`p-[1.5rem] flex-1 rounded-[var(--Radius-md)] text-center cursor-pointer transition-all duration-300 ease-in-out flex items-center justify-center ${activeTab === "shop"
-                ? "bg-[var(--Secondary-100)]"
-                : "bg-transparent hover:bg-[var(--Secondary-100)]/50"
+              ? "bg-[var(--Secondary-100)]"
+              : "bg-transparent hover:bg-[var(--Secondary-100)]/50"
               }`}
             onClick={() => setActiveTab("shop")}
           >

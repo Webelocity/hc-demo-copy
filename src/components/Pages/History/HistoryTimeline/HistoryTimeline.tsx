@@ -53,42 +53,31 @@ const TimelineCard = ({
   imageLayout,
 }: TimelineCardProps) => {
   return (
-    <div className="flex flex-col md:flex-row gap-[16px] items-start w-full p-0 md:p-[24px]">
+    <div className="flex flex-col-reverse md:flex-row gap-[1rem]  items-start w-full p-0 md:p-[24px]">
       {/* Images Section */}
-      <div className="flex-1 flex flex-col gap-[8px] w-full md:w-auto self-stretch">
+      <div className="flex-1 flex flex-col gap-[8px] h-[-webkit-fill-available] w-full md:w-auto self-stretch">
         {imageLayout.map((row, rowIdx) => (
           <div
             key={rowIdx}
-            className={`flex flex-col md:flex-row gap-[${
-              row.gap || "8px"
-            }] w-full`}
+            className={`flex flex-col h-[-webkit-fill-available] md:flex-row gap-[${row.gap || "8px"
+              }] w-full`}
           >
             {row.images.map((img, imgIdx) => {
               const widthClass =
-                img.width === "158px"
-                  ? "w-full md:w-[158px]"
-                  : img.width === "flex-1" || !img.width
-                  ? "flex-1"
-                  : `w-${img.width}`;
+                img.width
 
-              const heightClass = img.height
-                ? `h-[${img.height}]`
-                : "h-full min-h-[300px]";
 
               return (
                 <div
                   key={imgIdx}
-                  className={`relative ${widthClass} ${
-                    img.aspectRatio
-                      ? `aspect-[${img.aspectRatio}]`
-                      : heightClass
-                  } rounded-[var(--Radius-md)] overflow-hidden`}
+                  className={`relative  ${widthClass} 
+                    } h-[-webkit-fill-available] rounded-[var(--Radius-md)] overflow-hidden`}
                 >
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    className="object-cover"
+                    className="object-cover !relative !w-full !h-full "
                   />
                 </div>
               );
@@ -351,12 +340,12 @@ const HistoryTimeline = () => {
             {
               src: "/assets/image/History/5-3.svg",
               alt: "Home Central Interior",
-              width: "flex-1",
+              width: "flex-[3]",
             },
             {
               src: "/assets/image/History/5-4.svg",
               alt: "Home Central Building",
-              width: "158px",
+              width: "flex-1",
             },
           ],
         },
@@ -366,7 +355,7 @@ const HistoryTimeline = () => {
               src: "/assets/image/History/5-5.svg",
               alt: "Home Central Signage",
               width: "flex-1",
-              aspectRatio: "400/109",
+
             },
           ],
         },
@@ -454,8 +443,7 @@ const HistoryTimeline = () => {
             {
               src: "/assets/image/History/6-3.svg",
               alt: "Store Updates",
-              width: "flex-1",
-              aspectRatio: "400/109",
+              width: "flex-1 max-h-[170px]",
             },
           ],
         },
@@ -464,12 +452,12 @@ const HistoryTimeline = () => {
             {
               src: "/assets/image/History/6-4.svg",
               alt: "Modern Facilities",
-              width: "flex-1",
+              width: "flex-[3.7]",
             },
             {
               src: "/assets/image/History/6-5.svg",
               alt: "New Equipment",
-              width: "158px",
+              width: "flex-1",
             },
           ],
         },
@@ -483,7 +471,7 @@ const HistoryTimeline = () => {
         <div className="relative w-full flex justify-center">
           <div className="relative w-full max-w-[1352px]">
             {/* Vertical Timeline Line */}
-            <div className="hidden 2xl:block absolute left-[675px] top-[24px] w-px h-[calc(100%-48px)] bg-[var(--Neutral-300)] rounded-[var(--Radius-md)]" />
+            <div className="hidden lg:block absolute left-[50%] translate-x-[-50%] top-[24px] w-[0.2rem] h-[calc(100%-48px)] bg-[var(--Neutral-300)] rounded-[var(--Radius-md)]" />
 
             {/* Timeline Entries */}
             <div className="flex flex-col gap-[20px] w-full">

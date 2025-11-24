@@ -1,6 +1,8 @@
 import Button from "@/components/shared/Button";
+import QuoteRequestPopup from "../QuoteRequest/QuoteRequestPopup";
 
 export default function Paint() {
+    const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
     return (
         <div className="baseContainer py-[2.5rem] ">
             <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] aspect-[1352/288] bg-[url('/assets/image/HomePage/Paint.svg')] rounded-[var(--Radius-md)] bg-cover bg-center bg-no-repeat">
@@ -11,8 +13,7 @@ export default function Paint() {
                     Our expert staff and advanced color-matching system can replicate any sample or adjust your favorite shade, ensuring your paint is exactly what you want for your project.
                 </p>
                 <div className="flex justify-center items-center gap-[1.5rem]">
-                    <Button variant="primary">Request a Quote</Button>
-                    <span className="text-[1rem] cursor-pointer text-white">More Details</span>
+                    <QuoteRequestPopup dashboardUrl={Customer_Dashboard_Url} />
                 </div>
             </div>
         </div>

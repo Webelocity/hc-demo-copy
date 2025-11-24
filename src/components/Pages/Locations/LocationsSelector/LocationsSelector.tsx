@@ -12,12 +12,66 @@ import {
 } from "@/util/shedule";
 import Button from "@/components/shared/Button";
 import Map from "@/components/shared/ContactUs/Map/Map";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type Coordinates = { lat: number; lng: number };
+
+const EARTH_RADIUS_MILES = 3958.8;
+
+const toRadians = (value: number) => (value * Math.PI) / 180;
+
+const calculateDistanceMiles = (origin: Coordinates, destination: Coordinates) => {
+  const dLat = toRadians(destination.lat - origin.lat);
+  const dLon = toRadians(destination.lng - origin.lng);
+  const lat1 = toRadians(origin.lat);
+  const lat2 = toRadians(destination.lat);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return EARTH_RADIUS_MILES * c;
+};
 
 export default function LocationsSelector() {
   const [selectedStore, setSelectedStore] = useAtom(selectedStoreAtom);
   const [expandedStores, setExpandedStores] = useState<Set<StoreId>>(new Set());
+  const [userCoordinates, setUserCoordinates] = useState<Coordinates | null>(null);
+  const [distanceError, setDistanceError] = useState(false);
   const stores = getAllStores();
+
+  useEffect(() => {
+    if (
+      typeof window === "undefined" ||
+      typeof navigator === "undefined" ||
+      !navigator.geolocation
+    ) {
+      setDistanceError(true);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserCoordinates({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+        setDistanceError(false);
+      },
+      () => {
+        setDistanceError(true);
+      }
+    );
+  }, []);
+
+  const getDistanceLabel = (location: Coordinates) => {
+    if (!userCoordinates) {
+      return distanceError ? "Distance unavailable" : "Calculating...";
+    }
+
+    const distance = calculateDistanceMiles(userCoordinates, location);
+    return `${distance.toFixed(1)} miles`;
+  };
 
   const toggleHours = (storeId: StoreId) => {
     setExpandedStores((prev) => {
@@ -131,11 +185,13 @@ export default function LocationsSelector() {
     );
   };
 
+  const owegoShowroom = stores.find((store) => store.id === "owego-showroom");
+
   return (
     <div className="baseContainer">
       <div className="flex maxWidth flex-col lg:flex-row gap-[1.5rem] items-center justify-center  py-[2.5rem]">
         <div className="flex-1 flex flex-col gap-[1rem] w-full">
-          {stores.filter((store) => store.name !== "Do it Best").map((store) => {
+          {stores.filter((store) => store.id !== "owego-showroom").map((store) => {
             const isMyStore = selectedStore === store.id;
             return (
               <div
@@ -210,11 +266,74 @@ export default function LocationsSelector() {
                       </p>
                     </Button>
                   )}
-                  <p className="font-semibold text-[0.875rem] ">2.4 miles</p>
+                  <p className="font-semibold text-[0.875rem] ">
+                    {getDistanceLabel({ lat: store.lat, lng: store.lng })}
+                  </p>
                 </div>
               </div>
             );
           })}
+          {owegoShowroom && (
+            <div
+              key={owegoShowroom.id}
+              className="p-[1.5rem] flex items-center gap-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-md)]"
+            >
+              <div className="flex-[4] flex flex-col gap-[1rem]">
+                <p className="text-[1.5rem] font-medium">{owegoShowroom.name}</p>
+                <div className="flex flex-col items-start gap-[0.5rem]">
+                  <div className="flex justify-start items-center gap-[0.5rem]">
+                    <Image
+                      className="!relative !w-[1.5rem] !h-[1.5rem]"
+                      src="/assets/image/Locations/MapPoint.svg"
+                      alt="location"
+                      fill
+                    />
+                    <p className="text-[var(--Colors-Neutral-700)] text-[1.125rem] ">
+                      {owegoShowroom.fullAddress}
+                    </p>
+                  </div>
+                  <div className="flex justify-start items-center gap-[0.5rem]">
+                    <Image
+                      className="!relative !w-[1.5rem] !h-[1.5rem]"
+                      src="/assets/image/Locations/Phone.svg"
+                      alt="location"
+                      fill
+                    />
+                    <a
+                      href={`tel:${owegoShowroom.phone}`}
+                      className="text-[var(--secondary-500-main)] text-[1.125rem] "
+                    >
+                      {owegoShowroom.phone}
+                    </a>
+                  </div>
+                  <div className="flex justify-start items-center gap-[0.5rem]">
+                    {owegoShowroom.fax && (
+                      <>
+                        <Image
+                          className="!relative !w-[1.5rem] !h-[1.5rem]"
+                          src="/assets/image/Locations/printer.svg"
+                          alt="fax"
+                          fill
+                        />
+                        <a
+                          href={`tel:${owegoShowroom.fax}`}
+                          className="text-[var(--secondary-500-main)] text-[1.125rem] "
+                        >
+                          {owegoShowroom.fax}
+                        </a>
+                      </>
+                    )}
+                  </div>
+                  {renderStatus(owegoShowroom.id)}
+                </div>
+              </div>
+              <div className="flex-[1.2] flex flex-col items-end justify-between gap-[0.5rem] h-[-webkit-fill-available]">
+                <p className="font-semibold text-[0.875rem] ">
+                  {getDistanceLabel({ lat: owegoShowroom.lat, lng: owegoShowroom.lng })}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
         <div className="flex-1 w-full h-[-webkit-fill-available]">
           <Map size="large" />

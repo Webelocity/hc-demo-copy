@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PiListBold } from "react-icons/pi";
 import { useState } from "react";
 import MegaMenu from "../MegaMenu/MegaMenu";
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function Navbar() {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
@@ -45,10 +46,15 @@ export default function Navbar() {
           <li className="py-[0.625rem] px-[1rem]">
             <Link href="/careers">Careers</Link>
           </li>
+          <li className="py-[0.625rem] px-[1rem]">
+            <Link href="/history">History</Link>
+          </li>
         </ul>
         <div className="flex items-center">
-          <Button variant="primary">Request a Quote</Button>
-        </div>
+          <QuoteRequestPopup
+            dashboardUrl={process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD}
+            triggerLabel="Request a Quote"
+          />        </div>
       </div>
 
       <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} />

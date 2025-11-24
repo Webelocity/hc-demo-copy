@@ -1,7 +1,10 @@
+'use client';
 import Button from "@/components/shared/Button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function PerfectColorBanner() {
+  const router = useRouter();
   return (
     <div className="baseContainer py-[1.5rem] md:py-[3rem]">
       <div className="relative maxWidth bg-[var(--Secondary-600)] rounded-[1.5rem] overflow-hidden min-h-[253px] md:min-h-[395px]">
@@ -17,7 +20,7 @@ export default function PerfectColorBanner() {
               is precise, even when repainting an old wall.
             </p>
             <div className="flex items-center justify-start">
-              <Button size="large" variant="primary">
+              <Button size="large" variant="primary" onClick={() => router.push('/locations')}>
                 Find a Location
               </Button>
             </div>

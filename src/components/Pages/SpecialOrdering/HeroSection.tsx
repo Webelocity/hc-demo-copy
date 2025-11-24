@@ -23,7 +23,7 @@ export default function HeroSection() {
               letterSpacing: "0.04rem",
             }}
           >
-            Special Orders for Contractors
+            Special Orders for Contractors and Homeowners
           </h1>
         </div>
       </div>

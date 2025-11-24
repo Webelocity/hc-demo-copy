@@ -12,9 +12,9 @@ export default function Header() {
                 <HiOutlinePhone className="text-xl" />
                 {NEXT_PUBLIC_HOME_CENTRAL_PHONE}
             </span>
-            <span className="font-semibold text-[1rem] text-center uppercase flex-1">
+            {/* <span className="font-semibold text-[1rem] text-center uppercase flex-1">
                 15% off your first order of sheeted goods
-            </span>
+            </span> */}
             <span className="text-[1rem] flex-1 hidden items-center justify-center gap-[0.5rem] lg:flex justify-end">
                 <FiMail className="text-xl" />
                 {NEXT_PUBLIC_HOME_CENTRAL_EMAIL}

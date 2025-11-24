@@ -20,14 +20,14 @@ export default function ProductCard({ product }: ProductCardProps) {
     const toggleWishlist = useSetAtom(toggleWishlistAtom);
     const wishlist = useAtomValue(wishlistAtom);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
-    const selectedVariant = product?.lowestPriceVariant || product?.productVariants?.[0];
+    const selectedVariant = product?.lowestPriceVariant;
     const isSelectedVariantOutOfStock = Boolean(
         isTrackQuantity && selectedVariant && ((selectedVariant.inventoryCount ?? 0) <= 0)
     );
 
     const renderStock = () => {
         if (isTrackQuantity) {
-            if (product?.inventoryCount && product.inventoryCount > 0) {
+            if (selectedVariant?.inventoryCount && selectedVariant.inventoryCount > 0) {
                 return <div className="flex justify-start items-center gap-[0.5rem]">
                     <span className="text-[0.75rem] font-semibold">In stock</span>
                 </div>
@@ -107,10 +107,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
             <div className="flex flex-col gap-[0.25rem]">
                 <span className="py-[0.25rem] px-[0.5rem] rounded-[1.125rem] bg-[var(--Colors-Neutral-50)] w-fit">{getLastDefaultPathName(product)}</span>
-                <span className="text-[0.875rem] font-semibold ">{product?.name}</span>
+                <span className="text-[0.875rem] font-semibold ">{selectedVariant?.name}</span>
                 <div className="flex items-center gap-[0.25rem] text-[0.75rem] ">
                     <span className="text-[var(--Colors-Neutral-500)]">SKU: </span>
-                    <span className="">{product?.sku}</span>
+                    <span className="">{selectedVariant?.sku}</span>
                 </div>
             </div>
             <div className="flex justify-start items-center gap-[0.4rem]">
@@ -121,7 +121,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="flex justify-between items-center">
                 {renderStock()}
                 <div>
-                    <span className="text-[0.875rem] font-semibold">${product?.finalPrice}/<p className="inline text-[0.75rem] text-[var(--Colors-Neutral-500)] font-normal">each</p></span>
+                    <span className="text-[0.875rem] font-semibold">${selectedVariant?.finalPrice}/<p className="inline text-[0.75rem] text-[var(--Colors-Neutral-500)] font-normal">each</p></span>
                 </div>
             </div>
             <Button variant="primary" onClick={addToCart}>   <LuShoppingCart className="text-xl cursor-pointer" />Add to cart</Button>
