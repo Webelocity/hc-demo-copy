@@ -41,11 +41,10 @@ export default function UsefulLinks() {
                     href={link.url}
                     target='_blank'
                     rel='noopener noreferrer'
-                    className={`bg-white/15 rounded-2xl p-4 flex flex-col gap-4 hover:bg-white/20 transition-colors group ${
-                      index === 2 ? 'sm:col-span-2' : ''
-                    }`}
+                    className={`bg-white/15 rounded-2xl p-4 flex flex-col gap-4 hover:bg-white/20 transition-colors group ${index === 2 ? 'sm:col-span-2' : ''
+                      }`}
                   >
-                    <div className='relative w-full aspect-[1.15/1] rounded-xl overflow-hidden bg-white/5'>
+                    <div className='relative w-full h-[-webkit-fill-available] min-h-[10rem] rounded-xl overflow-hidden bg-white/5'>
                       <Image
                         src={link.image}
                         alt={link.title}

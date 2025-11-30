@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Banners from "@/components/Pages/HomePage/Banners/Banners";
+import SpecialOrdering from "@/components/Pages/HomePage/SpecialOrdering/SpecialOrdering";
 
 const WeeklyOffers = dynamic(
   () => import("@/components/Pages/HomePage/WeeklyOffers/WeeklyOffers"),
@@ -103,8 +104,9 @@ export default function Home() {
   return (
     <>
       <Banners />
-      <WeeklyOffers />
+      {/* <WeeklyOffers /> */}
       <Categories />
+      <SpecialOrdering />
       <NewArrivals />
       <Paint />
       <Recommended />

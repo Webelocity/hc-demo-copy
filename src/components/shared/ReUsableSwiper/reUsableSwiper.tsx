@@ -52,6 +52,7 @@ export default function ReUsableSwiper<T>({
                     clickable: true,
                     el: `.swiper-pagination-${className}`,
                 }}
+
                 onSwiper={(swiper: SwiperType) => {
                     setSwiperInstance(swiper);
                     setIsBeginning(swiper.isBeginning);

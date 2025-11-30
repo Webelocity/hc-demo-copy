@@ -12,7 +12,7 @@ export default function Footer() {
     <div className="baseContainer bg-[var(--Primary-50)]">
       <footer className="maxWidth flex flex-col gap-[1.75rem] justify-between items-center pt-[6.25rem] pb-[3.5rem] ">
         <div className="flex flex-col md:flex-row gap-[1.75rem] w-full">
-          <div className="flex-1 flex flex-col gap-[1.5rem] justify-center items-start">
+          <div className="flex-1 flex flex-col gap-[1.5rem] justify-start items-start">
             <div className="relative  w-[10rem] h-[7rem]">
               <Image
                 src="/assets/image/shared/logo.svg"
@@ -33,9 +33,14 @@ export default function Footer() {
               <div className="relative w-[7.25rem] h-[3.1rem] cursor-pointer">
                 <Image src="/assets/icon/Apple.svg" alt="Apple" fill />
               </div>
-              <div className="relative w-[7.25rem] h-[3.1rem] cursor-pointer">
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.toolswift.hc"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative w-[7.25rem] h-[3.1rem] cursor-pointer"
+              >
                 <Image src="/assets/icon/PlayStore.svg" alt="PlayStore" fill />
-              </div>
+              </Link>
             </div>
           </div>
           <div className="flex-[5]">
@@ -251,10 +256,20 @@ export default function Footer() {
           <hr className="border-[var(--Neutral-300)]" />
         </div>
 
-        <div className="w-full flex flex-col justify-center  md:flex-row md:justify-between items-center">
+        <div className="w-full flex flex-col justify-center gap-1 md:flex-row md:justify-between md:items-center">
           <p className="text-[0.75rem] font-semibold ">
             © 2025 Home Central. All rights reserved
           </p>
+          <span className="flex gap-1">
+            <p className="text-[0.75rem] font-semibold ">Powered by</p>
+            <Link
+              className="text-[0.75rem] underline"
+              target="_blank"
+              href="https://www.toolswift.ca/"
+            >
+              ToolSwift
+            </Link>
+          </span>
           <span className="flex gap-1">
             <p className="text-[0.75rem] font-semibold ">
               Designed & Developed by
@@ -267,6 +282,7 @@ export default function Footer() {
               Webelocity
             </Link>
           </span>
+
         </div>
       </footer>
     </div>

@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import Stepper from "./Stepper";
 import { useFieldArray, Controller, useForm } from "react-hook-form";
 import type { JobApplication, JobExperience } from "@/types/jobApplication";
-import { State, City } from "country-state-city";
+import { State } from "country-state-city";
 import {
     TextField,
     FormControl,
@@ -26,6 +27,7 @@ import DropzoneUploader from "@/components/shared/DropzoneUploader";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "@/components/shared/Button";
+import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 
 type FormValues = JobApplication;
 
@@ -47,60 +49,69 @@ const workingDays = [
 ];
 
 const referralOptions = ["Company Website", "Friend", "Indeed", "LinkedIn", "Other"];
+{
+
+}
 const jobTypeOptions = ["Cashier", "Stock Associate", "Sales", "Warehouse", "Other"];
 
+const createDefaultValues = (): FormValues => ({
+    demographicInformation: {
+        name: "",
+        referredBy: "",
+        email: "",
+        phonePrimary: "",
+        phoneSecondary: "",
+        streetAddress: "",
+        city: "",
+        state: "",
+        zipCode: "",
+    },
+    employmentData: {
+        cv: null,
+        dateAvailableToStart: "",
+        salaryRequirement: "",
+        timeYouAreAvailableToWork: "",
+        daysAbleToWork: [],
+        workedForHomeCentralBefore: "no",
+        workedForHomeCentralWhen: "",
+        isUsCitizen: "yes",
+        legallyAllowedToWorkUs: "yes",
+        employmentType: "full-time",
+        jobType: "",
+        driversLicenseNumber: "",
+        stateOfIssue: "",
+        skillsSummary: "",
+    },
+    previousEmploymentHistory: [],
+    otherExperience: {
+        educationalBackground: "",
+        additionalSkills: "",
+        retailExperience: "",
+        managementExperience: "",
+        warehouseDriverExperience: "",
+        inventoryExperience: "",
+        applicantNameSignature: "",
+        additionalFiles: [],
+        certificationsAccepted: false,
+    },
+});
+
 export default function CareerForm() {
+    const router = useRouter();
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState([false, false, false, false]);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const defaultValues = useMemo(() => createDefaultValues(), []);
 
     const {
         control,
         handleSubmit,
         trigger,
         watch,
+        reset,
         formState: { errors },
     } = useForm<FormValues>({
-        defaultValues: {
-            demographicInformation: {
-                name: "",
-                referredBy: "",
-                email: "",
-                phonePrimary: "",
-                phoneSecondary: "",
-                streetAddress: "",
-                city: "",
-                state: "",
-                zipCode: "",
-            },
-            employmentData: {
-                cv: null,
-                dateAvailableToStart: "",
-                salaryRequirement: "",
-                timeYouAreAvailableToWork: "",
-                daysAbleToWork: [],
-                workedForHomeCentralBefore: "no",
-                workedForHomeCentralWhen: "",
-                isUsCitizen: "yes",
-                legallyAllowedToWorkUs: "yes",
-                employmentType: "full-time",
-                jobType: "",
-                driversLicenseNumber: "",
-                stateOfIssue: "",
-                skillsSummary: "",
-            },
-            previousEmploymentHistory: [],
-            otherExperience: {
-                educationalBackground: "",
-                additionalSkills: "",
-                retailExperience: "",
-                managementExperience: "",
-                warehouseDriverExperience: "",
-                inventoryExperience: "",
-                applicantNameSignature: "",
-                additionalFiles: [],
-                certificationsAccepted: false,
-            },
-        },
+        defaultValues,
         mode: "onChange",
     });
 
@@ -109,18 +120,10 @@ export default function CareerForm() {
         name: "previousEmploymentHistory",
     });
 
-    const selectedState = watch("demographicInformation.state");
-    // const selectedEmploymentState = watch("employmentData.stateOfIssue");
     const priorExperiences = watch("previousEmploymentHistory");
     const workedBefore = watch("employmentData.workedForHomeCentralBefore");
 
     const usStates = useMemo(() => State.getStatesOfCountry("US"), []);
-    const citiesForSelectedState = useMemo(() => {
-        if (!selectedState) return [];
-        const st = usStates.find((s) => s.isoCode === selectedState || s.name === selectedState);
-        if (!st) return [];
-        return City.getCitiesOfState("US", st.isoCode);
-    }, [selectedState, usStates]);
 
     const onNext = async () => {
         const fieldsToValidate: (keyof FormValues | string)[] = [];
@@ -197,7 +200,11 @@ export default function CareerForm() {
             return;
         }
         console.log(values);
-        toast.success("Application submitted successfully.");
+        toast.success("Your application has been submitted successfully.");
+        reset(createDefaultValues());
+        setActiveStep(0);
+        setCompleted([false, false, false, false]);
+        setShowSuccessModal(true);
     };
 
     const addExperience = () => {
@@ -334,15 +341,13 @@ export default function CareerForm() {
                                         control={control}
                                         rules={{ required: "Required" }}
                                         render={({ field }) => (
-                                            <FormControl required error={!!errors.demographicInformation?.city}>
-                                                <InputLabel>City</InputLabel>
-                                                <Select label="City" {...field}>
-                                                    {citiesForSelectedState.map((c) => (
-                                                        <MenuItem key={c.name} value={c.name}>{c.name}</MenuItem>
-                                                    ))}
-                                                </Select>
-                                                <FormHelperText>{errors.demographicInformation?.city?.message}</FormHelperText>
-                                            </FormControl>
+                                            <TextField
+                                                {...field}
+                                                label="City"
+                                                required
+                                                error={!!errors.demographicInformation?.city}
+                                                helperText={errors.demographicInformation?.city?.message}
+                                            />
                                         )}
                                     />
                                     <Controller
@@ -814,6 +819,47 @@ export default function CareerForm() {
                     </form>
                 </LocalizationProvider>
             </div>
+            {showSuccessModal && (
+                <div className="fixed inset-0 z-[999] flex items-center justify-center px-4">
+                    <div
+                        className="absolute inset-0 bg-black/50"
+                        onClick={() => setShowSuccessModal(false)}
+                        aria-hidden="true"
+                    />
+                    <div
+                        role="dialog"
+                        aria-modal="true"
+                        className="relative z-10 w-full max-w-[32rem] rounded-[var(--Radius-sm)] bg-white p-[2rem] shadow-2xl flex flex-col items-center gap-[1rem]"
+                    >
+                        <IoIosCheckmarkCircleOutline className="text-[4rem] text-[var(--secondary-500-main)]" />
+                        <h2 className="text-[1.75rem] font-bold text-center text-black">
+                            Your application has been submitted successfully!
+                        </h2>
+                        <p className="text-center text-[var(--Colors-Neutral-500)]">
+                            We received your information and our team will review it shortly. We'll be in touch soon.
+                        </p>
+                        <div className="flex flex-wrap items-center justify-center gap-3 w-full">
+                            <Button
+                                className="min-w-[8rem]"
+                                variant="primary"
+                                onClick={() => {
+                                    setShowSuccessModal(false);
+                                    router.push("/");
+                                }}
+                            >
+                                Go to Home
+                            </Button>
+                            <Button
+                                className="min-w-[8rem]"
+                                variant="outline"
+                                onClick={() => setShowSuccessModal(false)}
+                            >
+                                Fill Another Application
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

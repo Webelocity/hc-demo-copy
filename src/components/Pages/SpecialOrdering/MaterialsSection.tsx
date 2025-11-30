@@ -6,9 +6,9 @@ import Image from "next/image";
 export default function MaterialsSection() {
   return (
     <section >
-      <div className="w-full maxWidth">
+      <div className="w-full baseContainer">
         <div
-          className="relative w-full rounded-[1.5rem]  pb-[1.5rem] md:p-[2.5rem] overflow-hidden"
+          className="relative maxWidth w-full rounded-[1.5rem]  pb-[1.5rem] md:p-[2.5rem] overflow-hidden"
           style={{
             backgroundColor: "var(--Secondary-50)",
           }}

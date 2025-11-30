@@ -32,9 +32,26 @@ type IdentifyPayload = {
 
 type AdjustQuantityPayload = IdentifyPayload & { amount?: number };
 
+const findFulfillmentConflict = (
+    items: CartState,
+    variantId: string,
+    fulfillmentMethod: FulfillmentMethodEnum | null
+) =>
+    items.find(
+        (item) =>
+            item.variant._id === variantId &&
+            item.fulfillmentMethod !== fulfillmentMethod
+    );
+
 export const addToCartAtom = atom(null, (get, set, payload: AddToCartPayload) => {
     const { productId, variant, quantity, fulfillmentMethod } = payload;
+    let itemAdded = false;
     set(cartAtom, (prev) => {
+        const conflictingItem = findFulfillmentConflict(prev, variant._id, fulfillmentMethod);
+        if (conflictingItem) {
+            toast.error(`${variant.name} has another fulfilment method chosen for it`);
+            return prev;
+        }
         const index = prev.findIndex(
             (item) =>
                 item.variant._id === variant._id &&
@@ -64,15 +81,29 @@ export const addToCartAtom = atom(null, (get, set, payload: AddToCartPayload) =>
             ];
         }
         toast.success(`${variant.name} added to cart successfully`);
+        itemAdded = true;
         return next;
     });
-    set(cartDrawerOpenAtom, true);
+    if (itemAdded) {
+        set(cartDrawerOpenAtom, true);
+    }
 });
 
 export const addAllToCartAtom = atom(null, (get, set, items: AddToCartPayload[]) => {
+    let addedAny = false;
+    let conflictDetected = false;
     set(cartAtom, (prev) => {
         const next = [...prev];
         items.forEach(({ productId, variant, quantity, fulfillmentMethod }) => {
+            if (conflictDetected) {
+                return;
+            }
+            const conflictingItem = findFulfillmentConflict(next, variant._id, fulfillmentMethod);
+            if (conflictingItem) {
+                toast.error(`${variant.name} has another fulfilment method chosen for it`);
+                conflictDetected = true;
+                return;
+            }
             const index = next.findIndex(
                 (item) =>
                     item.variant._id === variant._id &&
@@ -95,11 +126,20 @@ export const addAllToCartAtom = atom(null, (get, set, items: AddToCartPayload[])
                     addedAt: new Date().toISOString(),
                 });
             }
+            addedAny = true;
         });
+        if (conflictDetected || !addedAny) {
+            return prev;
+        }
         return next;
     });
-    toast.success(`${items.length} items added to cart successfully`);
-    set(cartDrawerOpenAtom, true);
+    if (conflictDetected) {
+        return;
+    }
+    if (addedAny) {
+        toast.success(`${items.length} items added to cart successfully`);
+        set(cartDrawerOpenAtom, true);
+    }
 });
 
 export const increaseQuantityAtom = atom(

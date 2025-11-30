@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function GoPro() {
     return (
         <div className="baseContainer" >
-            <div className="maxWidth  py-[2.5rem] flex flex-col md:flex-row gap-[2.5rem]">
+            <div className="maxWidth  items-center  py-[2.5rem] flex flex-col md:flex-row gap-[2.5rem]">
                 <div className="flex-[1] relative h-full">
                     <Image className="rounded-[var(--Radius-md)] aspect-[448/406] !relative" src="/assets/image/ContractorZone/GOPro.svg" alt="Engineers Professional" fill />
                 </div>

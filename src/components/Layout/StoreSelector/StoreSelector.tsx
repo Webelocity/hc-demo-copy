@@ -50,7 +50,7 @@ export default function StoreSelector({ isOpen, onClose }: StoreSelectorProps) {
         <Modal open={isOpen} onClose={handleCancel} title="Select Your Store" maxWidth="xs" >
             <div className="flex flex-col gap-[1.5rem]">
                 <div className="flex flex-col gap-[1rem]">
-                    {stores.map((store) => {
+                    {stores.filter((store) => store.id !== "owego-showroom").map((store) => {
                         const status = getStoreStatus(store.id);
                         const isSelected = tempSelection === store.id;
 
