@@ -5,6 +5,7 @@ import {
   type StrapiParams,
   type StrapiCareer,
   type StrapiTeamMember,
+  StrapiReview,
 } from "@/lib/strapi";
 
 export function useStrapi<T extends StrapiEntity>(
@@ -28,6 +29,12 @@ export function useCareers(params?: StrapiParams) {
 
 export function useTeam(params?: StrapiParams) {
   return useStrapi<StrapiTeamMember>("teams", {
+    ...params,
+  });
+}
+
+export function useReviews(params?: StrapiParams) {
+  return useStrapi<StrapiReview>("reviews", {
     ...params,
   });
 }
