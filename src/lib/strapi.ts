@@ -2,6 +2,13 @@ const STRAPI_URL =
   process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN || "";
 
+// Helper to get full image URL from Strapi
+export function getStrapiImageUrl(path: string | undefined): string {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `${STRAPI_URL}${path}`;
+}
+
 // Base entity structure from Strapi v5
 export type StrapiEntity = {
   id: number;
@@ -35,6 +42,13 @@ export type StrapiTeamMember = StrapiEntity & {
     | "Accounting"
     | "IT"
     | "Sales";
+};
+
+// Review type
+export type StrapiReview = StrapiEntity & {
+  review: string;
+  name: string;
+  image: { url: string };
 };
 
 // Response structure
