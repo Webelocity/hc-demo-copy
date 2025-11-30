@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import TeamCard from "../TeamCard/TeamCard";
 import { teamMembers } from "@/Data/Team";
+import { useTeam } from "@/hooks/useStrapi";
 
 type TabType =
   | "All"
@@ -25,13 +26,13 @@ const tabs: TabType[] = [
 
 export default function TeamSection() {
   const [activeTab, setActiveTab] = useState<TabType>("All");
-
+  const { data: teamData } = useTeam();
   const filteredMembers = useMemo(() => {
     if (activeTab === "All") {
-      return teamMembers;
+      return teamData?.data;
     }
-    return teamMembers.filter((member) => member.category === activeTab);
-  }, [activeTab]);
+    return teamData?.data.filter((member) => member.category === activeTab);
+  }, [activeTab, teamData?.data]);
 
   return (
     <div className="baseContainer py-[3rem]">
@@ -67,7 +68,7 @@ export default function TeamSection() {
 
           {/* Team Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-[1.25rem] w-full">
-            {filteredMembers.map((member, index) => {
+            {filteredMembers?.map((member, index) => {
               // Last 3 members span 2 columns on desktop when showing all members
               const isLastThree =
                 activeTab === "All" && index >= filteredMembers.length - 3;
