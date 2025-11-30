@@ -142,14 +142,12 @@ export default function OrderSummary({
 
             // If VersaPay payment is selected and token is available, process payment
             if (versapayValid && versapayToken) {
-
-                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
-
-                // The backend will automatically fetch the billing address from the user
+                // The backend automatically calculates the amount from the order
+                // and fetches billing address if not provided
                 const paymentResult = await processVersapayPayment(
                     versapayToken,
                     order._id,
-                    grandTotal
+                    billing?._id  // Optional billing address ID
                 );
 
                 if (!paymentResult.success) {
