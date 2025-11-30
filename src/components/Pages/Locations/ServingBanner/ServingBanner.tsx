@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function ServingBanner() {
   return (
     <div className="baseContainer py-[2.5rem] ">
-      <div className="maxWidth flex flex-col lg:flex-row gap-[3rem] p-[2.5rem] rounded-[var(--Radius-md)] bg-[var(--secondary-500-main)] relative pb-[30rem] lg:pb-[2.5rem]">
+      <div className="maxWidth flex flex-col xl:flex-row gap-[3rem] p-[2.5rem] rounded-[var(--Radius-md)] bg-[var(--secondary-500-main)] relative pb-[30rem] xl:pb-[2.5rem]">
         <div className="flex-1">
           <p className="text-white text-[2rem] font-semibold">
             Serving Homeowners & Contractors Across the Southern Tier of New

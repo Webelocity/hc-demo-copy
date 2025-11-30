@@ -49,10 +49,7 @@ export default function WhyChooseUs() {
       name: "Candor Chamber of Commerce",
       logo: "/assets/image/AboutUs/ccc.svg",
     },
-    {
-      name: "US Chamber of Commerce",
-      logo: "/assets/image/AboutUs/ucc.svg",
-    },
+
     {
       name: "NY Farm Bureau",
       logo: "/assets/image/AboutUs/nfb.svg",

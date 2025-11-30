@@ -69,7 +69,7 @@ export default function PromoCode({ cart, subTotal }: PromoCodeProps) {
 
     return (
         <>
-            <div className="flex items-center ">
+            <div className="flex items-center gap-[0.5rem] ">
                 <input
                     type="text"
                     value={promoCode}

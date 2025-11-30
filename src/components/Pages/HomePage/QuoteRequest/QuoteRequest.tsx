@@ -17,8 +17,8 @@ export default function QuoteRequest() {
                     </div>
                 </div>
 
-                <div className="aspect-[3/2] min-h-[18.5rem] !relative  flex-1 ">
-                    <Image className="" src="/assets/image/HomePage/Quote.svg" alt="quote-request" fill />
+                <div className="aspect-[3/2] min-h-[18.5rem] !relative  flex-1 rounded-[var(--Radius-md)] overflow-hidden">
+                    <Image className="" src="/assets/image/HomePage/Quote.png" alt="quote-request" fill />
                 </div>
             </div>
         </div>

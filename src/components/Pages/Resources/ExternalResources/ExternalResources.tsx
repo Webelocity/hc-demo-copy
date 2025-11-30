@@ -8,7 +8,7 @@ export default function ExternalResources() {
     <>
       {/* Wilsonart Visualizer Card */}
       <div className='bg-[#181464] rounded-2xl p-6 md:p-10 flex flex-col gap-8 md:gap-12'>
-        <div className='w-[5.06rem] h-[5.06rem] md:w-[7.33rem] md:h-[7.33rem] relative'>
+        <div className='w-[5.06rem] h-[-webkit-fill-available] min-h-[5.06rem] md:w-[7.33rem] md:h-[7.33rem] relative'>
           <Image
             src='/assets/image/Resources/wilsonart-logo.svg'
             alt='Wilsonart Visualizer'

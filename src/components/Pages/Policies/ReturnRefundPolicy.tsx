@@ -33,9 +33,8 @@ export default function ReturnRefundPolicy() {
       <PolicyTerm title="How to Initiate a Return">
         <p>
           To initiate a return, please contact our customer service team at{" "}
-          <span className="font-bold text-[#841618]">
-            orderdesk@homecentralstores.ca
-          </span>{" "}
+          <a href="mailto:hc@homecentralstores.com" className="underline text-[#841618]">
+            hc@homecentralstores.com          </a>{" "}
           or call us at (607) 687-3284. Our team will provide you with return
           instructions and a return authorization number if applicable.
         </p>
