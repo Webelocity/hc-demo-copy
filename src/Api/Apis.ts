@@ -283,20 +283,26 @@ export const validatePromoCode = async (
 
 // VersaPay helpers (client -> your backend). For now, log and return backend response or a mock.
 export const versapayConfirmMethod = async (
-    payload?: { paymentToken?: string; orderId?: string; amount?: number; billingAddressId?: string }
+    payload?: { orderId?: string; paymentIntentId?: string; billingAddressId?: string }
 ): Promise<any> => {
     try {
         // eslint-disable-next-line no-console
-        const res = await fetchWithStoreId<any>('/payments/versapay/process', {
+        // Use guest endpoint for checkout (no JWT required)
+        const res = await fetchWithStoreId<any>('/payments/orders/guest-process-payment', {
             method: "POST",
-            body: payload ?? {},
+            body: {
+                orderId: payload?.orderId,
+                provider: 'Versapay',  // Specify VersaPay gateway
+                paymentIntentId: payload?.paymentIntentId,  // VersaPay token
+                billingAddressId: payload?.billingAddressId,
+            },
         });
         // eslint-disable-next-line no-console
         return res;
     } catch (err) {
         // eslint-disable-next-line no-console
-        // Return a mock so the UI can proceed in environments without the backend route
-        return { ok: true, mocked: true };
+        console.error('VersaPay payment error:', err);
+        throw err;  // Throw error instead of returning mock for proper error handling
     }
 };
 
@@ -304,31 +310,24 @@ export const versapayConfirmMethod = async (
  * Process VersaPay payment for an order
  * @param paymentToken - Token from VersaPay Collect.js tokenization
  * @param orderId - Order ID from created order
- * @param amount - Total amount to charge
- * @param billingAddressId - Billing address ID
+ * @param billingAddressId - Billing address ID (optional)
  */
 export const processVersapayPayment = async (
     paymentToken: string,
     orderId: string,
-    amount: number,
     billingAddressId?: string // Optional - backend will fetch from user if not provided
 ): Promise<{ success: boolean; message?: string; data?: any }> => {
     try {
-        const payload: any = {
-            paymentToken,
+        const payload = {
             orderId,
-            amount,
+            paymentIntentId: paymentToken,  // VersaPay token renamed to paymentIntentId
+            billingAddressId,
         };
-
-        // Only include billingAddressId if provided
-        if (billingAddressId) {
-            payload.billingAddressId = billingAddressId;
-        }
 
         const result = await versapayConfirmMethod(payload);
 
         // Check if payment was successful
-        if (result?.success === true || result?.ok === true) {
+        if (result?.success === true || result?.payment) {
             return { success: true, data: result };
         }
 
