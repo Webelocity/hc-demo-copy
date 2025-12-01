@@ -24,8 +24,8 @@ const calculatorLinks = [
 
 export default function UsefulLinks() {
   return (
-    <section className='w-full bg-white py-10'>
-      <div className='baseContainer'>
+    <section className='w-full bg-white py-10 baseContainer'>
+      <div className='maxWidth'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
           {/* Useful Links Card - Left Side */}
           <div className='bg-[#181464] rounded-2xl p-6 md:p-10 lg:row-span-2'>

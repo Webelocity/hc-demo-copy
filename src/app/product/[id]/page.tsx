@@ -22,8 +22,8 @@ export default async function ProductPage({
     params,
     searchParams,
 }: {
-    params: Promise<PageParams>;            // sync
-    searchParams: Promise<Search>; // must be awaited
+    params: Promise<PageParams>;
+    searchParams: Promise<Search>;
 }) {
     const { id } = await params;
     const { q, variant_Id } = await searchParams;

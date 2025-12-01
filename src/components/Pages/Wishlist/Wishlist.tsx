@@ -104,7 +104,7 @@ export default function Wishlist() {
             <div className="flex flex-col items-center justify-center min-h-[50vh] gap-4">
                 <h2 className="text-2xl font-semibold">Your wishlist is empty</h2>
                 <p className="text-gray-500">Browse our products and find something you like!</p>
-                <Link href="/shop">
+                <Link href="/shop/catalogue?page=1">
                     <Button variant="primary">Go to Shop</Button>
                 </Link>
             </div>
