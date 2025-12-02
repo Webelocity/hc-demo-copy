@@ -120,7 +120,8 @@ export default function OrderSummary({
             } : undefined,
 
             // Payment information
-            orderPaymentMethod: versapayValid ? 'Versapay' : 'Cash',
+            // Use 'Card' for VersaPay payments as it's a card-based gateway
+            orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
             deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
         };
