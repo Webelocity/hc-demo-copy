@@ -122,6 +122,8 @@ export default function OrderSummary({
             // Payment information
             // Use 'Card' for VersaPay payments as it's a card-based gateway
             orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
+            // Pass payment provider so backend knows to skip Stripe-specific logic for VersaPay
+            paymentProvider: versapayValid ? 'Versapay' : undefined,
             deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
         };
@@ -148,21 +150,55 @@ export default function OrderSummary({
                 const paymentResult = await processVersapayPayment(
                     versapayToken,
                     order._id,
-                    billing?._id  // Optional billing address ID
+                    billing?.id  // Optional billing address ID
                 );
 
                 if (!paymentResult.success) {
                     throw new Error(paymentResult.message || 'VersaPay payment failed');
                 }
+
+                // For VersaPay, payment is processed via webhook
+                // If the result indicates pending, show appropriate message
+                if (paymentResult.data?.pending) {
+                    toast.info('Payment submitted. Confirming your order...');
+                } else {
+                    toast.success('Order placed successfully!');
+                }
+            } else {
+                // Non-VersaPay payment (e.g., Cash)
+                toast.success('Order placed successfully!');
             }
 
-            // Success - redirect to order confirmation page
-            toast.success('Order placed successfully!');
+            // Clear cart and checkout state after successful order
+            setCart([]);
+            setSelectedShipping(null);
+            setAppliedDiscounts([]);
+            setSelectedAddresses(null);
+            setVersapayToken(null);
+            setVersapayValid(false);
+            setVersapaySummary(null);
+
+            // Redirect to order confirmation page
+            // The order page will show the current order status
             router.push(`/order/${order._id}`);
 
         } catch (error: any) {
             console.error('Error placing order:', error);
-            toast.error(error?.message || 'Failed to place order. Please try again.');
+            
+            // IMPORTANT: Clear VersaPay token after any error
+            // VersaPay tokens are single-use, so we must clear it to force re-validation
+            // This prevents "Duplicate transaction" errors on retry
+            setVersapayToken(null);
+            setVersapayValid(false);
+            setVersapaySummary(null);
+            
+            // Show appropriate error message
+            const errorMessage = error?.message || 'Failed to place order. Please try again.';
+            if (errorMessage.includes('Duplicate') || errorMessage.includes('Token')) {
+                toast.error('Please re-enter your card details and try again.');
+            } else {
+                toast.error(errorMessage);
+            }
         } finally {
             setIsProcessing(false);
         }

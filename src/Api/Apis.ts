@@ -311,12 +311,13 @@ export const versapayConfirmMethod = async (
  * @param paymentToken - Token from VersaPay Collect.js tokenization
  * @param orderId - Order ID from created order
  * @param billingAddressId - Billing address ID (optional)
+ * @returns Object with success status, optional message, and optional pending flag
  */
 export const processVersapayPayment = async (
     paymentToken: string,
     orderId: string,
     billingAddressId?: string // Optional - backend will fetch from user if not provided
-): Promise<{ success: boolean; message?: string; data?: any }> => {
+): Promise<{ success: boolean; message?: string; data?: { pending?: boolean; [key: string]: any } }> => {
     try {
         const payload = {
             orderId,
@@ -326,9 +327,15 @@ export const processVersapayPayment = async (
 
         const result = await versapayConfirmMethod(payload);
 
-        // Check if payment was successful
-        if (result?.success === true || result?.payment) {
-            return { success: true, data: result };
+        // Check if payment was successful or pending (webhook-based flow)
+        if (result?.success === true || result?.pending === true) {
+            return { 
+                success: true, 
+                data: { 
+                    pending: result?.pending === true,
+                    ...result 
+                } 
+            };
         }
 
         return {
