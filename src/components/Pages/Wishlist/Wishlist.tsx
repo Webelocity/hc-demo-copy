@@ -15,6 +15,7 @@ import { LuShoppingCart } from "react-icons/lu";
 import { addToCartAtom, addAllToCartAtom } from '@/atoms/cartAtom';
 import { BsGridFill, BsListUl } from "react-icons/bs";
 import CustomNoData from '@/components/shared/CustomNoData';
+import { resolveFulfillmentMethod } from '@/util/fulfillmentInventory';
 
 export default function Wishlist() {
     const wishlist = useAtomValue(wishlistAtom);
@@ -74,16 +75,18 @@ export default function Wishlist() {
     const handleAddAllToCart = () => {
         const itemsToAdd = filteredWishlist
             .filter(product => {
-                // Only include products that have a valid variant
                 const variant = product.lowestPriceVariant || product.productVariants?.[0];
                 return variant !== undefined;
             })
-            .map(product => ({
-                productId: product._id,
-                variant: product.lowestPriceVariant || product.productVariants[0],
-                quantity: 1,
-                fulfillmentMethod: null,
-            }));
+            .map(product => {
+                const variant = (product.lowestPriceVariant || product.productVariants[0]) as ProductVariant;
+                return {
+                    productId: product._id,
+                    variant,
+                    quantity: 1,
+                    fulfillmentMethod: resolveFulfillmentMethod(variant, 'pickup'),
+                };
+            });
         addAllToCartAction(itemsToAdd);
     };
 

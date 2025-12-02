@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAtomValue } from "jotai";
 import { cartAtom } from "@/atoms/cartAtom";
+import { selectedStoreAtom } from "@/atoms/storeAtom";
 import CartItem from "../CartItem/CartItem";
 import Button from "@/components/shared/Button";
 import { useCartTotals } from "@/hooks/useCartTotals";
@@ -11,16 +12,11 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import PromoCode from "./PromoCode";
 import CartSummary from "./CartSummary";
-
-const FULFILLMENT_LABELS: Record<string, string> = {
-    undefined: "No fulfillment selected",
-    pickup: "Pickup",
-    delivery: "Delivery",
-    shipping: "Shipping",
-};
+import { computeFulfillmentAvailability, resolveFulfillmentMethod } from "@/util/fulfillmentInventory";
 
 export default function CartPage() {
     const cart = useAtomValue(cartAtom);
+    const selectedStoreId = useAtomValue(selectedStoreAtom);
     const { data: totals, isLoading } = useCartTotals();
 
     const router = useRouter();
@@ -43,7 +39,28 @@ export default function CartPage() {
         return cart.some((ci) => ci.fulfillmentMethod === 'shipping');
     }, [cart]);
 
-    const hasUnfulfilled = useMemo(() => groups.undefined.length > 0, [groups]);
+    const hasInvalidFulfillment = useMemo(() => {
+        return cart.some((item) => {
+            if (!item.variant.trackQuantity) {
+                return false;
+            }
+            const method = resolveFulfillmentMethod(item.variant, item.fulfillmentMethod);
+            if (!method) {
+                return true;
+            }
+            const availability = computeFulfillmentAvailability(item.variant, selectedStoreId);
+            const methodAvailability = availability[method];
+            if (!methodAvailability?.available) {
+                return true;
+            }
+            if (!Number.isFinite(methodAvailability.ceiling)) {
+                return false;
+            }
+            return item.quantity > methodAvailability.ceiling;
+        });
+    }, [cart, selectedStoreId]);
+
+    const hasUnfulfilled = useMemo(() => groups.undefined.length > 0 || hasInvalidFulfillment, [groups, hasInvalidFulfillment]);
     if (cart.length === 0) {
         return (
             <div className="baseContainer py-[2.5rem]">

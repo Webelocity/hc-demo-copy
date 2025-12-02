@@ -106,7 +106,6 @@ export const fetchSubcategoryById = async (
 
 export const fetchSingleProductById = async (
     productId: string | undefined,
-    storeAddressId: string | undefined,
     params: Record<string, string | number | boolean> = {},
 ): Promise<Product> => {
     if (!productId) {
@@ -116,7 +115,7 @@ export const fetchSingleProductById = async (
 
 
 
-    const query = constructQueryParams({ ...params, storeAddressId: storeAddressId ?? "" });
+    const query = constructQueryParams({ ...params });
     const pathname = `/products/singleProduct/${productId}`;
 
     const response = await fetchWithStoreId<Product>(pathname, {

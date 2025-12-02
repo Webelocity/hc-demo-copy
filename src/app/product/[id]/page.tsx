@@ -30,7 +30,7 @@ export default async function ProductPage({
     const cookieStore = await cookies()
     const storeAddressId = cookieStore.get('storeAddressId')?.value;
     try {
-        const product = await fetchSingleProductById(id, storeAddressId);
+        const product = await fetchSingleProductById(id);
         console.log(product);
         // decide default variant (your priority rule)
         const defaultVariant = product.lowestPriceVariant ?? product.productVariants[0];

@@ -9,6 +9,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { addToCartAtom } from "@/atoms/cartAtom";
 import { toggleWishlistAtom, wishlistAtom } from "@/atoms/wishlistAtom";
 import { toast } from "react-toastify";
+import { resolveFulfillmentMethod } from "@/util/fulfillmentInventory";
 
 interface ProductCardProps {
     product?: Product;
@@ -65,11 +66,17 @@ export default function ProductCard({ product }: ProductCardProps) {
             return;
         }
 
+        const method = resolveFulfillmentMethod(variant, 'pickup');
+        if (!method) {
+            toast.error('No fulfillment option is available for this product right now.');
+            return;
+        }
+
         addToCartAction({
             productId: product?._id ?? '',
             variant: variant,
             quantity: 1,
-            fulfillmentMethod: null,
+            fulfillmentMethod: method,
         });
     }
     const getLastDefaultPathName = (p?: Product) => {

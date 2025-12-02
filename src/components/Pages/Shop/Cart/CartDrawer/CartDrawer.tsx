@@ -8,15 +8,18 @@ import Link from 'next/link';
 import { useAtom, useAtomValue } from 'jotai';
 import { cartDrawerOpenAtom } from '@/atoms/cartDrawerAtom';
 import { cartAtom } from '@/atoms/cartAtom';
+import { selectedStoreAtom } from '@/atoms/storeAtom';
 import { useCartTotals } from '@/hooks/useCartTotals';
 import CartItem from '../CartItem/CartItem';
 import Button from '@/components/shared/Button';
 import { useRouter } from 'next/navigation';
 import { TiShoppingCart } from "react-icons/ti";
+import { computeFulfillmentAvailability, resolveFulfillmentMethod } from '@/util/fulfillmentInventory';
 
 export default function CartDrawer() {
     const [open, setOpen] = useAtom(cartDrawerOpenAtom);
     const cart = useAtomValue(cartAtom);
+    const selectedStoreId = useAtomValue(selectedStoreAtom);
     const router = useRouter();
     // Warm the cache and keep totals synced with cart changes
     const { data: totals, isLoading } = useCartTotals();
@@ -30,7 +33,26 @@ export default function CartDrawer() {
         router.push('/cart')
         handleClose();
     }
+    const hasBlockingItems = cart.some((item) => {
+        if (!item.variant.trackQuantity) {
+            return false;
+        }
+        const method = resolveFulfillmentMethod(item.variant, item.fulfillmentMethod);
+        if (!method) {
+            return true;
+        }
+        const availability = computeFulfillmentAvailability(item.variant, selectedStoreId);
+        const methodAvailability = availability[method];
+        if (!methodAvailability?.available) {
+            return true;
+        }
+        if (!Number.isFinite(methodAvailability.ceiling)) {
+            return false;
+        }
+        return item.quantity > methodAvailability.ceiling;
+    });
     const navigateToCheckout = () => {
+        if (hasBlockingItems) return;
         router.push('/checkout')
         handleClose();
     }
@@ -138,7 +160,7 @@ export default function CartDrawer() {
                     <div className='flex items-center gap-[1rem] px-4 py-4'>
                         <Button variant="outline" fullWidth onClick={navigateToCart}>
                             View Cart                </Button>
-                        <Button onClick={navigateToCheckout} variant="primary" fullWidth>
+                        <Button onClick={navigateToCheckout} variant="primary" fullWidth disabled={hasBlockingItems} aria-disabled={hasBlockingItems}>
                             Proceed to Checkout
                         </Button>
                     </div>
