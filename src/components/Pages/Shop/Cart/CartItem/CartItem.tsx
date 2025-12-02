@@ -3,7 +3,7 @@ import FallBackImage from "@/components/shared/FallBackImage";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
+import { FiMinusCircle, FiPlusCircle, FiAlertTriangle } from "react-icons/fi";
 import { GoTrash } from "react-icons/go";
 import useDebounce from "@/hooks/useDebounce";
 import { useRouter } from "next/navigation";
@@ -88,7 +88,7 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     const thumbnail = item.variant.productMedia[0]?.file || item.variant.thumbnail?.file;
     return (
         <div
-            className={`flex flex-col gap-[0.5rem] p-[1rem] border rounded-[var(--Radius-xs)] ${showFulfillmentWarning ? 'border-[var(--Colors-Error-300)]' : 'border-[var(--Colors-Neutral-100)]'
+            className={`flex flex-col gap-[0.5rem] p-[1rem] border rounded-[var(--Radius-xs)] ${showFulfillmentWarning ? 'border-[red]' : 'border-[var(--Colors-Neutral-100)]'
                 }`}
         >
             <div className="flex gap-[0.5rem]">
@@ -170,16 +170,14 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
                     ) : null}
 
                     {/* Fulfillment warnings */}
-                    {showFulfillmentWarning ? (
-                        <div className="w-full rounded-[var(--Radius-xs)] border border-[var(--Colors-Error-200)] bg-[var(--Colors-Error-50)] px-3 py-2">
-                            <p className="text-[0.75rem] font-medium text-[var(--Colors-Error-700)]">
-                                {fulfillmentWarningMessage}
-                            </p>
-                        </div>
-                    ) : item.isValid === false ? (
-                        <div className="w-full rounded-[var(--Radius-xs)] border border-[var(--Colors-Error-200)] bg-[var(--Colors-Error-50)] px-3 py-2">
-                            <p className="text-[0.75rem] font-medium text-[var(--Colors-Error-700)]">
-                                This item may be unavailable or not allowed for the selected fulfillment method.
+                    {(showFulfillmentWarning || item.isValid === false) ? (
+                        <div className="w-full rounded-[var(--Radius-xs)] bg-[var(--Primary-50)] px-3 py-2 flex items-center gap-2 text-[var(--primary-500-main)]">
+                            <FiAlertTriangle className="text-base flex-shrink-0" />
+                            <p className="text-[0.75rem] font-medium leading-snug">
+                                {showFulfillmentWarning
+                                    ? fulfillmentWarningMessage
+                                    : "This item may be unavailable or not allowed for the selected fulfillment method."
+                                }
                             </p>
                         </div>
                     ) : null}

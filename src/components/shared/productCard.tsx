@@ -6,18 +6,18 @@ import { FaHeart } from "react-icons/fa";
 import FallBackImage from "./FallBackImage";
 import { useRouter } from "next/navigation";
 import { useAtomValue, useSetAtom } from "jotai";
-import { addToCartAtom } from "@/atoms/cartAtom";
 import { toggleWishlistAtom, wishlistAtom } from "@/atoms/wishlistAtom";
 import { toast } from "react-toastify";
-import { resolveFulfillmentMethod } from "@/util/fulfillmentInventory";
+import { useState } from "react";
+import ProductQuickAddModal from "./ProductQuickAddModal";
 
 interface ProductCardProps {
     product?: Product;
 }
 export default function ProductCard({ product }: ProductCardProps) {
     const router = useRouter();
+    const [quickAddOpen, setQuickAddOpen] = useState(false);
     const isTrackQuantity = product?.trackQuantity;
-    const addToCartAction = useSetAtom(addToCartAtom);
     const toggleWishlist = useSetAtom(toggleWishlistAtom);
     const wishlist = useAtomValue(wishlistAtom);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
@@ -50,35 +50,15 @@ export default function ProductCard({ product }: ProductCardProps) {
     const navigateToProduct = () => {
         router.push(`/product/${product?._id}`);
     }
-    const addToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (!product) return;
+    const openQuickAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
-        if (isSelectedVariantOutOfStock) {
-            toast.error('This product Variant is out of stock');
-            return;
-        }
-
-        // Use lowestPriceVariant if available, otherwise fall back to first variant (computed above)
-        const variant = selectedVariant;
-
-        if (!variant) {
-            console.error('No variant available for product:', product._id);
-            return;
-        }
-
-        const method = resolveFulfillmentMethod(variant, 'pickup');
-        if (!method) {
-            toast.error('No fulfillment option is available for this product right now.');
-            return;
-        }
-
-        addToCartAction({
-            productId: product?._id ?? '',
-            variant: variant,
-            quantity: 1,
-            fulfillmentMethod: method,
-        });
-    }
+        if (!product) return;
+        // if (isSelectedVariantOutOfStock) {
+        //     toast.error('This product Variant is out of stock');
+        //     return;
+        // }
+        setQuickAddOpen(true);
+    };
     const getLastDefaultPathName = (p?: Product) => {
         const path = p?.defaultPath;
         if (!Array.isArray(path) || path.length === 0) return '';
@@ -131,10 +111,20 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <span className="text-[0.875rem] font-semibold">${selectedVariant?.finalPrice}/<p className="inline text-[0.75rem] text-[var(--Colors-Neutral-500)] font-normal">each</p></span>
                 </div>
             </div>
-            <Button variant="primary" onClick={addToCart}>   <LuShoppingCart className="text-xl cursor-pointer" />Add to cart</Button>
+            <Button variant="primary" onClick={openQuickAdd}>
+                <LuShoppingCart className="text-xl cursor-pointer" />
+                Add to cart
+            </Button>
             <span className="text-[0.75rem] text-center cursor-pointer">
                 Parcel Shipping
             </span>
+            {product && (
+                <ProductQuickAddModal
+                    product={product}
+                    open={quickAddOpen}
+                    onClose={() => setQuickAddOpen(false)}
+                />
+            )}
         </div>
     )
 }

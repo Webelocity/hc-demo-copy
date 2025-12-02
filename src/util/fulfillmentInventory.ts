@@ -63,9 +63,11 @@ export const computeFulfillmentAvailability = (
 ): FulfillmentAvailabilityMap => {
     const availability = createEmptyAvailabilityMap();
     if (!variant) {
+        console.log("no variant");
         return availability;
     }
-
+    console.log(variant);
+    console.log(variant.trackQuantity);
     if (!variant.trackQuantity) {
         FALLBACK_METHOD_ORDER.forEach((method) => {
             availability[method] = {
@@ -73,10 +75,12 @@ export const computeFulfillmentAvailability = (
                 ceiling: Number.POSITIVE_INFINITY,
             };
         });
+        console.log("no track quantity");
         return availability;
     }
 
-    const inventories = Array.isArray(variant.allInventories) ? variant.allInventories : [];
+    const inventories = Array.isArray(variant.allInventories) ? variant.allInventories : variant.inventory ?? [];
+    console.log("inventories", inventories);
     const inStockInventories = inventories.filter((inventory) => isInventoryInStock(inventory));
     const doItBestId = options?.doItBestId ?? getDoItBestId();
 

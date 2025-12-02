@@ -72,6 +72,7 @@ type ProductVariant = {
     parentSubCategories: string[];
     id: string;
     allInventories: Inventory[];
+    inventory?: Inventory[];
     bulkPricingTable: BulkPriceRow[],
     thumbnail: ProductMedia;
     allowPro: boolean;

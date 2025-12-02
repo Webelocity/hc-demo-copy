@@ -45,7 +45,7 @@ export default function ReUsableSwiper<T>({
     const skeletonArray = useMemo(() => Array.from({ length: skeletonCount }), [skeletonCount]);
 
     return (
-        <div className='w-full flex-[1] overflow-hidden min-h-fit'>
+        <div className='w-full flex-[1]  min-h-fit'>
             <Swiper
                 modules={[Pagination]}
                 pagination={{

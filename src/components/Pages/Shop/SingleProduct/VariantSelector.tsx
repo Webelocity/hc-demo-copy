@@ -3,18 +3,25 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react';
 
+type VariantAttributesProps = {
+    product: Product;
+    currentVariantId: string;
+    onVariantChange?: (variant: ProductVariant | null) => void;
+    enableUrlSync?: boolean;
+};
+
 export default function VariantAttributes({
     product,
     currentVariantId,
-}: {
-    product: Product;
-    currentVariantId: string;
-}) {
+    onVariantChange,
+    enableUrlSync = true,
+}: VariantAttributesProps) {
     const router = useRouter();
     const params = useSearchParams();
 
     const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>({});
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+    const variantIdFromUrl = params.get('variant_Id');
 
     // Helper to check if an attribute value is available
     const getAttributeAvailability = useMemo(() => {
@@ -50,7 +57,7 @@ export default function VariantAttributes({
     useEffect(() => {
         if (!product) return;
 
-        const variantId = params.get('variant_Id') || currentVariantId;
+        const variantId = enableUrlSync && variantIdFromUrl ? variantIdFromUrl : currentVariantId;
         const variant = product.productVariants.find(pv => pv._id === variantId)
             ?? product.productVariants[0];
 
@@ -62,6 +69,7 @@ export default function VariantAttributes({
                 init[k] = String(val);
             });
             setSelectedVariant(variant);
+            onVariantChange?.(variant);
         } else if (product.attributes) {
             // Fallback to first value of each attribute
             Object.entries(product.attributes).forEach(([k, vals]) => {
@@ -70,7 +78,7 @@ export default function VariantAttributes({
         }
 
         setSelectedAttributes(init);
-    }, [product, currentVariantId, params]);
+    }, [product, currentVariantId, enableUrlSync, variantIdFromUrl, onVariantChange]);
 
     // When user changes attributes, find matching variant and update URL
     useEffect(() => {
@@ -82,19 +90,23 @@ export default function VariantAttributes({
 
         if (match) {
             setSelectedVariant(match);
+            onVariantChange?.(match);
 
-            const currentVariantInUrl = params.get('variant_Id');
+            if (enableUrlSync) {
+                const currentVariantInUrl = params.get('variant_Id');
 
-            // Only update URL if the variant actually changed (prevents infinite loop)
-            if (currentVariantInUrl !== match._id) {
-                const usp = new URLSearchParams(params.toString());
-                usp.set('variant_Id', match._id);
-                router.replace(`/product/${product._id}?${usp.toString()}`, { scroll: false });
+                // Only update URL if the variant actually changed (prevents infinite loop)
+                if (currentVariantInUrl !== match._id) {
+                    const usp = new URLSearchParams(params.toString());
+                    usp.set('variant_Id', match._id);
+                    router.replace(`/product/${product._id}?${usp.toString()}`, { scroll: false });
+                }
             }
         } else {
             setSelectedVariant(null);
+            onVariantChange?.(null);
         }
-    }, [selectedAttributes, product, params, router]);
+    }, [selectedAttributes, product, params, router, enableUrlSync, onVariantChange]);
 
     const changeAttr = (attr: string, val: string) =>
         setSelectedAttributes(prev => ({ ...prev, [attr]: val }));

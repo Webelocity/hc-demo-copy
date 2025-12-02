@@ -54,6 +54,7 @@ export default function QuantityPicker({
         () => computeFulfillmentAvailability(selectedVariant, selectedStoreId, { doItBestId: DO_IT_BEST_ADDRESS_ID }),
         [selectedVariant, selectedStoreId]
     );
+    console.log(fulfillmentAvailability);
     const activeFulfillmentMethod = resolveFulfillmentMethod(selectedVariant, selectedFulfillmentMethod);
     const activeMethodInfo = activeFulfillmentMethod ? fulfillmentAvailability[activeFulfillmentMethod] : undefined;
     const methodLimit = !selectedVariant?.trackQuantity
