@@ -57,6 +57,16 @@ export default function OrderPage() {
         queryFn: () =>
             fetchOrderById(id as string, contactEmail),
         enabled: Boolean(id) && String(contactEmail).trim() !== '',
+        // Poll every 2 seconds while payment is pending (waiting for webhook)
+        refetchInterval: (query) => {
+            const order = query.state.data;
+            // Keep polling if order exists but payment is not yet confirmed
+            // Order starts as PENDING, then moves to IN_FULFILLMENT after payment webhook
+            if (order && !order.payment) {
+                return 2000; // Poll every 2 seconds
+            }
+            return false; // Stop polling once payment exists
+        },
     });
 
     const groupedItems = useMemo(() => {
@@ -227,6 +237,10 @@ export default function OrderPage() {
     }
 
     const isPending = isOrderLoading || !fetchedOrder;
+    
+    // Check if payment is still being processed (waiting for webhook)
+    // Payment is pending if order exists but has no payment record yet
+    const isPaymentPending = fetchedOrder && !fetchedOrder.payment;
 
     if (isPending) {
         return (
@@ -258,17 +272,35 @@ export default function OrderPage() {
         <div className="baseContainer py-[2.5rem]">
             <div className="maxWidth flex flex-col gap-[2rem]">
                 <div className="flex flex-col items-center justify-center gap-[1rem]">
-                    <IoIosCheckmarkCircleOutline className="text-[4rem] text-[var(  --secondary-500-main)]" />
-                    <div className="flex items-center justify-center gap-[1rem]">
-                        <div className="flex items-center justify-center gap-[0.5rem]">
-                            <p className="text-[1.25rem] text-[var(--Colors-Neutral-700)] ">Order ID</p>
-                            <p className="text-[1rem] text-[var(--primary-500-main)]">{fetchedOrder?._id}</p>
-                        </div>
-                    </div>
-                    <h1 className="text-[2.5rem] font-bold text-center">Thank you for the order </h1>
-                    <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">Thank you for your purchase! Your payment has been successfully processed, and your order is now being prepared for delivery. We appreciate your trust in Home Central Stores.</p>
-                    <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">We have sent the order confirmation details to <span className="text-[black]  font-medium">{contactEmail}</span>.</p>
-                    <Button variant="primary" onClick={() => { router.push('/') }}>Continue Shopping</Button>
+                    {isPaymentPending ? (
+                        <>
+                            <div className="animate-spin rounded-full h-16 w-16 border-4 border-[var(--primary-500-main)] border-t-transparent" />
+                            <div className="flex items-center justify-center gap-[1rem]">
+                                <div className="flex items-center justify-center gap-[0.5rem]">
+                                    <p className="text-[1.25rem] text-[var(--Colors-Neutral-700)]">Order ID</p>
+                                    <p className="text-[1rem] text-[var(--primary-500-main)]">{fetchedOrder?._id}</p>
+                                </div>
+                            </div>
+                            <h1 className="text-[2.5rem] font-bold text-center">Processing Payment...</h1>
+                            <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">
+                                Your payment is being processed. This usually takes just a few seconds. Please don&apos;t close this page.
+                            </p>
+                        </>
+                    ) : (
+                        <>
+                            <IoIosCheckmarkCircleOutline className="text-[4rem] text-[var(  --secondary-500-main)]" />
+                            <div className="flex items-center justify-center gap-[1rem]">
+                                <div className="flex items-center justify-center gap-[0.5rem]">
+                                    <p className="text-[1.25rem] text-[var(--Colors-Neutral-700)] ">Order ID</p>
+                                    <p className="text-[1rem] text-[var(--primary-500-main)]">{fetchedOrder?._id}</p>
+                                </div>
+                            </div>
+                            <h1 className="text-[2.5rem] font-bold text-center">Thank you for the order </h1>
+                            <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">Thank you for your purchase! Your payment has been successfully processed, and your order is now being prepared for delivery. We appreciate your trust in Home Central Stores.</p>
+                            <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">We have sent the order confirmation details to <span className="text-[black]  font-medium">{contactEmail}</span>.</p>
+                            <Button variant="primary" onClick={() => { router.push('/') }}>Continue Shopping</Button>
+                        </>
+                    )}
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-[1.5rem]">
