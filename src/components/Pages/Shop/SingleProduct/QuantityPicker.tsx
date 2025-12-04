@@ -130,18 +130,46 @@ export default function QuantityPicker({
             <div className='flex flex-col gap-[1rem]'>
                 <p className='text-[1rem] font-medium'>How you’ll get this item</p>
                 <div className="flex items-center gap-[0.5rem]">
-                    {selectedVariant?.supportedFulfillmentMethods?.map((method) => (
-                        <div
-                            key={method}
-                            onClick={() => setSelectedFulfillmentMethod(method)}
-                            className={`cursor-pointer flex-1 flex flex-col items-center justify-center p-[0.5rem] py-[1rem] border rounded-[var(--Radius-xs)] relative overflow-hidden min-h-full text-center ${selectedFulfillmentMethod === method ? 'border-[var(--secondary-500-main)]' : 'border-[var(--Colors-Neutral-100)]'}`}
-                        >
-                            <p className={`text-[1rem] font-medium ${selectedFulfillmentMethod === method ? 'text-[var(--Colors-Neutral-800)]' : 'text-[var(--Colors-Neutral-700)]'}`}>
-                                {method.charAt(0).toUpperCase() + method.slice(1)}
-                            </p>
-                            {method === 'pickup' ? <p className='text-[var(--Colors-Success-800)] text-[0.75rem] font-medium'>Free</p> : <p className='text-[var(--Colors-Neutral-700)] text-[0.75rem] font-medium'>Calculated at checkout</p>}
-                        </div>
-                    ))}
+                    {selectedVariant?.supportedFulfillmentMethods?.map((method) => {
+                        const info = fulfillmentAvailability ? fulfillmentAvailability[method] : undefined;
+                        const isDisabled = Boolean(selectedVariant?.trackQuantity && !info?.available);
+                        const isSelected = selectedFulfillmentMethod === method;
+                        const secondaryLabel = isDisabled
+                            ? 'Unavailable'
+                            : method === 'pickup'
+                                ? 'Free'
+                                : 'Calculated at checkout';
+
+                        return (
+                            <button
+                                key={method}
+                                type="button"
+                                disabled={isDisabled}
+                                onClick={() => {
+                                    if (isDisabled) return;
+                                    setSelectedFulfillmentMethod(method);
+                                }}
+                                className={`flex-1 flex flex-col items-center justify-center p-[0.5rem] py-[1rem] border rounded-[var(--Radius-xs)] relative overflow-hidden min-h-full text-center transition
+                                    ${isSelected ? 'border-[var(--secondary-500-main)]' : 'border-[var(--Colors-Neutral-100)]'}
+                                    ${isDisabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer hover:border-[var(--secondary-500-main)]'}
+                                `}
+                            >
+                                <p className={`text-[1rem] font-medium ${isSelected ? 'text-[var(--Colors-Neutral-800)]' : 'text-[var(--Colors-Neutral-700)]'}`}>
+                                    {method.charAt(0).toUpperCase() + method.slice(1)}
+                                </p>
+                                <p
+                                    className={`text-[0.75rem] font-medium ${isDisabled
+                                        ? 'text-[var(--Colors-Neutral-500)]'
+                                        : method === 'pickup'
+                                            ? 'text-[var(--Colors-Success-800)]'
+                                            : 'text-[var(--Colors-Neutral-700)]'
+                                        }`}
+                                >
+                                    {secondaryLabel}
+                                </p>
+                            </button>
+                        );
+                    })}
                 </div>
                 <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
                     Fulfillment inventory for {formatFulfillmentMethodLabel(activeFulfillmentMethod)}: {fulfillmentInventoryLabel}

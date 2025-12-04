@@ -1,11 +1,8 @@
 import { constructQueryParams, fetchWithStoreId } from "./helpers";
-import { MOCK_PRODUCT, getMockProductWithPrices } from "@/mocks/products";
-import { getMockCartTotals } from "@/mocks/cart";
 import type { CartState } from "@/atoms/cartAtom";
 import type { CheckoutShippingLocation } from "@/types/checkout";
 
 // Toggle to use mock data (set to false when backend is ready)
-const USE_MOCK_DATA = false;
 
 export const getCategories = async (): Promise<Category[]> => {
     const response = await fetchWithStoreId<Category[]>('/categories');
@@ -139,18 +136,6 @@ export const fetchSingleProductByIdPrices = async (
         throw new Error("No productId provided");
     }
 
-    // Use mock data if enabled (import directly, no HTTP call needed)
-    if (USE_MOCK_DATA) {
-        // Simulate network delay for realistic testing
-        await new Promise(resolve => setTimeout(resolve, 200));
-
-        const quantity = Number(params.quantity) || 1;
-
-        if (variantId === MOCK_PRODUCT._id || variantId === MOCK_PRODUCT.id || variantId === 'prod_12345') {
-            return getMockProductWithPrices(quantity);
-        }
-        throw new Error(`Mock product not found with ID ${variantId}. Use 'prod_12345' for testing.`);
-    }
 
     const query = constructQueryParams(params);
     const pathname = `/products/singleProduct/${variantId}/prices`;

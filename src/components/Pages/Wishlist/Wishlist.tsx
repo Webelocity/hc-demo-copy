@@ -115,100 +115,103 @@ export default function Wishlist() {
     }
 
     return (
-        <div className="flex flex-col gap-6">
-            {/* Header Actions */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold">Wishlist</h1>
-                    <p className="text-gray-500">View all your recent and older products</p>
-                </div>
-                <div className="flex gap-3">
-                    <Link href="/cart">
-                        <Button variant="outline" className="!rounded-md">
-                            View Cart
+        <div className="baseContainer">
+            <div className="flex flex-col gap-6 maxWidth ">
+                {/* Header Actions */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold">Wishlist</h1>
+                        <p className="text-gray-500">View all your recent and older products</p>
+                    </div>
+                    <div className="flex gap-3">
+                        <Link href="/cart">
+                            <Button variant="outline" className="!rounded-md">
+                                View Cart
+                            </Button>
+                        </Link>
+                        <Button variant="primary" className="!rounded-md !bg-[#8B1D15]" onClick={handleAddAllToCart}>
+                            <LuShoppingCart /> Add All to Cart
                         </Button>
-                    </Link>
-                    <Button variant="primary" className="!rounded-md !bg-[#8B1D15]" onClick={handleAddAllToCart}>
-                        <LuShoppingCart /> Add All to Cart
-                    </Button>
+                    </div>
                 </div>
-            </div>
 
-            {/* Filter Bar */}
-            <div className="flex flex-col lg:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg border border-gray-100">
-                {/* Categories */}
-                <div className="flex gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
-                    <button
-                        key="all"
-                        onClick={() => setSelectedCategory('all')}
-                        className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === 'all'
-                            ? 'border-gray-400 bg-gray-100'
-                            : 'border-gray-200 hover:bg-gray-50'
-                            }`}
-                    >
-                        All
-                    </button>
-                    {categories.map(cat => (
+                {/* Filter Bar */}
+                <div className="flex flex-col lg:flex-row justify-between items-center gap-4 bg-white p-4 rounded-lg border border-gray-100">
+                    {/* Categories */}
+                    <div className="flex gap-2 overflow-x-auto w-full lg:w-auto pb-2 lg:pb-0">
                         <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(prev => (prev === cat ? 'all' : cat))}
-                            className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === cat
+                            key="all"
+                            onClick={() => setSelectedCategory('all')}
+                            className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === 'all'
                                 ? 'border-gray-400 bg-gray-100'
                                 : 'border-gray-200 hover:bg-gray-50'
                                 }`}
                         >
-                            {cat}
+                            All
                         </button>
-                    ))}
-                </div>
-
-                {/* Controls */}
-                <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
-                    <Input
-                        placeholder="Search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        startAdornment={
-                            <InputAdornment position="start">
-                                <IoMdSearch className="text-gray-400" />
-                            </InputAdornment>
-                        }
-                        className="!border !border-gray-200 !rounded-md !px-3 !py-1 !text-sm w-full sm:w-64"
-                        disableUnderline
-                    />
-
-                    <div className="flex items-center gap-4">
-                        <SortDropdown />
-                        <AvailabilityDropdown />
-
-                        <div className="flex border border-gray-200 rounded-md overflow-hidden">
+                        {categories.map(cat => (
                             <button
-                                onClick={() => setViewMode('list')}
-                                className={`p-2 ${viewMode === 'list' ? 'bg-gray-100' : 'bg-white'}`}
+                                key={cat}
+                                onClick={() => setSelectedCategory(prev => (prev === cat ? 'all' : cat))}
+                                className={`px-4 py-2 rounded-full border text-sm whitespace-nowrap cursor-pointer ${selectedCategory === cat
+                                    ? 'border-gray-400 bg-gray-100'
+                                    : 'border-gray-200 hover:bg-gray-50'
+                                    }`}
                             >
-                                <BsListUl />
+                                {cat}
                             </button>
-                            <button
-                                onClick={() => setViewMode('grid')}
-                                className={`p-2 ${viewMode === 'grid' ? 'bg-gray-100' : 'bg-white'}`}
-                            >
-                                <BsGridFill />
-                            </button>
+                        ))}
+                    </div>
+
+                    {/* Controls */}
+                    <div className="flex flex-wrap items-center gap-4 w-full lg:w-auto">
+                        <Input
+                            placeholder="Search"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <IoMdSearch className="text-gray-400" />
+                                </InputAdornment>
+                            }
+                            className="!border !border-gray-200 !rounded-md !px-3 !py-1 !text-sm w-full sm:w-64"
+                            disableUnderline
+                        />
+
+                        <div className="flex items-center gap-4">
+                            <SortDropdown />
+                            <AvailabilityDropdown />
+
+                            <div className="flex border border-gray-200 rounded-md overflow-hidden">
+                                <button
+                                    onClick={() => setViewMode('list')}
+                                    className={`p-2 ${viewMode === 'list' ? 'bg-gray-100' : 'bg-white'}`}
+                                >
+                                    <BsListUl />
+                                </button>
+                                <button
+                                    onClick={() => setViewMode('grid')}
+                                    className={`p-2 ${viewMode === 'grid' ? 'bg-gray-100' : 'bg-white'}`}
+                                >
+                                    <BsGridFill />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Grid */}
-            {filteredWishlist.length === 0 ? (
-                <CustomNoData text="No results found for your selection" />
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {filteredWishlist.map((product) => (
-                        <ProductCard key={product._id} product={product} />
-                    ))}
-                </div>
-            )}
+                {/* Grid */}
+                {filteredWishlist.length === 0 ? (
+                    <CustomNoData text="No results found for your selection" />
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {filteredWishlist.map((product) => (
+                            <ProductCard key={product._id} product={product} />
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
+
     );
 }

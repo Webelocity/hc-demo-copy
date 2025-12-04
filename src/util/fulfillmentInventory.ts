@@ -43,7 +43,7 @@ export const formatFulfillmentMethodLabel = (method?: FulfillmentMethod | null) 
 export const resolveFulfillmentMethod = (
     variant?: ProductVariant | null,
     requested?: FulfillmentMethod | null
-): FulfillmentMethod | null => {
+): FulfillmentMethod => {
     const variantMethods = Array.isArray(variant?.supportedFulfillmentMethods)
         ? (variant?.supportedFulfillmentMethods as FulfillmentMethod[])
         : [];
@@ -53,7 +53,7 @@ export const resolveFulfillmentMethod = (
         return requested;
     }
 
-    return supportedList.find((method) => FALLBACK_METHOD_ORDER.includes(method)) ?? null;
+    return supportedList.find((method) => FALLBACK_METHOD_ORDER.includes(method)) ?? supportedList[0];
 };
 
 export const computeFulfillmentAvailability = (
