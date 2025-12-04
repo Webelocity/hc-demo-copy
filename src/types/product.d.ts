@@ -71,7 +71,8 @@ type ProductVariant = {
     __v: number;
     parentSubCategories: string[];
     id: string;
-    inventory: Inventory[];
+    allInventories: Inventory[];
+    inventory?: Inventory[];
     bulkPricingTable: BulkPriceRow[],
     thumbnail: ProductMedia;
     allowPro: boolean;
@@ -83,6 +84,14 @@ type ProductVariant = {
     rating: number;
     supportedFulfillmentMethods: FulfillmentMethodEnum[];
 
+}
+type Inventory = {
+    _id: string;
+    storeId: string;
+    variant: string;
+    addressId: string;
+    quantity: number;
+    status: string;
 }
 type ProductVariantAttribute = {
     [key: string]: string;

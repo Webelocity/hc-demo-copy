@@ -2,11 +2,13 @@ import { type CartItem, increaseQuantityAtom, decreaseQuantityAtom, deleteFromCa
 import FallBackImage from "@/components/shared/FallBackImage";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { useSetAtom } from "jotai";
-import { FiMinusCircle, FiPlusCircle } from "react-icons/fi";
+import { useAtomValue, useSetAtom } from "jotai";
+import { FiMinusCircle, FiPlusCircle, FiAlertTriangle } from "react-icons/fi";
 import { GoTrash } from "react-icons/go";
 import useDebounce from "@/hooks/useDebounce";
-import router, { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { selectedStoreAtom } from "@/atoms/storeAtom";
+import { computeFulfillmentAvailability, formatFulfillmentMethodLabel, resolveFulfillmentMethod } from "@/util/fulfillmentInventory";
 
 export default function CartItem({ item, isLoading }: { item: CartItem; isLoading: boolean }) {
     const increaseQuantity = useSetAtom(increaseQuantityAtom);
@@ -16,6 +18,34 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     const router = useRouter();
     const [quantity, setQuantity] = useState(item.quantity);
     const debouncedQuantity = useDebounce(quantity, 2000);
+    const selectedStoreId = useAtomValue(selectedStoreAtom);
+    const fulfillmentAvailability = useMemo(
+        () => computeFulfillmentAvailability(item.variant, selectedStoreId),
+        [item.variant, selectedStoreId]
+    );
+    const normalizedMethod = resolveFulfillmentMethod(item.variant, item.fulfillmentMethod);
+    const methodAvailability = normalizedMethod ? fulfillmentAvailability[normalizedMethod] : undefined;
+    const methodLimit = useMemo(
+        () =>
+            item.variant.trackQuantity
+                ? (methodAvailability?.available ? methodAvailability.ceiling : 0)
+                : Number.POSITIVE_INFINITY,
+        [item.variant.trackQuantity, methodAvailability]
+    );
+    const finiteMethodLimit = Number.isFinite(methodLimit) ? Number(methodLimit) : null;
+    const isFulfillmentUnavailable =
+        Boolean(item.variant.trackQuantity) && (!methodAvailability || !methodAvailability.available);
+    const isQuantityOverLimit =
+        Boolean(item.variant.trackQuantity) &&
+        Boolean(methodAvailability?.available) &&
+        finiteMethodLimit !== null &&
+        item.quantity > finiteMethodLimit;
+    const showFulfillmentWarning = Boolean(normalizedMethod) && (isFulfillmentUnavailable || isQuantityOverLimit);
+    const fulfillmentWarningMessage = showFulfillmentWarning
+        ? isFulfillmentUnavailable
+            ? `${formatFulfillmentMethodLabel(normalizedMethod)} is unavailable at the selected location. Please choose a different fulfillment method.`
+            : `Only ${finiteMethodLimit} available for ${formatFulfillmentMethodLabel(normalizedMethod)}. Reduce the quantity or pick another method.`
+        : '';
     const handleProductClick = () => {
         router.push(`/product/${item.variant.parentProduct}?variant_Id=${item.variant._id}`);
     }
@@ -23,11 +53,6 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     useEffect(() => {
         setQuantity(item.quantity);
     }, [item.quantity]);
-
-    const maxQty = useMemo(
-        () => (item.variant.trackQuantity ? item.variant.inventoryCount : Number.POSITIVE_INFINITY),
-        [item.variant.trackQuantity, item.variant.inventoryCount]
-    );
 
     // Debounced "apply" to the store
     useEffect(() => {
@@ -37,13 +62,13 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
         if (diff > 0) {
             increaseQuantity({
                 variantId: item.variant._id,
-                fulfillmentMethod: item.fulfillmentMethod,
+                fulfillmentMethod: normalizedMethod ?? item.fulfillmentMethod,
                 amount: diff,
             });
         } else {
             decreaseQuantity({
                 variantId: item.variant._id,
-                fulfillmentMethod: item.fulfillmentMethod,
+                fulfillmentMethod: normalizedMethod ?? item.fulfillmentMethod,
                 amount: -diff,
             });
         }
@@ -59,10 +84,13 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
     };
 
     const canDecrement = quantity > 1;
-    const canIncrement = quantity < maxQty;
+    const canIncrement = finiteMethodLimit !== null ? quantity < finiteMethodLimit : true;
     const thumbnail = item.variant.productMedia[0]?.file || item.variant.thumbnail?.file;
     return (
-        <div className="flex flex-col gap-[0.5rem] p-[1rem] border border-[var(--Colors-Neutral-100)] rounded-[var(--Radius-xs)]">
+        <div
+            className={`flex flex-col gap-[0.5rem] p-[1rem] border rounded-[var(--Radius-xs)] ${showFulfillmentWarning ? 'border-[red]' : 'border-[var(--Colors-Neutral-100)]'
+                }`}
+        >
             <div className="flex gap-[0.5rem]">
                 <div className="flex-1 relative cursor-pointer" onClick={handleProductClick}>
                     {thumbnail ? (
@@ -141,11 +169,15 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
                         </div>
                     ) : null}
 
-                    {/* Invalid indicator */}
-                    {item.isValid === false ? (
-                        <div className="w-full">
-                            <p className="text-[0.75rem] font-medium text-[var(--Colors-Error-600)]">
-                                This item may be unavailable or not allowed for the selected fulfillment method.
+                    {/* Fulfillment warnings */}
+                    {(showFulfillmentWarning || item.isValid === false) ? (
+                        <div className="w-full rounded-[var(--Radius-xs)] bg-[var(--Primary-50)] px-3 py-2 flex items-center gap-2 text-[var(--primary-500-main)]">
+                            <FiAlertTriangle className="text-base flex-shrink-0" />
+                            <p className="text-[0.75rem] font-medium leading-snug">
+                                {showFulfillmentWarning
+                                    ? fulfillmentWarningMessage
+                                    : "This item may be unavailable or not allowed for the selected fulfillment method."
+                                }
                             </p>
                         </div>
                     ) : null}
@@ -170,7 +202,14 @@ export default function CartItem({ item, isLoading }: { item: CartItem; isLoadin
 
                     <button
                         type="button"
-                        onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
+                        onClick={() =>
+                            setQuantity((q) => {
+                                if (finiteMethodLimit !== null && q >= finiteMethodLimit) {
+                                    return q;
+                                }
+                                return q + 1;
+                            })
+                        }
                         disabled={!canIncrement}
                         className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         aria-label="Increase quantity"

@@ -22,15 +22,15 @@ export default async function ProductPage({
     params,
     searchParams,
 }: {
-    params: Promise<PageParams>;            // sync
-    searchParams: Promise<Search>; // must be awaited
+    params: Promise<PageParams>;
+    searchParams: Promise<Search>;
 }) {
     const { id } = await params;
     const { q, variant_Id } = await searchParams;
     const cookieStore = await cookies()
     const storeAddressId = cookieStore.get('storeAddressId')?.value;
     try {
-        const product = await fetchSingleProductById(id, storeAddressId);
+        const product = await fetchSingleProductById(id);
         console.log(product);
         // decide default variant (your priority rule)
         const defaultVariant = product.lowestPriceVariant ?? product.productVariants[0];

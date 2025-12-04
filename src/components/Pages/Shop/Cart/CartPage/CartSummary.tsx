@@ -74,6 +74,11 @@ export default function CartSummary({ totals, isLoading, hasShipping, hasUnfulfi
             <Button variant="primary" onClick={() => router.push('/checkout')} fullWidth disabled={hasUnfulfilled} aria-disabled={hasUnfulfilled}>
                 Proceed to Checkout
             </Button>
+            {hasUnfulfilled ? (
+                <p className="text-xs text-[var(--Colors-Error-600)] text-center">
+                    Resolve fulfillment selections and inventory limits to continue.
+                </p>
+            ) : null}
         </>
     );
 }

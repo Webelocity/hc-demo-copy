@@ -1,20 +1,26 @@
 'use client';
 
-import { useEffect, useState, type MouseEvent } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 import { Input } from '@mui/material';
 import Button from '@/components/shared/Button';
 import { LuShoppingCart } from 'react-icons/lu';
 import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
-import Image from 'next/image';
-import { useAtom, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { addToCartAtom } from '@/atoms/cartAtom';
-
+import { selectedStoreAtom } from '@/atoms/storeAtom';
+import {
+    computeFulfillmentAvailability,
+    formatFulfillmentMethodLabel,
+    resolveFulfillmentMethod,
+} from '@/util/fulfillmentInventory';
 import { wishlistAtom, toggleWishlistAtom } from '@/atoms/wishlistAtom';
 import { FaHeart } from "react-icons/fa";
 import { LuHeart } from "react-icons/lu";
 import { toast } from 'react-toastify';
+
+const DO_IT_BEST_ADDRESS_ID = process.env.NEXT_PUBLIC_DO_IT_BEST_ID ?? '';
 
 export default function QuantityPicker({
     productId,
@@ -31,13 +37,45 @@ export default function QuantityPicker({
 }) {
     const router = useRouter();
     const params = useSearchParams();
-    const trackQuantity = selectedVariant?.trackQuantity ?? false;
-    const inventoryCount = selectedVariant?.inventoryCount ?? 0;
     const [localQty, setLocalQty] = useState<number>(quantity);
-    const [selectedFulfillmentMethod, setSelectedFulfillmentMethod] = useState<FulfillmentMethodEnum | null>(selectedVariant?.supportedFulfillmentMethods[0] ?? null);
+    const selectedStoreId = useAtomValue(selectedStoreAtom);
     const addToCartAction = useSetAtom(addToCartAtom);
+    const [selectedFulfillmentMethod, setSelectedFulfillmentMethod] = useState<FulfillmentMethodEnum | null>(() =>
+        resolveFulfillmentMethod(selectedVariant, selectedVariant?.supportedFulfillmentMethods?.[0] ?? null)
+    );
+    const [wishlist] = useAtom(wishlistAtom);
+    const toggleWishlist = useSetAtom(toggleWishlistAtom);
+    const isWishlisted = wishlist.some((item) => item._id === product?._id);
     useEffect(() => setLocalQty(quantity), [quantity]);
-
+    useEffect(() => {
+        setSelectedFulfillmentMethod((prev) => resolveFulfillmentMethod(selectedVariant, prev));
+    }, [selectedVariant?._id]);
+    const fulfillmentAvailability = useMemo(
+        () => computeFulfillmentAvailability(selectedVariant, selectedStoreId, { doItBestId: DO_IT_BEST_ADDRESS_ID }),
+        [selectedVariant, selectedStoreId]
+    );
+    console.log(fulfillmentAvailability);
+    const activeFulfillmentMethod = resolveFulfillmentMethod(selectedVariant, selectedFulfillmentMethod);
+    const activeMethodInfo = activeFulfillmentMethod ? fulfillmentAvailability[activeFulfillmentMethod] : undefined;
+    const methodLimit = !selectedVariant?.trackQuantity
+        ? Number.POSITIVE_INFINITY
+        : activeMethodInfo?.available
+            ? activeMethodInfo.ceiling
+            : 0;
+    const maxQtyForInput = Number.isFinite(methodLimit) ? Math.max(1, methodLimit) : undefined;
+    const canIncrement = Number.isFinite(methodLimit) ? localQty < methodLimit : true;
+    const fulfillmentInventoryLabel = (() => {
+        if (!selectedVariant?.trackQuantity) {
+            return 'Unlimited';
+        }
+        if (!activeFulfillmentMethod) {
+            return 'Select a fulfillment method';
+        }
+        if (!activeMethodInfo?.available) {
+            return 'Unavailable for the selected location';
+        }
+        return `${activeMethodInfo.ceiling} available`;
+    })();
     const debouncedQty = useDebounce(localQty, 2000);
 
     useEffect(() => {
@@ -49,11 +87,10 @@ export default function QuantityPicker({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedQty, productId, selectedVariant?._id]);
     const handleIncrement = () => {
-        const newQty = localQty + 1;
-        const maxQty = trackQuantity ? inventoryCount : Infinity;
-        if (newQty <= maxQty) {
-            setLocalQty(newQty);
+        if (Number.isFinite(methodLimit) && localQty >= methodLimit) {
+            return;
         }
+        setLocalQty((qty) => qty + 1);
     };
 
     const handleDecrement = () => {
@@ -65,11 +102,12 @@ export default function QuantityPicker({
     const addToCart = () => {
 
         if (!selectedVariant) {
-            toast.error('No selectedVariant to add to cart');
+            toast.error('No selected variant to add to cart');
             return;
         }
-        if (trackQuantity && localQty > inventoryCount) {
-            toast.error('Quantity is greater than inventory count');
+        const methodForCart = activeFulfillmentMethod;
+        if (!methodForCart) {
+            toast.error('Select a fulfillment method to continue');
             return;
         }
 
@@ -77,13 +115,9 @@ export default function QuantityPicker({
             productId,
             variant: selectedVariant,
             quantity: localQty,
-            fulfillmentMethod: selectedFulfillmentMethod,
+            fulfillmentMethod: methodForCart,
         });
     }
-
-    const [wishlist] = useAtom(wishlistAtom);
-    const toggleWishlist = useSetAtom(toggleWishlistAtom);
-    const isWishlisted = wishlist.some((item) => item._id === product?._id);
 
     const handleWishlistToggle = () => {
         if (product) {
@@ -96,7 +130,7 @@ export default function QuantityPicker({
             <div className='flex flex-col gap-[1rem]'>
                 <p className='text-[1rem] font-medium'>How you’ll get this item</p>
                 <div className="flex items-center gap-[0.5rem]">
-                    {selectedVariant?.supportedFulfillmentMethods.map((method) => (
+                    {selectedVariant?.supportedFulfillmentMethods?.map((method) => (
                         <div
                             key={method}
                             onClick={() => setSelectedFulfillmentMethod(method)}
@@ -109,7 +143,9 @@ export default function QuantityPicker({
                         </div>
                     ))}
                 </div>
-
+                <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
+                    Fulfillment inventory for {formatFulfillmentMethodLabel(activeFulfillmentMethod)}: {fulfillmentInventoryLabel}
+                </p>
             </div>
             <div className=' flex gap-[0.5rem] items-center'>
                 <div className="flex-[1.1] p-[0.25rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] flex justify-center items-center gap-[0.5rem]">
@@ -127,18 +163,27 @@ export default function QuantityPicker({
                         id="qty"
                         type="number"
                         className="[&_input]:text-center [&_input::-webkit-outer-spin-button]:appearance-none [&_input::-webkit-inner-spin-button]:appearance-none [&_input[type=number]]:[-moz-appearance:textfield]"
-                        inputProps={{ min: 1, max: inventoryCount }}
+                        inputProps={{ min: 1, max: maxQtyForInput }}
                         value={localQty}
                         onChange={(e) => {
                             const next = Number(e.target.value);
-                            setLocalQty(Number.isFinite(next) && next > 0 ? Math.floor(next) : 1);
+                            if (!Number.isFinite(next) || next <= 0) {
+                                setLocalQty(1);
+                                return;
+                            }
+                            const normalized = Math.floor(next);
+                            if (typeof maxQtyForInput === 'number') {
+                                setLocalQty(Math.min(normalized, maxQtyForInput));
+                            } else {
+                                setLocalQty(normalized);
+                            }
                         }}
                     />
 
                     <button
                         type="button"
                         onClick={handleIncrement}
-                        disabled={trackQuantity && localQty >= inventoryCount}
+                        disabled={!canIncrement}
                         className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         aria-label="Increase quantity"
                     >

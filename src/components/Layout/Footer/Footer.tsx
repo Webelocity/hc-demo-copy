@@ -189,7 +189,7 @@ export default function Footer() {
                   Shipping and Delivery Policy
                 </Link>
                 <Link
-                  href={"/"}
+                  href={"/resources"}
                   className="text-[0.9rem] text-[var(--Neutral-800)]"
                 >
                   Resources

@@ -2,8 +2,8 @@
 
 export default function ResourcesBanner() {
   return (
-    <section className='w-full bg-white py-6'>
-      <div className='baseContainer'>
+    <section className='w-full baseContainer bg-white py-6'>
+      <div className='maxWidth'>
         <div className='relative flex items-center justify-center rounded-2xl px-10 py-20 min-h-[25rem]'>
           {/* Background layers with exact positioning */}
           <div
