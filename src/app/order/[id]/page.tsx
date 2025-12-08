@@ -237,7 +237,7 @@ export default function OrderPage() {
     }
 
     const isPending = isOrderLoading || !fetchedOrder;
-    
+
     // Check if payment is still being processed (waiting for webhook)
     // Payment is pending if order exists but has no payment record yet
     const isPaymentPending = fetchedOrder && !fetchedOrder.payment;
@@ -298,7 +298,7 @@ export default function OrderPage() {
                             <h1 className="text-[2.5rem] font-bold text-center">Thank you for the order </h1>
                             <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">Thank you for your purchase! Your payment has been successfully processed, and your order is now being prepared for delivery. We appreciate your trust in Home Central Stores.</p>
                             <p className="text-[var(--Colors-Neutral-500)] w-[90%] text-center lg:w-[60%]">We have sent the order confirmation details to <span className="text-[black]  font-medium">{contactEmail}</span>.</p>
-                            <Button variant="primary" onClick={() => { router.push('/') }}>Continue Shopping</Button>
+                            <Button variant="primary" href="/shop/catalogue">Continue Shopping</Button>
                         </>
                     )}
                 </div>

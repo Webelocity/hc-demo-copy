@@ -16,6 +16,7 @@ import { processVersapayPayment } from '@/Api/Apis';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { cartAtom } from '@/atoms/cartAtom';
+import { selectedStoreAtom } from '@/atoms/storeAtom';
 
 type OrderSummaryProps = {
     cart: CartItem[];
@@ -49,6 +50,7 @@ export default function OrderSummary({
     const selectedAddresses = useAtomValue(selectedAddressesAtom);
     const versapayToken = useAtomValue(versapayTokenAtom);
     const versapayValid = useAtomValue(versapayValidAtom);
+    const storeAddressId = useAtomValue(selectedStoreAtom);
     const setCart = useSetAtom(cartAtom);
     const setSelectedShipping = useSetAtom(selectedShippingOptionAtom);
     const setAppliedDiscounts = useSetAtom(appliedDiscountsAtom);
@@ -119,6 +121,7 @@ export default function OrderSummary({
                 version: selectedShipping.version,
             } : undefined,
 
+
             // Payment information
             // Use 'Card' for VersaPay payments as it's a card-based gateway
             orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
@@ -126,6 +129,7 @@ export default function OrderSummary({
             paymentProvider: versapayValid ? 'Versapay' : undefined,
             deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
+            pickupAddressId: storeAddressId
         };
 
 
@@ -150,7 +154,6 @@ export default function OrderSummary({
                 const paymentResult = await processVersapayPayment(
                     versapayToken,
                     order._id,
-                    billing?.id  // Optional billing address ID
                 );
 
                 if (!paymentResult.success) {
@@ -169,29 +172,20 @@ export default function OrderSummary({
                 toast.success('Order placed successfully!');
             }
 
-            // Clear cart and checkout state after successful order
-            setCart([]);
-            setSelectedShipping(null);
-            setAppliedDiscounts([]);
-            setSelectedAddresses(null);
-            setVersapayToken(null);
-            setVersapayValid(false);
-            setVersapaySummary(null);
-
             // Redirect to order confirmation page
             // The order page will show the current order status
             router.push(`/order/${order._id}`);
 
         } catch (error: any) {
             console.error('Error placing order:', error);
-            
+
             // IMPORTANT: Clear VersaPay token after any error
             // VersaPay tokens are single-use, so we must clear it to force re-validation
             // This prevents "Duplicate transaction" errors on retry
             setVersapayToken(null);
             setVersapayValid(false);
             setVersapaySummary(null);
-            
+
             // Show appropriate error message
             const errorMessage = error?.message || 'Failed to place order. Please try again.';
             if (errorMessage.includes('Duplicate') || errorMessage.includes('Token')) {
