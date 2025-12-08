@@ -51,10 +51,10 @@ export default function OurCoreValues() {
             </h2>
             <div className="h-[72.25rem] mix-blend-screen relative shrink-0 w-full rounded-[var(--Radius-md)] overflow-hidden hidden lg:block">
               <Image
-                src="/assets/image/AboutUs/core-values.svg"
+                src="/assets/image/AboutUs/core-values.png"
                 alt="Our Core Values"
                 fill
-                className="object-cover"
+                className="object-contain object-top"
               />
             </div>
           </div>

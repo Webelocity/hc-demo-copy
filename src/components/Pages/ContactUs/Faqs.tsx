@@ -5,6 +5,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Link from "next/link";
+import QuoteRequestPopup from "../HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function Faqs() {
     return (
@@ -22,13 +23,15 @@ export default function Faqs() {
                 <Accordion expanded={true}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>How can I become a Pro contractor and access rewards?</AccordionSummary>
                     <AccordionDetails className="text-[1rem] font-medium text-[#1E1E1E]">
-                        Contractors and vendors can <Link className="underline text-[var(--primary-500-main)]" href="/pro">Become a Pro</Link> with Home Central Stores by signing up for our Contractor Zone. As a Pro, you’ll enjoy exclusive rewards, Pro pricing, bulk discounts, and special promotions designed to help you save on every project.                    </AccordionDetails>
+                        Contractors and vendors can <Link className="underline text-[var(--primary-500-main)]" href="https://customer.homecentralstores.com/auth/register/pro" target="_blank" rel="noopener noreferrer">Become a Pro</Link> with Home Central Stores by signing up for our Contractor Zone. As a Pro, you’ll enjoy exclusive rewards, Pro pricing, bulk discounts, and special promotions designed to help you save on every project.
+                    </AccordionDetails>
                 </Accordion>
 
                 <Accordion expanded={true}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>Can I request a quote online for materials or tools?</AccordionSummary>
                     <AccordionDetails className="text-[1rem] font-medium text-[#1E1E1E]">
-                        Yes! You can easily request a quote online for <Link className="underline text-[var(--primary-500-main)]" href="/products">building materials</Link>, tools, or <Link className="underline text-[var(--primary-500-main)]" href="/rental">rental equipment</Link> through our website. Simply fill out the <Link className="underline text-[var(--primary-500-main)]" href="/contact">quote form</Link>, and our team will provide a fast, personalized response to support your project needs.                    </AccordionDetails>
+                        Yes! You can easily request a quote online for <Link className="underline text-[var(--primary-500-main)]" href="/shop/catalogue?category_active=69143ed86ac9361831e465f6&page=1">building materials</Link>, tools, or <Link className="underline text-[var(--primary-500-main)]" href="/special-ordering">Special Ordering</Link> through our website. Simply fill out the <QuoteRequestPopup triggerVariant="link" triggerLabel="quote form" triggerClassName="underline text-[var(--primary-500-main)] !text-[var(--primary-500-main)]" dashboardUrl="https://customer.homecentralstores.com" />, and our team will provide a fast, personalized response to support your project needs.
+                    </AccordionDetails>
                 </Accordion>
             </div>
         </div>

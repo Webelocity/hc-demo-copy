@@ -1,8 +1,10 @@
 'use client';
 
+import { fetchAllProducts, fetchProductsByCategoryId } from "@/Api/Apis";
 import Button from "@/components/shared/Button";
 import ProductCard from "@/components/shared/productCard";
 import ReUsableSwiper from "@/components/shared/ReUsableSwiper/reUsableSwiper";
+import { useQuery } from "@tanstack/react-query";
 
 // Temporary mock data - replace with your actual data
 const mockProducts = [
@@ -19,24 +21,36 @@ const mockProducts = [
 ];
 
 interface CategorySwiperProps {
-    category: string;
+    categoryId: string;
+    categoryName: string;
 }
-export default function CategorySwiper({ category }: CategorySwiperProps) {
+export default function CategorySwiper({ categoryId, categoryName }: CategorySwiperProps) {
+    const {
+        data: productsResponse,
+        isLoading,
+        isError,
+    } = useQuery<ApiResponse<Product>>({
+        queryKey: ['CategorySwiper', categoryId],
+        queryFn: () => fetchProductsByCategoryId(categoryId, { page: 1, limit: 10 }),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
     return (
         <div className="baseContainer py-[5rem]">
             <div className="maxWidth p-[2.5rem] flex flex-col gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
                 <div className="flex justify-between items-center">
                     <h3 className="text-[2.5rem] font-bold text-start">
-                        {category}
+                        {categoryName}
                     </h3>
-                    <Button variant="secondary">View Shop</Button>
+                    <Button variant="secondary" href={`/shop/catalogue?category_active=${categoryId}&page=1`}>View Shop</Button>
                 </div>
 
                 <ReUsableSwiper
                     className="swiper-pagination-new-arrivals"
-                    data={mockProducts}
+                    data={productsResponse?.data ?? []}
+                    isLoading={isLoading}
                     renderSlide={(product) => (
-                        <ProductCard key={product.id} />
+                        <ProductCard key={product._id} product={product} />
                     )}
                     swiperOptions={{
                         spaceBetween: 20,

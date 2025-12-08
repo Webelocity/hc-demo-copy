@@ -56,7 +56,7 @@ export default function JoinZone() {
 
               {/* Buttons */}
               <div className="flex flex-wrap items-center gap-[2rem] pt-[1.25rem]">
-                <Button variant="secondary" size="large">
+                <Button variant="secondary" href="https://customer.homecentralstores.com/auth/register/pro" rel="noopener noreferrer" size="large">
                   Sign Up Now
                 </Button>
 

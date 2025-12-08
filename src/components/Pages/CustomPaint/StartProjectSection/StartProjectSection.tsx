@@ -1,5 +1,5 @@
-import Button from "@/components/shared/Button";
 import Image from "next/image";
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function StartProjectSection() {
   return (
@@ -27,9 +27,11 @@ export default function StartProjectSection() {
             Central location in Owego, Vestal, or Candor, NY.
           </p>
           <div>
-            <Button size="large" variant="primary">
-              Request a Quote
-            </Button>
+            <QuoteRequestPopup
+              dashboardUrl="https://customer.homecentralstores.com"
+              triggerLabel="Request a Quote"
+              triggerClassName="w-full sm:w-auto"
+            />
           </div>
         </div>
       </div>

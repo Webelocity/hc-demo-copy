@@ -29,7 +29,7 @@ export default function Vision() {
             >
               contractors
             </Link>{" "}
-            and vendors confidently plan and execute projects.
+            and homeowners confidently plan and execute projects.
           </p>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function OwegoShowRoom() {
                             <Image className="aspect-[846px/459px] !relative" src="/assets/image/HomePage/OwegoShowroom.svg" alt="owego-showroom" fill />
                             <div className="hidden py-[1rem] px-[1.5rem] bg-[var(--Primary-600)] absolute bottom-[1.5rem] left-[-2rem]  md:flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                                 <RiDiscountPercentFill className="text-2xl text-white" />
-                                <p className="text-[1.125rem] text-white md:whitespace-nowrap">Hands-on access to top-quality appliances and fixtures</p>
+                                <p className="text-[1.125rem] text-white md:whitespace-nowrap">Hands-on access to top-quality kitchens and fixtures</p>
                             </div>
                             <div className="hidden py-[1rem] px-[1.5rem] bg-[var(--Primary-600)] left-[50%] translate-x-[-50%] absolute bottom-0 translate-y-[100%]  md:flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                                 <HiMiniUserGroup className="text-2xl text-white" />

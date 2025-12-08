@@ -103,7 +103,7 @@ export default function Explore() {
           <div className="bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] px-[1rem] py-[0.5rem] w-full">
             <p className="text-[1.125rem] text-[var(--Neutral-700)] tracking-[0.0225rem] leading-[1.5]">
               Note: What we don't display, we can source! The showroom is a
-              collaborative space for contractors, vendors, and homeowners to find
+              collaborative space for contractors and homeowners to find
               the right products for any project.
             </p>
           </div>

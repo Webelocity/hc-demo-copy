@@ -7,7 +7,7 @@ export default function Partners() {
                 Partners in Design
             </h2>
             <p className="text-[1rem] font-normal text-center w-full md:w-[40%]">
-                Home Central Showroom offers top-quality brands that contractors and vendors trust, ensuring your project is completed with durable, reliable materials.
+                Home Central Showroom offers top-quality brands that contractors and homeowners trust, ensuring your project is completed with durable, reliable materials.
             </p>
             <div className="flex flex-col gap-[1.75rem]">
                 <div className="flex justify-center items-center gap-[1.75rem] flex-wrap ">

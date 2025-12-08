@@ -95,7 +95,7 @@ const services: Service[] = [
     description:
       "Skip shipping fees with Home Central’ Ship-to-Store program. Order online from True Value and have your products shipped to your preferred Owego, Vestal, or Candor location. We’ll hold your items under your name until you’re ready to pick them up—convenient, local, and cost-saving.",
     ctaName: "Start Shopping",
-    ctaLink: "/start-shopping",
+    ctaLink: "/shop/catalogue",
     imagePath: "/assets/image/Services/serviceList/images/shipTostore.svg", // Replace with actual image paths later
     icon: "/assets/image/Services/serviceList/icons/Calculator.svg", // Import and pass the JSX element as needed
   },
@@ -113,7 +113,7 @@ const services: Service[] = [
     description:
       "We provide professional tool repair services for most brands and models of power tools. Before replacing your tools, bring them in and let our experienced staff inspect, repair, and restore them to working order.",
     ctaName: "Visit Us",
-    ctaLink: "/visit-us",
+    ctaLink: "/locations",
     imagePath: "/assets/image/Services/serviceList/images/toolRepair.svg",
     icon: "/assets/image/Services/serviceList/icons/Palette.svg", // Import and pass the JSX element as needed
   },

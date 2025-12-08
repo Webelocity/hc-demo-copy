@@ -1,6 +1,7 @@
 import { services } from "@/Data/Services";
 import Image from "next/image";
 import Link from "next/link";
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function ServiceList() {
   return (
@@ -42,12 +43,21 @@ export default function ServiceList() {
               <p className="text-[1.25rem] text-[var(--Neutral-700)] font-normal">
                 {service.description}
               </p>
-              <Link
-                href={service.ctaLink || ""}
-                className="text-[1rem] text-[var(--primary-500-main)] cursor-pointer"
-              >
-                {service.ctaName}
-              </Link>
+              {service.ctaName === "Request a Quote" ? (
+                <QuoteRequestPopup
+                  dashboardUrl="https://customer.homecentralstores.com"
+                  triggerVariant="link"
+                  triggerLabel={service.ctaName}
+                  triggerClassName="text-[1rem] text-[var(--primary-500-main)] w-fit  cursor-pointer"
+                />
+              ) : (
+                <Link
+                  href={service.ctaLink || ""}
+                  className="text-[1rem] text-[var(--primary-500-main)] cursor-pointer"
+                >
+                  {service.ctaName}
+                </Link>
+              )}
             </div>
           ))}
         </div>
