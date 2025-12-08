@@ -16,6 +16,7 @@ import { processVersapayPayment } from '@/Api/Apis';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { cartAtom } from '@/atoms/cartAtom';
+import { selectedStoreAtom } from '@/atoms/storeAtom';
 
 type OrderSummaryProps = {
     cart: CartItem[];
@@ -49,6 +50,7 @@ export default function OrderSummary({
     const selectedAddresses = useAtomValue(selectedAddressesAtom);
     const versapayToken = useAtomValue(versapayTokenAtom);
     const versapayValid = useAtomValue(versapayValidAtom);
+    const storeAddressId = useAtomValue(selectedStoreAtom);
     const setCart = useSetAtom(cartAtom);
     const setSelectedShipping = useSetAtom(selectedShippingOptionAtom);
     const setAppliedDiscounts = useSetAtom(appliedDiscountsAtom);
@@ -119,10 +121,15 @@ export default function OrderSummary({
                 version: selectedShipping.version,
             } : undefined,
 
+
             // Payment information
-            orderPaymentMethod: versapayValid ? 'Versapay' : 'Cash',
+            // Use 'Card' for VersaPay payments as it's a card-based gateway
+            orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
+            // Pass payment provider so backend knows to skip Stripe-specific logic for VersaPay
+            paymentProvider: versapayValid ? 'Versapay' : undefined,
             deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
+            pickupAddressId: storeAddressId
         };
 
 
@@ -142,28 +149,50 @@ export default function OrderSummary({
 
             // If VersaPay payment is selected and token is available, process payment
             if (versapayValid && versapayToken) {
-
-                const grandTotal = (totals?.subTotal ?? 0) + (totals?.taxAmount ?? 0) + (totals?.deliveryCosts ?? 0) + (hasShipping ? (selectedShipping?.price ?? 0) : 0);
-
-                // The backend will automatically fetch the billing address from the user
+                // The backend automatically calculates the amount from the order
+                // and fetches billing address if not provided
                 const paymentResult = await processVersapayPayment(
                     versapayToken,
                     order._id,
-                    grandTotal
                 );
 
                 if (!paymentResult.success) {
                     throw new Error(paymentResult.message || 'VersaPay payment failed');
                 }
+
+                // For VersaPay, payment is processed via webhook
+                // If the result indicates pending, show appropriate message
+                if (paymentResult.data?.pending) {
+                    toast.info('Payment submitted. Confirming your order...');
+                } else {
+                    toast.success('Order placed successfully!');
+                }
+            } else {
+                // Non-VersaPay payment (e.g., Cash)
+                toast.success('Order placed successfully!');
             }
 
-            // Success - redirect to order confirmation page
-            toast.success('Order placed successfully!');
+            // Redirect to order confirmation page
+            // The order page will show the current order status
             router.push(`/order/${order._id}`);
 
         } catch (error: any) {
             console.error('Error placing order:', error);
-            toast.error(error?.message || 'Failed to place order. Please try again.');
+
+            // IMPORTANT: Clear VersaPay token after any error
+            // VersaPay tokens are single-use, so we must clear it to force re-validation
+            // This prevents "Duplicate transaction" errors on retry
+            setVersapayToken(null);
+            setVersapayValid(false);
+            setVersapaySummary(null);
+
+            // Show appropriate error message
+            const errorMessage = error?.message || 'Failed to place order. Please try again.';
+            if (errorMessage.includes('Duplicate') || errorMessage.includes('Token')) {
+                toast.error('Please re-enter your card details and try again.');
+            } else {
+                toast.error(errorMessage);
+            }
         } finally {
             setIsProcessing(false);
         }

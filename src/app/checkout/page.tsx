@@ -43,6 +43,10 @@ export default function CheckoutPage() {
     });
     const [paymentResetCounter, setPaymentResetCounter] = useState<number>(0);
     const [contactData, setContactData] = useState<CheckoutContactFormData | null>(null);
+    
+    // Watch versapayValid to reset payment section when token becomes invalid
+    // This handles cases where payment fails and token is cleared in OrderSummary
+    const versapayValid = useAtomValue(versapayValidAtom);
 
     const setComplete = (id: StepId) => {
         setCompletedById((prev) => {
@@ -76,6 +80,18 @@ export default function CheckoutPage() {
     const cardSummary = useAtomValue(versapayCardSummaryAtom);
     const { data: totals, isLoading, error: totalsError } = useCartTotals();
     const [totalsErrorOpen, setTotalsErrorOpen] = useState<boolean>(false);
+
+    // Reset payment section when versapayValid becomes false
+    // This handles cases where payment fails and token is cleared in OrderSummary
+    useEffect(() => {
+        if (!versapayValid && completedById.payment) {
+            // Payment was marked complete but token is now invalid
+            // Reset the payment section so user can re-enter card details
+            setCompletedById((prev) => ({ ...prev, payment: false }));
+            setOpenById((prev) => ({ ...prev, payment: true }));
+            setPaymentResetCounter((c) => c + 1);
+        }
+    }, [versapayValid, completedById.payment]);
 
     // Hard redirect to cart if checkout is opened with an empty cart
     useEffect(() => {

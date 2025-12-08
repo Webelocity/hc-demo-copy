@@ -112,9 +112,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <LuShoppingCart className="text-xl cursor-pointer" />
                 Add to cart
             </Button>
-            <span className="text-[0.75rem] text-center cursor-pointer">
-                Parcel Shipping
-            </span>
+
             {product && (
                 <ProductQuickAddModal
                     product={product}
