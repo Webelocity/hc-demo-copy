@@ -280,6 +280,21 @@ export const validatePromoCode = async (
         throw new Error("An unknown error occurred");
     }
 };
+export const fetchRelatedProducts = async (
+    productId: string,
+    params: Record<string, string | number | boolean> = {}
+): Promise<Product[]> => {
+    const query = constructQueryParams(params);
+    const pathname = `/products/relatedProducts/${productId}`;
+    const response = await fetchWithStoreId<Product[]>(pathname, {
+        method: "GET",
+        query,
+    });
+    if (!response) {
+        throw new Error("Error Fetching Related Products");
+    }
+    return response;
+};
 
 // VersaPay helpers (client -> your backend). For now, log and return backend response or a mock.
 export const versapayConfirmMethod = async (
@@ -317,7 +332,7 @@ export const processVersapayPayment = async (
     paymentToken: string,
     orderId: string,
     billingAddressId?: string // Optional - backend will fetch from user if not provided
-): Promise<{ success: boolean; message?: string; data?: { pending?: boolean; [key: string]: any } }> => {
+): Promise<{ success: boolean; message?: string; data?: { pending?: boolean;[key: string]: any } }> => {
     try {
         const payload = {
             orderId,
@@ -329,12 +344,12 @@ export const processVersapayPayment = async (
 
         // Check if payment was successful or pending (webhook-based flow)
         if (result?.success === true || result?.pending === true) {
-            return { 
-                success: true, 
-                data: { 
+            return {
+                success: true,
+                data: {
                     pending: result?.pending === true,
-                    ...result 
-                } 
+                    ...result
+                }
             };
         }
 

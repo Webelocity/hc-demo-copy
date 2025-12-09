@@ -30,8 +30,8 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <span className="text-[0.75rem] font-semibold">In stock</span>
                 </div>
             }
-            return <div className="flex justify-start items-center gap-[0.5rem]">
-                <span className="text-[0.75rem] font-semibold">Out of stock</span>
+            return <div className="flex justify-start items-center gap-[0.5rem] bg-[#FEF7F6] p-[0.4rem] rounded-[var(--Radius-md)]">
+                <span className="text-[0.75rem] font-semibold text-[#EB4337]">Out of stock</span>
             </div>
         }
     }
@@ -76,7 +76,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             onClick={navigateToProduct}
         >
             <div
-                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white shadow-sm hover:bg-gray-50 transition-colors"
+                className="absolute top-4 right-4 z-10 p-2 rounded-[var(--Radius-xs)] bg-white shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={handleWishlistToggle}
             >
                 {isWishlisted ? (
