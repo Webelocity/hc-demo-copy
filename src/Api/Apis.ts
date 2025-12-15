@@ -83,6 +83,25 @@ export const fetchAllProducts = async (
 
     return response;
 };
+export const fetchDiscountedProducts = async (
+    params: Record<string, string | number | boolean> = {}
+): Promise<ApiResponse<Product>> => {
+    const query = constructQueryParams(params); // Construct query string
+    const pathname = `/products/discounted`;
+
+    // Pass query string directly to fetchWithStoreId
+    const response = await fetchWithStoreId<ApiResponse<Product>>(pathname, {
+        method: "GET",
+        query, // Pass the constructed query string directly
+    });
+
+    if (!response) {
+        throw new Error(`Error fetching discounted products`);
+    }
+
+    return response;
+};
+
 
 export const fetchSubcategoryById = async (
     SubcategoryId: string | undefined

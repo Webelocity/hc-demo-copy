@@ -9,7 +9,7 @@ export default function ServiceBanner() {
                         Home Central Stores Services
                     </h3>
                 </div>
-                <Image className=" !relative object-cover !right-0 aspect-[1/1] !w-[23rem]  " src="/assets/image/Services/nail.svg" alt="quote-request" fill />
+                <Image className=" !relative object-cover !right-0 aspect-[1/1] !w-[23rem]  " src="/assets/image/Services/nail.png" alt="quote-request" fill />
             </div>
         </div>
 

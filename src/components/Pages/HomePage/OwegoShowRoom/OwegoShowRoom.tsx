@@ -34,7 +34,7 @@ export default function OwegoShowRoom() {
                 <div className="flex-[1.8] relative  md:min-h-[34rem] w-full">
                     <div className="relative top-0 md:top-[-6rem] md:absolute  w-full h-full ">
                         <div className="w-full relative  ">
-                            <Image className="aspect-[846px/459px] !relative" src="/assets/image/HomePage/OwegoShowroom.svg" alt="owego-showroom" fill />
+                            <Image className="aspect-[846px/459px] !relative" src="/assets/image/HomePage/kitchen.png" alt="owego-showroom" fill />
                             <div className="hidden py-[1rem] px-[1.5rem] bg-[var(--Primary-600)] absolute bottom-[1.5rem] left-[-2rem]  md:flex gap-[1.25rem] items-center rounded-[var(--Radius-md)] border-[var(--Primary-100)] border">
                                 <RiDiscountPercentFill className="text-2xl text-white" />
                                 <p className="text-[1.125rem] text-white md:whitespace-nowrap">Hands-on access to top-quality kitchens and fixtures</p>

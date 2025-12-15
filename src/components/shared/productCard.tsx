@@ -22,7 +22,14 @@ export default function ProductCard({ product }: ProductCardProps) {
     const wishlist = useAtomValue(wishlistAtom);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
 
-
+    const renderDiscountTag = () => {
+        if (product?.isDiscounted) {
+            return <div className="absolute top-2 left-2 z-10 flex items-center gap-[0.25rem] p-[0.25rem] rounded-[0.5rem] bg-[#F0BB35] text-[0.75rem] font-semibold text-white">
+                <Image src="/assets/icon/discount_icon.svg" alt="Discount" width={16} height={16} />
+                <span>Save ${product?.discountAmount.toFixed(2)}</span>
+            </div>
+        }
+    }
     const renderStock = () => {
         if (isTrackQuantity) {
             if (product?.inventoryCount && product.inventoryCount > 0) {
@@ -71,10 +78,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <div className=" p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group h-[-webkit-fill-available]"
+        <div className="h-full !box-border p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group "
 
             onClick={navigateToProduct}
         >
+            {renderDiscountTag()}
             <div
                 className="absolute top-4 right-4 z-10 p-2 rounded-[var(--Radius-xs)] bg-white shadow-sm hover:bg-gray-50 transition-colors"
                 onClick={handleWishlistToggle}
