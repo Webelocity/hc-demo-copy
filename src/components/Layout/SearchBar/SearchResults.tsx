@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { FiChevronRight } from 'react-icons/fi';
+import { GoDotFill } from 'react-icons/go';
 import styles from './SearchResults.module.css';
 import FallBackImage from '@/components/shared/FallBackImage';
 
@@ -27,6 +29,13 @@ export default function SearchResults({
   const router = useRouter();
 
   if (!isOpen) return null;
+
+  const getCategoryName = (product: Product) => {
+    const path = product?.defaultPath;
+    if (!Array.isArray(path) || path.length === 0) return '';
+    const last = path[path.length - 1];
+    return (last as any)?.name ?? '';
+  };
 
   const handleProductClick = (productId: string) => {
     router.push(`/product/${productId}`);
@@ -78,56 +87,101 @@ export default function SearchResults({
             </div>
 
             <div className={styles.resultsList}>
-              {results.data.map((product) => (
-                <div
-                  key={product._id}
-                  className={styles.resultItem}
-                  onClick={() => handleProductClick(product._id)}
-                >
-                  <div className={styles.productImage}>
-                    {product.productMedia?.length > 0 ? (
-                      <Image
-                        src={product.productMedia[0].file}
-                        alt={product.name}
-                        width={48}
-                        height={48}
-                        className={styles.image}
-                      />
-                    ) : (
-                      <div className={styles.imagePlaceholder}>
-                        <FallBackImage />
-                      </div>
-                    )}
-                  </div>
+              {results.data.map((product) => {
+                const variantsCount = product.productVariants?.length ?? 0;
+                const hasMultipleVariants = variantsCount > 1;
+                const singleVariant =
+                  variantsCount === 1 ? product.productVariants[0] : undefined;
+                const sku = hasMultipleVariants
+                  ? product.sku
+                  : singleVariant?.sku ?? product.sku;
+                const upc = hasMultipleVariants
+                  ? product.upc
+                  : (singleVariant as any)?.upc ?? product.upc;
+                const stockCount = hasMultipleVariants
+                  ? product.inventoryCount
+                  : singleVariant?.inventoryCount ?? product.inventoryCount;
+                const hasStock =
+                  typeof stockCount === 'number' && stockCount > 0;
+                const price =
+                  singleVariant?.finalPrice ?? product.finalPrice ?? 0;
+                const categoryName = getCategoryName(product);
 
-                  <div className={styles.productInfo}>
-                    <p className={styles.productName}>{product.name}</p>
-                    <div className={styles.productDetails}>
-                      {product.brand && (
-                        <span className={styles.productBrand}>
-                          {product.brand}
+                return (
+                  <div
+                    key={product._id}
+                    className={styles.resultItem}
+                    onClick={() => handleProductClick(product._id)}
+                  >
+                    <div className={styles.productImage}>
+                      {product.productMedia?.length > 0 ? (
+                        <Image
+                          src={product.productMedia[0].file}
+                          alt={product.name}
+                          width={48}
+                          height={48}
+                          className={styles.image}
+                        />
+                      ) : (
+                        <div className={styles.imagePlaceholder}>
+                          <FallBackImage />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={styles.productInfo}>
+                      {categoryName && (
+                        <span className={styles.categoryBadge}>
+                          {categoryName}
                         </span>
                       )}
-                      {product.sku && (
-                        <span className={styles.productSku}>
-                          SKU: {product.sku}
+                      <p className={styles.productName}>{product.name}</p>
+                      <div className={styles.metaList}>
+                        {sku && (
+                          <div className={styles.metaItem}>
+                            <span className={styles.metaKey}>SKU</span>
+                            <span className={styles.metaValue}>{sku}</span>
+                          </div>
+                        )}
+                        {upc && (
+                          <div className={styles.metaItem}>
+                            <GoDotFill className={styles.metaDot} aria-hidden />
+                            <span className={styles.metaKey}>UPC</span>
+                            <span className={styles.metaValue}>{upc}</span>
+                          </div>
+                        )}
+                        {typeof stockCount === 'number' && (
+                          <div className={styles.metaItem}>
+                            <GoDotFill className={styles.metaDot} aria-hidden />
+                            <span
+                              className={`${styles.metaValue} ${hasStock ? styles.inStock : styles.outOfStock
+                                }`}
+                            >
+                              {hasStock ? `${stockCount} in stock` : 'Out of stock'}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={styles.productPrice}>
+                      {hasMultipleVariants ? (
+                        <div className={styles.variantCount}>
+                          <span>
+                            {variantsCount} Variant
+                            {variantsCount !== 1 ? 's' : ''}
+                          </span>
+                          <FiChevronRight aria-hidden />
+                        </div>
+                      ) : (
+                        <span className={styles.finalPrice}>
+                          ${price.toFixed(2)}
                         </span>
                       )}
                     </div>
                   </div>
-
-                  <div className={styles.productPrice}>
-                    {product.isDiscounted && (
-                      <span className={styles.originalPrice}>
-                        ${product.priceBeforeDiscount.toFixed(2)}
-                      </span>
-                    )}
-                    <span className={styles.finalPrice}>
-                      ${product.finalPrice.toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {results.totalItems > 8 && (
@@ -136,7 +190,10 @@ export default function SearchResults({
                   className={styles.viewAllButton}
                   onClick={handleViewAllClick}
                 >
-                  View all {results.totalItems} results
+                  <span>View all</span>
+                  <strong>{results.totalItems}</strong>
+                  <span>Products</span>
+                  <FiChevronRight aria-hidden className={styles.viewAllIcon} />
                 </button>
               </div>
             )}

@@ -3,6 +3,11 @@
     width: 100%;
 }
 
+/* Ensure slides grow with their content */
+.swiperContainer :global(.swiper-slide) {
+    height: auto;
+}
+
 /* Custom Navigation Container */
 .navigationContainer {
     display: flex;

@@ -13,6 +13,7 @@ import { Rating } from '@mui/material';
 import BulkTable from '@/components/Pages/Shop/SingleProduct/BulkTable';
 import { cookies } from 'next/headers';
 import Button from '@/components/shared/Button';
+import RelatedProducts from '@/components/Pages/Shop/SingleProduct/RelatedProducts';
 
 
 export const revalidate = 300;
@@ -124,17 +125,10 @@ export default async function ProductPage({
 
                         </div>
                     </div>
-
-
-
-
-
-
-
-
                     <div className="mt-8 border-t pt-8">
                         <ProductDetails product={product} />
                     </div>
+                    <RelatedProducts productId={product._id} />
                 </div>
             </div>
 

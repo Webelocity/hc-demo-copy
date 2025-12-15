@@ -21,7 +21,7 @@ export default function WhyChooseUs() {
         "A buying cooperative that services approximately 4,000 stores worldwide, giving contractors and vendors access to the more than 70,000 in-stock items with thousands of vendors.",
     },
     {
-      logo: "/assets/image/AboutUs/vendors/additional.svg",
+      logo: "/assets/image/AboutUs/additional.svg",
       title: "Additional Vendors",
       description:
         "We also purchase through several other cooperatives and wholesalers, including:\n• Reserve Supply of Central New York\n• NECO Alliance",

@@ -1,7 +1,10 @@
 'use client';
 
+import { fetchDiscountedProducts } from "@/Api/Apis";
 import ProductCard from "@/components/shared/productCard";
 import ReUsableSwiper from "@/components/shared/ReUsableSwiper/reUsableSwiper";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 // Temporary mock data - replace with your actual data
 const mockProducts = [
@@ -18,16 +21,28 @@ const mockProducts = [
 ];
 
 export default function Recommended() {
+    const {
+        data: productsResponse,
+        isLoading,
+        isError,
+    } = useQuery<ApiResponse<Product>>({
+        queryKey: ['DiscountedProducts'],
+        queryFn: () => fetchDiscountedProducts(),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
+    const router = useRouter();
     return (
         <div className="baseContainer py-[5rem]">
             <div className="p-[2.5rem] maxWidth flex flex-col gap-[1.5rem] w-full bg-[var(--Secondary-50)] rounded-[var(--Radius-md)]  ">
                 <h3 className="text-[2.5rem] font-bold text-start">
-                    Recommended For You
+                    Deals for you
                 </h3>
                 <ReUsableSwiper
-                    data={mockProducts}
+                    data={productsResponse?.data ?? []}
+                    isLoading={isLoading}
                     renderSlide={(product) => (
-                        <ProductCard key={product.id} />
+                        <ProductCard key={product._id} product={product} />
                     )}
                     className="swiper-pagination-recommended"
                     swiperOptions={{

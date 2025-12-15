@@ -31,6 +31,7 @@
   --Neutral-300: #b9b9c4;
   --Neutral-500: #a7a19d;
   --Colors-Neutral-500: #a7a19d;
+  --Colors-Neutral-600:#CAC6C4;
   --Colors-Neutral-700: #66605c;
   --Colors-Neutral-800 : #433F3C;
   --Neutral-800: #33333d;
@@ -39,7 +40,10 @@
   /* Success Colors */
   --Colorsuccess: #37b800;
   --Colors-Success-800:#1B7A38;
+  --Colors-Success-500: #239E48;
 
+  --Colors-Warning-500: #EB4337;
+  
   /* Border Radius */
   --Radius-xs: 0.625rem;
   --Radius-md: 1rem;
