@@ -3,6 +3,7 @@
 import OpeningItem from "./OpeningItem";
 import { useCareers } from "@/hooks/useStrapi";
 import { CircularProgress, Alert } from "@mui/material";
+import CustomNoData from "@/components/shared/CustomNoData";
 
 export default function Openings() {
     const { data, isLoading, isError, error } = useCareers({
@@ -48,8 +49,8 @@ export default function Openings() {
                 <h4 className="maxWidth text-[2.5rem] font-bold text-start">
                     Currently Hiring
                 </h4>
-                <div className="maxWidth">
-                    <p className="text-[var(--Neutral-700)]">No job openings available at the moment.</p>
+                <div className="maxWidth flex justify-center">
+                    <CustomNoData text="No job openings available at the moment." />
                 </div>
             </div>
         );
