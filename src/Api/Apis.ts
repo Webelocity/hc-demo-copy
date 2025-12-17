@@ -418,3 +418,14 @@ export const fetchOrderById = async (
     }
     return response;
 };
+
+export const fetchProductReviews = async (productId: string): Promise<Review[]> => {
+    const pathname = `/reviews/reviewsByProduct/${productId}`;
+    const response = await fetchWithStoreId<Review[]>(pathname, {
+        method: "GET",
+    });
+    if (!response) {
+        throw new Error("Error Fetching Product Reviews");
+    }
+    return response;
+};

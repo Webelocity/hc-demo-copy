@@ -5,7 +5,7 @@
 
 /* Ensure slides grow with their content */
 .swiperContainer :global(.swiper-slide) {
-    height: -webkit-fill-available;
+    height: unset;
 }
 
 /* Custom Navigation Container */
