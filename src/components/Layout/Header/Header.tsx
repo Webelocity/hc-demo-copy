@@ -22,6 +22,8 @@ import { cartDrawerOpenAtom } from '@/atoms/cartDrawerAtom';
 import { wishlistAtom } from '@/atoms/wishlistAtom';
 
 export default function Header() {
+  const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
+
   const [selectedStoreId] = useAtom(selectedStoreAtom);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -139,7 +141,7 @@ export default function Header() {
                 />
               </Badge>
             </div>
-            <Button variant='outline'>
+            <Button variant='outline' href={Customer_Dashboard_Url + '/auth/login'}>
               <CiUser className='text-xl' />
               Login
             </Button>

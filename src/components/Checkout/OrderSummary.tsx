@@ -72,7 +72,7 @@ export default function OrderSummary({
         const items = cart.map((ci) => ({
             quantity: ci.quantity,
             product: { productVariantId: ci.variant._id },
-            fulfilmentMethod: ci.fulfillmentMethod ?? 'pickup',
+            fulfillmentMethod: ci.fulfillmentMethod ?? 'pickup',
         }));
 
         const shipping = selectedAddresses?.shipping;
