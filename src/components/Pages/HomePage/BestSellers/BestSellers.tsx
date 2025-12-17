@@ -13,6 +13,7 @@ export default function BestSellers() {
         data: productsResponse,
         isLoading,
         isError,
+        error,
     } = useQuery<ApiResponse<Product>>({
         queryKey: ['BestSellers'],
         queryFn: () => fetchAllProducts({ sort: "best_selling" }),
@@ -34,6 +35,8 @@ export default function BestSellers() {
                     className="swiper-pagination-best-sellers"
                     data={productsResponse?.data ?? []}
                     isLoading={isLoading}
+                    isError={isError}
+                    error={error}
                     renderSlide={(product) => (
                         <ProductCard product={product} key={product._id} />
                     )}

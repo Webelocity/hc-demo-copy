@@ -29,6 +29,7 @@ export default function CategorySwiper({ categoryId, categoryName }: CategorySwi
         data: productsResponse,
         isLoading,
         isError,
+        error,
     } = useQuery<ApiResponse<Product>>({
         queryKey: ['CategorySwiper', categoryId],
         queryFn: () => fetchProductsByCategoryId(categoryId, { page: 1, limit: 10 }),
@@ -49,6 +50,8 @@ export default function CategorySwiper({ categoryId, categoryName }: CategorySwi
                     className="swiper-pagination-new-arrivals"
                     data={productsResponse?.data ?? []}
                     isLoading={isLoading}
+                    isError={isError}
+                    error={error}
                     renderSlide={(product) => (
                         <ProductCard key={product._id} product={product} />
                     )}

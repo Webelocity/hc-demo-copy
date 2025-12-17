@@ -14,6 +14,7 @@ export default function NewArrivals() {
         data: productsResponse,
         isLoading,
         isError,
+        error,
     } = useQuery<ApiResponse<Product>>({
         queryKey: ['NewArrivals'],
         queryFn: () => fetchAllProducts({ sort: "latest" }),
@@ -36,6 +37,8 @@ export default function NewArrivals() {
                     slideStyles="!h-[-webkit-fill-available]"
                     data={productsResponse?.data ?? []}
                     isLoading={isLoading}
+                    isError={isError}
+                    error={error}
                     renderSlide={(product) => (
                         <ProductCard product={product} key={product._id} />
                     )}

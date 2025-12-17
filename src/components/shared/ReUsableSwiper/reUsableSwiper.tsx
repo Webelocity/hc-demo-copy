@@ -9,6 +9,7 @@ import type { Swiper as SwiperType } from 'swiper';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import CustomNoData from '../CustomNoData';
 import styles from './reUsableSwiper.module.css';
 
 interface ReUsableSwiperProps<T> {
@@ -19,6 +20,8 @@ interface ReUsableSwiperProps<T> {
     slideStyles?: string;
     isLoading?: boolean;
     skeletonCount?: number;
+    isError?: boolean;
+    error?: Error | null;
 }
 
 export default function ReUsableSwiper<T>({
@@ -29,10 +32,15 @@ export default function ReUsableSwiper<T>({
     slideStyles = '',
     isLoading = false,
     skeletonCount = 6,
+    isError = false,
+    error = null,
 }: ReUsableSwiperProps<T>) {
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
     const [isBeginning, setIsBeginning] = useState(true);
     const [isEnd, setIsEnd] = useState(false);
+
+    const hasError = isError || Boolean(error);
+    const errorMessage = error?.message || 'Something went wrong. Please try again.';
 
     const handlePrev = () => {
         swiperInstance?.slidePrev();
@@ -44,8 +52,16 @@ export default function ReUsableSwiper<T>({
 
     const skeletonArray = useMemo(() => Array.from({ length: skeletonCount }), [skeletonCount]);
 
+    if (hasError) {
+        return (
+            <div className="w-full flex-[1] min-h-fit">
+                <CustomNoData text={errorMessage} />
+            </div>
+        );
+    }
+
     return (
-        <div className='w-full flex-[1]  min-h-fit'>
+        <div className='w-full flex-[1] min-h-fit'>
             <Swiper
                 modules={[Pagination]}
                 pagination={{
