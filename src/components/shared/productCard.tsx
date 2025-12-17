@@ -78,7 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     }
 
     return (
-        <div className="h-full !box-border p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group "
+        <div className="h-full min-h-[16.25rem] !box-border p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group "
 
             onClick={navigateToProduct}
         >

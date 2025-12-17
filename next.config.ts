@@ -21,6 +21,30 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '1337',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'toolswift.s3.us-east-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'strapi.hcinc.com',
+        port: '',
+        pathname: '/**',
+      },
+      // Add your production Strapi domain here:
+      // {
+      //   protocol: 'https',
+      //   hostname: 'your-strapi-domain.com',
+      //   pathname: '/uploads/**',
+      // },
     ],
   },
 };
