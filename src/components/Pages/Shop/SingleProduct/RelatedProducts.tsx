@@ -40,7 +40,6 @@ export default function RelatedProducts({ productId }: { productId: string }) {
                 renderSlide={(product) => (
                     <ProductCard product={product} key={product._id} />
                 )}
-                slideStyles="!h-[-webkit-fill-available]"
                 swiperOptions={{
                     spaceBetween: 20,
                     slidesPerView: 5,
