@@ -13,11 +13,12 @@ type QuoteRequestPopupProps = {
 };
 
 export default function QuoteRequestPopup({
-    dashboardUrl,
+    dashboardUrl = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD,
     triggerLabel = "Request a Quote",
     triggerVariant = "button",
     triggerClassName,
 }: QuoteRequestPopupProps) {
+
     const [isOpen, setIsOpen] = useState(false);
     const signupHref = dashboardUrl ? `${dashboardUrl}/auth/register/regular` : '#';
     const handleOpen = () => setIsOpen(true);
