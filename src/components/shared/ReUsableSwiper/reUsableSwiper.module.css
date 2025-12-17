@@ -4,9 +4,9 @@
 }
 
 /* Ensure slides grow with their content */
-/* .swiperContainer :global(.swiper-slide) {
+.swiperContainer :global(.swiper-slide) {
     height: -webkit-fill-available;
-} */
+}
 
 /* Custom Navigation Container */
 .navigationContainer { 

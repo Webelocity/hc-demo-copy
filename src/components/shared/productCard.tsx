@@ -94,7 +94,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 )}
             </div>
 
-            <div className="flex justify-between items-center relative w-[11.5rem] h-[11.5rem] m-auto">
+            <div className="flex justify-between items-center relative w-[9.5rem] h-[9.5rem] m-auto">
                 {product?.thumbnail?.file ? <Image src={product.thumbnail.file} className="object-contain" fill alt="product-card" /> : <FallBackImage />}
             </div>
             <div className="flex flex-col gap-[0.25rem]">

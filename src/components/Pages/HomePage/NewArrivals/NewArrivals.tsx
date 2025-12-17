@@ -34,7 +34,6 @@ export default function NewArrivals() {
 
                 <ReUsableSwiper
                     className="swiper-pagination-new-arrivals"
-                    slideStyles="!h-[-webkit-fill-available]"
                     data={productsResponse?.data ?? []}
                     isLoading={isLoading}
                     isError={isError}
