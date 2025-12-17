@@ -6,7 +6,7 @@ import { getStrapiImageUrl } from "@/lib/strapi";
 import Image from "next/image";
 
 export default function Reviews() {
-  const { data: reviewsData, isLoading } = useReviews();
+  const { data: reviewsData, isLoading, error, isError } = useReviews();
   const reviews = reviewsData?.data ?? [];
 
   return (
@@ -21,6 +21,8 @@ export default function Reviews() {
           <ReUsableSwiper
             data={reviews}
             isLoading={isLoading}
+            isError={isError}
+            error={error}
             className="swiper-pagination-reviews"
             slideStyles="pt-[2.75rem]"
             renderSlide={(item) => {

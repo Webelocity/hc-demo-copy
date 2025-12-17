@@ -127,7 +127,6 @@ export default function OrderSummary({
             orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
             // Pass payment provider so backend knows to skip Stripe-specific logic for VersaPay
             paymentProvider: versapayValid ? 'Versapay' : undefined,
-            deliveryOption: hasShipping ? 'shipping' : 'pickup',
             isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
             pickupAddressId: storeAddressId
         };

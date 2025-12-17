@@ -25,6 +25,7 @@ export default function Recommended() {
         data: productsResponse,
         isLoading,
         isError,
+        error,
     } = useQuery<ApiResponse<Product>>({
         queryKey: ['DiscountedProducts'],
         queryFn: () => fetchDiscountedProducts(),
@@ -41,6 +42,8 @@ export default function Recommended() {
                 <ReUsableSwiper
                     data={productsResponse?.data ?? []}
                     isLoading={isLoading}
+                    isError={isError}
+                    error={error}
                     renderSlide={(product) => (
                         <ProductCard key={product._id} product={product} />
                     )}

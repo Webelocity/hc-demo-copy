@@ -13,6 +13,7 @@ export default function RelatedProducts({ productId }: { productId: string }) {
         data: productsResponse,
         isLoading,
         isError,
+        error,
     } = useQuery<Product[]>({
         queryKey: ['RelatedProducts', productId],
         queryFn: () => fetchRelatedProducts(productId),
@@ -34,6 +35,8 @@ export default function RelatedProducts({ productId }: { productId: string }) {
                 className="swiper-pagination-related-products"
                 data={productsResponse ?? []}
                 isLoading={isLoading}
+                isError={isError}
+                error={error}
                 renderSlide={(product) => (
                     <ProductCard product={product} key={product._id} />
                 )}

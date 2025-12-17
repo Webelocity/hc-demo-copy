@@ -95,7 +95,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             <div className="flex justify-between items-center relative w-[11.5rem] h-[4.3rem] m-auto">
-                {product?.thumbnail?.file ? <Image src={product.thumbnail.file} fill alt="product-card" /> : <FallBackImage />}
+                {product?.thumbnail?.file ? <Image src={product.thumbnail.file} className="object-contain" fill alt="product-card" /> : <FallBackImage />}
             </div>
             <div className="flex flex-col gap-[0.25rem]">
                 <span className="py-[0.25rem] px-[0.5rem] text-[0.75rem] rounded-[1.125rem] bg-[var(--Colors-Neutral-50)] w-fit">{getLastDefaultPathName(product)}</span>
