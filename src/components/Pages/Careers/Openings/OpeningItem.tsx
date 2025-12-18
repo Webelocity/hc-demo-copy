@@ -3,28 +3,32 @@ import Image from "next/image";
 import Link from "next/link";
 import { SlLocationPin } from "react-icons/sl";
 import type { StrapiCareer } from "@/lib/strapi";
+import { useRouter } from "next/navigation";
 
 interface OpeningItemProps {
   career: StrapiCareer;
 }
 
 export default function OpeningItem({ career }: OpeningItemProps) {
-  const { title, description, location, employmentType } = career;
-
+  const { id, Job_Name, Job_Description, Job_Location, employmentType } = career;
+  const router = useRouter();
   return (
-    <div className="flex-[1] p-[1.5rem] flex flex-col gap-[1rem] border-[var(--Colors-Neutral-100)] border rounded-[var(--Radius-md)]">
+    <div
+      className="flex-[1] p-[1.5rem] flex flex-col gap-[1rem] border-[var(--Colors-Neutral-100)] border rounded-[var(--Radius-md)] cursor-pointer"
+      onClick={() => router.push(`/careers/${id}`)}
+    >
       <span className="text-[1.25rem] text-[var(--primary-500-main)] font-bold text-start">
-        {title}
+        {Job_Name}
       </span>
       <span className="text-[var(--Neutral-700)] line-clamp-3">
-        {description}
+        {Job_Description}
       </span>
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center gap-[1.5rem]">
-          {location && (
+          {Job_Location && (
             <span className="flex gap-[0.5rem] items-center">
               <SlLocationPin className="text-2xl" />
-              <p className="text-[var(--Neutral-700)]">{location}</p>
+              <p className="text-[var(--Neutral-700)]">{Job_Location}</p>
             </span>
           )}
           {employmentType && (
@@ -39,7 +43,7 @@ export default function OpeningItem({ career }: OpeningItemProps) {
             </span>
           )}
         </div>
-        <Link href="/careers/apply">
+        <Link href={`/careers/apply?job=${encodeURIComponent(Job_Name)}`}>
           <Button variant="primary" className="w-fit">
             Apply Now
           </Button>

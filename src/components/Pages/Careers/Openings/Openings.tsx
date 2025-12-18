@@ -42,6 +42,7 @@ export default function Openings() {
     }
 
     const careers = data?.data || [];
+    console.log(careers);
 
     if (careers.length === 0) {
         return (

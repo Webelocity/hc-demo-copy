@@ -18,13 +18,26 @@ export type StrapiEntity = {
   publishedAt: string | null;
 };
 
+export type StrapiBanner = StrapiEntity & {
+  Background_Image: { url: string };
+  Title: string;
+  Description: string;
+  CTA: string;
+};
+
 // Career/Job Opening type
 export type StrapiCareer = StrapiEntity & {
-  title: string;
-  description: string;
-  location: string;
+  id: number;
+  Job_Name: string;
+  Job_Description: string;
+  Job_Location: string;
+  Supervisor?: string;
   employmentType?: string;
   department?: string;
+  Responsibilities?: string;
+  Qualifications?: string;
+  Goals?: string;
+  documentId?: string;
 };
 
 // Team Member type
@@ -35,13 +48,13 @@ export type StrapiTeamMember = StrapiEntity & {
   phone: string;
   email?: string;
   category:
-    | "Ownership"
-    | "General Manager"
-    | "Office Manager"
-    | "Purchasing"
-    | "Accounting"
-    | "IT"
-    | "Sales";
+  | "Ownership"
+  | "General Manager"
+  | "Office Manager"
+  | "Purchasing"
+  | "Accounting"
+  | "IT"
+  | "Sales";
 };
 
 // Review type

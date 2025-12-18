@@ -123,7 +123,6 @@ const Filters: React.FC<FiltersProps> = ({
             } else {
                 newParams.set(key, [...existingValues, value].join(','));
                 newParams.set('page', '1');
-
             }
         } else {
             newParams.set(key, value);
