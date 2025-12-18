@@ -28,8 +28,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Button from "@/components/shared/Button";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
+import { useCareers } from "@/hooks/useStrapi";
 
 type FormValues = JobApplication;
+
+type CareerFormProps = {
+    initialJobName?: string;
+};
 
 const steps = [
     { id: 1, title: "Demographic Information" },
@@ -49,12 +54,8 @@ const workingDays = [
 ];
 
 const referralOptions = ["Company Website", "Friend", "Indeed", "LinkedIn", "Other"];
-{
 
-}
-const jobTypeOptions = ["Cashier", "Stock Associate", "Sales", "Warehouse", "Other"];
-
-const createDefaultValues = (): FormValues => ({
+const createDefaultValues = (jobName?: string): FormValues => ({
     demographicInformation: {
         name: "",
         referredBy: "",
@@ -77,7 +78,7 @@ const createDefaultValues = (): FormValues => ({
         isUsCitizen: "yes",
         legallyAllowedToWorkUs: "yes",
         employmentType: "full-time",
-        jobType: "",
+        jobType: jobName || "",
         driversLicenseNumber: "",
         stateOfIssue: "",
         skillsSummary: "",
@@ -96,12 +97,12 @@ const createDefaultValues = (): FormValues => ({
     },
 });
 
-export default function CareerForm() {
+export default function CareerForm({ initialJobName }: CareerFormProps) {
     const router = useRouter();
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState([false, false, false, false]);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const defaultValues = useMemo(() => createDefaultValues(), []);
+    const defaultValues = useMemo(() => createDefaultValues(initialJobName), [initialJobName]);
 
     const {
         control,
@@ -124,6 +125,19 @@ export default function CareerForm() {
     const workedBefore = watch("employmentData.workedForHomeCentralBefore");
 
     const usStates = useMemo(() => State.getStatesOfCountry("US"), []);
+    const { data: careersData, isLoading: isLoadingCareers, isError: isCareersError } = useCareers({
+        pagination: { pageSize: 100 },
+        sort: "publishedAt:desc",
+    });
+
+    const jobTitleOptions = useMemo(() => {
+        const titles = new Set<string>();
+        careersData?.data?.forEach((career) => {
+            if (career.Job_Name) titles.add(career.Job_Name);
+        });
+        if (initialJobName) titles.add(initialJobName);
+        return Array.from(titles);
+    }, [careersData, initialJobName]);
 
     const onNext = async () => {
         const fieldsToValidate: (keyof FormValues | string)[] = [];
@@ -201,7 +215,7 @@ export default function CareerForm() {
         }
         console.log(values);
         toast.success("Your application has been submitted successfully.");
-        reset(createDefaultValues());
+        reset(createDefaultValues(initialJobName));
         setActiveStep(0);
         setCompleted([false, false, false, false]);
         setShowSuccessModal(true);
@@ -516,13 +530,21 @@ export default function CareerForm() {
                                         rules={{ required: "Required" }}
                                         render={({ field }) => (
                                             <FormControl required error={!!errors.employmentData?.jobType}>
-                                                <InputLabel>Type of Job you are Applying for?</InputLabel>
-                                                <Select label="Type of Job you are Applying for?" {...field}>
-                                                    {jobTypeOptions.map((opt) => (
+                                                <InputLabel>Job Title you are applying for</InputLabel>
+                                                <Select
+                                                    label="Job Title you are applying for"
+                                                    displayEmpty
+                                                    renderValue={(selected) => selected}
+                                                    {...field}
+                                                >
+
+                                                    {jobTitleOptions.map((opt) => (
                                                         <MenuItem key={opt} value={opt}>{opt}</MenuItem>
                                                     ))}
                                                 </Select>
-                                                <FormHelperText>{errors.employmentData?.jobType?.message}</FormHelperText>
+                                                <FormHelperText>
+                                                    {errors.employmentData?.jobType?.message || (isCareersError ? "Unable to load job titles right now" : "")}
+                                                </FormHelperText>
                                             </FormControl>
                                         )}
                                     />

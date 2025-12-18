@@ -38,3 +38,10 @@ export function useReviews(params?: StrapiParams) {
     ...params,
   });
 }
+export function useJobDetails(job_id: string) {
+  return useStrapi<StrapiCareer>("careers", {
+    filters: {
+      id: job_id
+    },
+  });
+}
