@@ -10,12 +10,12 @@ interface OpeningItemProps {
 }
 
 export default function OpeningItem({ career }: OpeningItemProps) {
-  const { id, Job_Name, Job_Description, Job_Location, employmentType } = career;
+  const { documentId, Job_Name, Job_Description, Job_Location, employmentType } = career;
   const router = useRouter();
   return (
     <div
       className="flex-[1] p-[1.5rem] flex flex-col gap-[1rem] border-[var(--Colors-Neutral-100)] border rounded-[var(--Radius-md)] cursor-pointer"
-      onClick={() => router.push(`/careers/${id}`)}
+      onClick={() => router.push(`/careers/${documentId}`)}
     >
       <span className="text-[1.25rem] text-[var(--primary-500-main)] font-bold text-start">
         {Job_Name}

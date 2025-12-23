@@ -19,10 +19,21 @@ export type StrapiEntity = {
 };
 
 export type StrapiBanner = StrapiEntity & {
-  Background_Image: { url: string };
-  Title: string;
-  Description: string;
-  CTA: string;
+  Background_Image?: { url: string };
+  Title?: string;
+  Description?: string;
+  CTA?: string;
+  BannerNumber:
+  | "Banner1 ( 815/368 )"
+  | "Banner2 ( 513/368 )"
+  | "Banner3 ( 721/412 )";
+};
+
+export type StrapiWeeklyOffer = StrapiEntity & {
+  Title?: string;
+  Description?: string;
+  CTA?: string;
+  Image?: { url: string };
 };
 
 // Career/Job Opening type
