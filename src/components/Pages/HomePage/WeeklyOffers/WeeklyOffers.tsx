@@ -1,7 +1,11 @@
+"use client"
 import Button from "@/components/shared/Button";
+import { useWeeklyOffers } from "@/hooks/useStrapi";
 import Image from "next/image";
 
 export default function WeeklyOffers() {
+    const { data: weeklyOffers } = useWeeklyOffers();
+    console.log(weeklyOffers);
     return (
         <div className="baseContainer">
             <div className="w-full maxWidth flex flex-col align-center  py-[2.5rem] gap-[3rem]">

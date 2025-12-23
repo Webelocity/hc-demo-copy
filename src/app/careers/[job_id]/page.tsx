@@ -62,19 +62,19 @@ export default function JobDetails() {
                 <div className="flex flex-col gap-[2.5rem]">
                     {Responsibilities && (
                         <div className="flex flex-col gap-[1rem]">
-                            <span className="text-[1.25rem] text-[var(--primary-500-main)] font-bold text-start">Responsibilities</span>
+                            <span className="text-[1.75rem] text-[black] font-bold text-start">Responsibilities</span>
                             <MarkdownView markdown={Responsibilities} />
                         </div>
                     )}
                     {Qualifications && (
                         <div className="flex flex-col gap-[1rem]">
-                            <span className="text-[1.25rem] text-[var(--primary-500-main)] font-bold text-start">Qualifications</span>
+                            <span className="text-[1.75rem] text-[black] font-bold text-start">Qualifications</span>
                             <MarkdownView markdown={Qualifications} />
                         </div>
                     )}
                     {Goals && (
                         <div className="flex flex-col gap-[1rem]">
-                            <span className="text-[1.25rem] text-[var(--primary-500-main)] font-bold text-start">Goals</span>
+                            <span className="text-[1.75rem] text-[black] font-bold text-start">Goals</span>
                             <MarkdownView markdown={Goals} />
                         </div>
                     )}
