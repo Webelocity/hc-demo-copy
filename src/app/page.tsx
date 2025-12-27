@@ -104,7 +104,7 @@ export default function Home() {
   return (
     <>
       <Banners />
-      {/* <WeeklyOffers /> */}
+      <WeeklyOffers />
       <Categories />
       <SpecialOrdering />
       <NewArrivals />

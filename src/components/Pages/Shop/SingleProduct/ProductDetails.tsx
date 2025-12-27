@@ -4,6 +4,7 @@ import * as React from 'react';
 import Tab from '@mui/material/Tab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Reviews from './Reviews/Reviews';
 interface ProductDetailsProps {
     product: Product;
 }
@@ -93,11 +94,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         sections.push({
             key: 'reviews',
             label: 'Reviews',
-            isDisabled: true,
-            content: (
-                <section className="space-y-3">
-                </section>
-            ),
+            content: <Reviews product={product} />,
         });
 
         return sections;
@@ -110,6 +107,15 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     const [value, setValue] = React.useState<string>(tabValues[0] ?? '');
 
+    const reviewsTabIndex = React.useMemo(
+        () => tabs.findIndex((tab) => tab.key === 'reviews'),
+        [tabs]
+    );
+    const reviewsTabValue = reviewsTabIndex >= 0 ? tabValues[reviewsTabIndex] : null;
+    const [shouldLoadReviews, setShouldLoadReviews] = React.useState<boolean>(
+        () => (reviewsTabValue ? value === reviewsTabValue : false)
+    );
+
     React.useEffect(() => {
         if (!tabValues.includes(value)) {
             setValue(tabValues[0] ?? '');
@@ -118,7 +124,16 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
     const handleChange = (_: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
+        if (reviewsTabValue && newValue === reviewsTabValue) {
+            setShouldLoadReviews(true);
+        }
     };
+
+    React.useEffect(() => {
+        if (reviewsTabValue && value === reviewsTabValue) {
+            setShouldLoadReviews(true);
+        }
+    }, [reviewsTabValue, value]);
 
     const productDetailsTheme = React.useMemo(
         () =>
@@ -195,7 +210,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
                     {tabs.map((tab, index) => (
                         <TabPanel key={tabValues[index]} value={tabValues[index]} className="space-y-6 p-0">
-                            {tab.content}
+                            {tab.key === 'reviews'
+                                ? <Reviews product={product} loadReviews={shouldLoadReviews} />
+                                : tab.content}
                         </TabPanel>
                     ))}
                 </TabContext>

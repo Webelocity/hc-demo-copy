@@ -142,24 +142,27 @@ type FulfillmentMethodEnum = 'pickup' | 'delivery' | 'shipping';
 
 type Review = {
     _id: string;
-    orderId: string | null;
+    orderId: string;
     storeId: string;
     userId: {
         _id: string;
+        firstname: string;
+        lastname: string;
         creditUsed: number | null;
         fullName: string;
         id: string;
-        avatar?: string | null;
     };
-    productId: string;
-    reviewType: string | null;
+    guestName: string;
+    guestEmail: string;
+    isVerified: boolean;
+    adminApproved: boolean;
+    productId: {
+        _id: string;
+    };
+    reviewType: string;
     reviewTitle: string;
     review: string;
     rating: number;
-    reply: string | null;
-    replyDate: string | null;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-    id: string;
-};
+    reply: string;
+    replyDate: string;
+}

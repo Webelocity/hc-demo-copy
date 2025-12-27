@@ -5,6 +5,8 @@ import {
   type StrapiParams,
   type StrapiCareer,
   type StrapiTeamMember,
+  type StrapiBanner,
+  type StrapiOffer,
   StrapiReview,
 } from "@/lib/strapi";
 
@@ -27,6 +29,12 @@ export function useCareers(params?: StrapiParams) {
   });
 }
 
+export function useBanners(params?: StrapiParams) {
+  return useStrapi<StrapiBanner>("banners", {
+    ...params,
+  });
+}
+
 export function useTeam(params?: StrapiParams) {
   return useStrapi<StrapiTeamMember>("teams", {
     ...params,
@@ -38,10 +46,16 @@ export function useReviews(params?: StrapiParams) {
     ...params,
   });
 }
+
+export function useOffers(params?: StrapiParams) {
+  return useStrapi<StrapiOffer>("weekly-offers", {
+    ...params,
+  });
+}
 export function useJobDetails(job_id: string) {
   return useStrapi<StrapiCareer>("careers", {
     filters: {
-      id: job_id
+      documentId: job_id
     },
   });
 }

@@ -16,6 +16,12 @@ type AllFiltersResponse = {
         maxPrice: number;
     };
     attributes: Record<string, Record<string, number>>;
+    promo: {
+        _id: string;
+        name: string;
+        count: number;
+    }[];
+    featured: Record<string, number>;
 }
 
 type Category = {

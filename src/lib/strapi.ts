@@ -19,11 +19,16 @@ export type StrapiEntity = {
 };
 
 export type StrapiBanner = StrapiEntity & {
-  Background_Image: { url: string };
-  Title: string;
-  Description: string;
-  CTA: string;
+  Background_Image?: { url: string };
+  Title?: string;
+  Description?: string;
+  CTA?: string;
+  BannerNumber:
+  | "Banner1 ( 815/368 )"
+  | "Banner2 ( 513/368 )"
+  | "Banner3 ( 721/412 )";
 };
+
 
 // Career/Job Opening type
 export type StrapiCareer = StrapiEntity & {
@@ -38,6 +43,15 @@ export type StrapiCareer = StrapiEntity & {
   Qualifications?: string;
   Goals?: string;
   documentId?: string;
+};
+export type StrapiOffer = StrapiEntity & {
+  DealName?: string;
+  DealTitle?: string;
+  Deal_Image?: { url: string };
+  CTA?: string;
+  BG_Image?: { url: string };
+  Category?: string;
+
 };
 
 // Team Member type

@@ -45,7 +45,11 @@ const Map: React.FC<MapProps> = ({ size = "medium", customLocation }) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   const [selectedStoreId] = useAtom(selectedStoreAtom);
+  console.log(selectedStoreId);
+
+  console.log(STORES);
   const selectedStore = STORES[selectedStoreId];
+  console.log(selectedStore);
 
   // Use custom location when provided, otherwise fall back to the selected store coordinates
   const mapCenter: LatLng =
