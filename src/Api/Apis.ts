@@ -147,6 +147,19 @@ export const fetchSingleProductById = async (
     return response; // Always a Product, never undefined
 };
 
+export const fetchReviewsByProduct = async (productId: string): Promise<Review[]> => {
+    const pathname = `/reviews/reviewsByProduct/${productId}`;
+    const response = await fetchWithStoreId<Review[]>(pathname, {
+        method: "GET",
+    });
+
+    if (!response) {
+        throw new Error(`Error fetching reviews for product ${productId}`);
+    }
+
+    return response;
+};
+
 export const fetchSingleProductByIdPrices = async (
     variantId: string | undefined,
     params: Record<string, string | number | boolean> = {}
@@ -167,6 +180,30 @@ export const fetchSingleProductByIdPrices = async (
     }
     return response;
 }
+
+export type AnonymousReviewPayload = {
+    productId: string;
+    reviewType: string;
+    reviewTitle: string;
+    review: string;
+    rating: number;
+    guestName: string;
+    guestEmail: string;
+};
+
+export const submitAnonymousReview = async (payload: AnonymousReviewPayload): Promise<{ success: boolean }> => {
+    const pathname = '/reviews/anonymous';
+    const response = await fetchWithStoreId<{ success: boolean }>(pathname, {
+        method: "POST",
+        body: payload,
+    });
+
+    if (!response) {
+        throw new Error('Error submitting review');
+    }
+
+    return response;
+};
 
 export type CartTotalsProductItem = {
     quantity: number;

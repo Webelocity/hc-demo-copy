@@ -10,13 +10,15 @@ import ProductPages from "@/components/Pages/Shop/Catalogue/ProductPages/Product
 import SortDropdown from "@/components/Pages/Shop/Catalogue/SortDropdown/SortDropdown";
 import AvailabilityDropdown from "@/components/Pages/Shop/Catalogue/AvailabilityDropdown/AvailabilityDropdown";
 import ActiveFilters from "@/components/Pages/Shop/Catalogue/ActiveFilters/ActiveFilters";
+import { categoriesQueryAtom } from "@/atoms/categoryAtom";
+import { useAtomValue } from "jotai";
 
 function CatalogueContent() {
     const isMobile = useMediaQuery('(max-width:1024px)');
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-
+    const categories = useAtomValue(categoriesQueryAtom);
     const categoryActive = searchParams.get('category_active') ?? undefined;
     const isSubcatActive = searchParams.get('subcats') ?? undefined;
 
@@ -103,6 +105,16 @@ function CatalogueContent() {
         );
     };
 
+    const renderTitle = () => {
+        if (selectedSubCat) {
+            return selectedSubCat.name;
+        }
+        if (categoryActive) {
+            return categories.data?.find((c: Category) => c._id === categoryActive)?.name;
+        }
+        return 'All products';
+    };
+
     return (
         <div className="baseContainer">
             <div className=" maxWidth py-[2.5rem] flex gap-[1.5rem]">
@@ -115,7 +127,7 @@ function CatalogueContent() {
                 <div className="flex-[3] flex flex-col gap-[1rem]">
                     <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col items-start gap-[0.5rem]">
-                            <h1 className="text-[2rem] font-bold">All products</h1>
+                            <h1 className="text-[2rem] font-bold">{renderTitle()}</h1>
                             {renderPaginationInfo()}
 
                         </div>

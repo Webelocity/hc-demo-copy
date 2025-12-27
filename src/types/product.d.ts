@@ -139,3 +139,30 @@ type ProductMedia = {
 }
 
 type FulfillmentMethodEnum = 'pickup' | 'delivery' | 'shipping';
+
+type Review = {
+    _id: string;
+    orderId: string;
+    storeId: string;
+    userId: {
+        _id: string;
+        firstname: string;
+        lastname: string;
+        creditUsed: number | null;
+        fullName: string;
+        id: string;
+    };
+    guestName: string;
+    guestEmail: string;
+    isVerified: boolean;
+    adminApproved: boolean;
+    productId: {
+        _id: string;
+    };
+    reviewType: string;
+    reviewTitle: string;
+    review: string;
+    rating: number;
+    reply: string;
+    replyDate: string;
+}

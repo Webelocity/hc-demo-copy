@@ -29,12 +29,6 @@ export type StrapiBanner = StrapiEntity & {
   | "Banner3 ( 721/412 )";
 };
 
-export type StrapiWeeklyOffer = StrapiEntity & {
-  Title?: string;
-  Description?: string;
-  CTA?: string;
-  Image?: { url: string };
-};
 
 // Career/Job Opening type
 export type StrapiCareer = StrapiEntity & {
@@ -49,6 +43,15 @@ export type StrapiCareer = StrapiEntity & {
   Qualifications?: string;
   Goals?: string;
   documentId?: string;
+};
+export type StrapiOffer = StrapiEntity & {
+  DealName?: string;
+  DealTitle?: string;
+  Deal_Image?: { url: string };
+  CTA?: string;
+  BG_Image?: { url: string };
+  Category?: string;
+
 };
 
 // Team Member type

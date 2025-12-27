@@ -15,7 +15,12 @@ export default function Reviews() {
         <p className="font-bold text-[2.5rem] text-black">
           What Our Customers Say
         </p>
-        {reviews.length === 0 && !isLoading ? (
+        {isLoading && (
+          <div className="flex items-center justify-center py-8 text-[1rem] text-[var(--Colors-Neutral-700)]">
+            Loading reviews...
+          </div>
+        )}
+        {!isLoading && reviews.length === 0 ? (
           <CustomNoData text="No Current Reviews" />
         ) : (
           <ReUsableSwiper
