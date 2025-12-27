@@ -6,7 +6,7 @@ import {
   type StrapiCareer,
   type StrapiTeamMember,
   type StrapiBanner,
-  type StrapiWeeklyOffer,
+  type StrapiOffer,
   StrapiReview,
 } from "@/lib/strapi";
 
@@ -47,8 +47,8 @@ export function useReviews(params?: StrapiParams) {
   });
 }
 
-export function useWeeklyOffers(params?: StrapiParams) {
-  return useStrapi<StrapiWeeklyOffer>("weekly-offers", {
+export function useOffers(params?: StrapiParams) {
+  return useStrapi<StrapiOffer>("weekly-offers", {
     ...params,
   });
 }

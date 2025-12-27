@@ -5,6 +5,8 @@ import { IoIosCloseCircleOutline } from "react-icons/io";
 import { useAtomValue } from "jotai";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllShopFilters } from "@/Api/Apis";
 
 interface ActiveFiltersProps {
     selectedSubCat?: Subcategory | ChildSubCategory;
@@ -16,6 +18,12 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
     const pathname = usePathname();
     const categories = useAtomValue(categoriesQueryAtom);
     const categoriesData = categories.data;
+    const { data: filtersData } = useQuery<AllFiltersResponse>({
+        queryKey: ['ActiveFiltersAllFilters'],
+        queryFn: () => fetchAllShopFilters({ isActive: true }),
+        staleTime: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+    });
 
     // Get active filters from URL
     const activeFilters = useMemo(() => {
@@ -68,6 +76,32 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
 
             // Skip maxPrice as it's handled with minPrice
             if (key === 'maxPrice') {
+                return;
+            }
+
+            // Handle promotional categories (ids -> names)
+            if (key === 'promotionalCategories' && filtersData?.promo) {
+                const promoMap = new Map(filtersData.promo.map((p) => [p._id, p.name]));
+                const ids = value.split(',');
+                ids.forEach((id) => {
+                    const promoName = promoMap.get(id) ?? id;
+                    filters.push({
+                        key,
+                        value: id,
+                        displayValue: promoName,
+                    });
+                });
+                return;
+            }
+
+            // Handle featured
+            if (key === 'isFeatured') {
+                const featuredLabel = Object.keys(filtersData?.featured ?? {})[0] || 'Featured Products';
+                filters.push({
+                    key,
+                    value,
+                    displayValue: featuredLabel,
+                });
                 return;
             }
 

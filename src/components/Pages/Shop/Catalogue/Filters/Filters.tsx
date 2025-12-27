@@ -2,7 +2,7 @@
 
 "use client"
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 // Tailwind styles are used; legacy SCSS removed
 import Slider from '@mui/material/Slider';
 import TextField from '@mui/material/TextField';
@@ -50,10 +50,14 @@ const Filters: React.FC<FiltersProps> = ({
         categories: boolean;
         price: boolean;
         brands: boolean;
+        promotionalCategories: boolean;
+        featured: boolean;
     }>({
         categories: true,
         price: false,
         brands: false,
+        promotionalCategories: true,
+        featured: true,
     });
 
     const toggleSection = (section: keyof typeof openSections) => {
@@ -66,13 +70,33 @@ const Filters: React.FC<FiltersProps> = ({
             [attributeName]: !prev[attributeName],
         }));
     };
+    const filtersParams = useMemo(() => {
+        const params: Record<string, string | number | boolean> = { isActive: true };
+
+        const categoryActive = searchParams.get('category_active');
+        const subcats = searchParams.get('subcats');
+
+        // Align with filters API: send categoryIds/subCategoryIds (comma-separated) instead of UI param keys.
+        if (categoryActive) params.categoryIds = categoryActive;
+        if (subcats) params.subCategoryIds = subcats;
+
+        searchParams.forEach((value, key) => {
+            // Skip pagination/sort + the UI-only category selectors; include everything else (brands, attrs, promo, isFeatured, etc.)
+            if (['page', 'limit', 'sort', 'category_active', 'subcats'].includes(key)) return;
+            const numeric = Number(value);
+            params[key] = Number.isNaN(numeric) ? value : numeric;
+        });
+
+        return params;
+    }, [searchParams]);
+
     const {
         data: DynamicFilters,
         isLoading,
         isError,
     } = useQuery<AllFiltersResponse>({
-        queryKey: ['AllFiltersResponse'],
-        queryFn: () => fetchAllShopFilters({ isActive: true }),
+        queryKey: ['AllFiltersResponse', JSON.stringify(filtersParams)],
+        queryFn: () => fetchAllShopFilters(filtersParams),
         staleTime: 5 * 60 * 1000,
         refetchOnWindowFocus: false,
     });
@@ -160,6 +184,18 @@ const Filters: React.FC<FiltersProps> = ({
     );
     const showBrandsSection = !queryLower || filteredBrandEntries.length > 0;
 
+    // Promotional categories helpers
+    const promoCategories = (DynamicFilters?.promo ?? []) as { _id: string; name: string; count: number }[];
+    const filteredPromoCategories = promoCategories.filter((promo) =>
+        !queryLower || promo.name.toLowerCase().includes(queryLower)
+    );
+    const showPromoSection = !queryLower || filteredPromoCategories.length > 0;
+
+    // Featured helpers (single toggle)
+    const featuredData = (DynamicFilters?.featured ?? {}) as Record<string, number>;
+    const featuredLabel = Object.keys(featuredData)[0] || 'Featured Products';
+    const featuredCount = featuredData[featuredLabel];
+
     // Attribute helpers
     const allAttributes = (DynamicFilters?.attributes || {}) as Record<string, Record<string, number>>;
     const filteredAttributes = Object.entries(allAttributes).map(([attributeName, options]) => {
@@ -204,6 +240,8 @@ const Filters: React.FC<FiltersProps> = ({
         if (!param) return false;
         return param.split(',').includes(value);
     };
+
+    const isFeaturedChecked = isChecked('isFeatured', 'true');
 
     const handleResetFilters = () => {
         const newParams = new URLSearchParams(searchParams);
@@ -272,6 +310,132 @@ const Filters: React.FC<FiltersProps> = ({
                                     </label>
                                 );
                             })}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    };
+
+    // Render promotional categories
+    const renderPromotionalCategories = () => {
+        if (!showPromoSection || filteredPromoCategories.length === 0) return null;
+        return (
+            <div className="flex flex-col gap-[1rem] w-full">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('promotionalCategories')}
+                    className={`flex w-full min-w-full items-center justify-between py-[0.25rem] border-b transition-colors duration-200 cursor-pointer ${openSections.promotionalCategories ? 'border-[color:var(--Neutral-800)]' : 'border-[color:var(--Neutral-100)]'}`}
+                >
+                    <span
+                        className={`text-[1rem] font-medium ${openSections.promotionalCategories ? 'text-[color:var(--Neutral-800)]' : 'text-[color:var(--Neutral-700)]'}`}
+                    >
+                        Promotional Categories
+                    </span>
+                    <motion.div
+                        className={`text-[1rem] cursor-pointer ${openSections.promotionalCategories ? 'text-[color:var(--Neutral-800)]' : 'text-[color:var(--Neutral-500)]'}`}
+                        animate={{ rotate: openSections.promotionalCategories ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <FaAngleDown />
+                    </motion.div>
+                </button>
+
+                <AnimatePresence>
+                    {openSections.promotionalCategories && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="flex flex-col gap-[0.75rem]"
+                        >
+                            {filteredPromoCategories.map((promo) => {
+                                const checked = isChecked('promotionalCategories', promo._id);
+                                return (
+                                    <label key={promo._id} className="flex items-center gap-[0.5rem] cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            className="w-[1rem] h-[1rem] rounded-[0.25rem] border border-[color:var(--Neutral-100)] accent-[var(--secondary-500-main)] cursor-pointer"
+                                            checked={checked}
+                                            onChange={() => handleFilterChange('promotionalCategories', promo._id)}
+                                        />
+                                        <span
+                                            className={`text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 ${checked ? 'font-semibold text-[color:var(--secondary-500-main)]' : 'font-normal text-[color:var(--Neutral-700)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'}`}
+                                        >
+                                            {promo.name} ({promo.count})
+                                        </span>
+                                    </label>
+                                );
+                            })}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+        );
+    };
+
+    const handleFeaturedToggle = () => {
+        const newParams = new URLSearchParams(searchParams);
+        if (newParams.get('isFeatured') === 'true') {
+            newParams.delete('isFeatured');
+        } else {
+            newParams.set('isFeatured', 'true');
+        }
+        newParams.set('page', '1');
+
+        router.push(`?${newParams.toString()}`, {
+            scroll: false,
+        });
+    };
+
+    const renderFeaturedSection = () => {
+        if (Object.keys(featuredData).length === 0) return null;
+        return (
+            <div className="flex flex-col gap-[1rem] w-full">
+                <button
+                    type="button"
+                    onClick={() => toggleSection('featured')}
+                    className={`flex w-full min-w-full items-center justify-between py-[0.25rem] border-b transition-colors duration-200 cursor-pointer ${openSections.featured ? 'border-[color:var(--Neutral-800)]' : 'border-[color:var(--Neutral-100)]'}`}
+                >
+                    <span
+                        className={`text-[1rem] font-medium ${openSections.featured ? 'text-[color:var(--Neutral-800)]' : 'text-[color:var(--Neutral-700)]'}`}
+                    >
+                        Featured Products
+                    </span>
+                    <motion.div
+                        className={`text-[1rem] cursor-pointer ${openSections.featured ? 'text-[color:var(--Neutral-800)]' : 'text-[color:var(--Neutral-500)]'}`}
+                        animate={{ rotate: openSections.featured ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
+                        whileTap={{ scale: 0.9 }}
+                    >
+                        <FaAngleDown />
+                    </motion.div>
+                </button>
+
+                <AnimatePresence>
+                    {openSections.featured && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="flex flex-col gap-[0.75rem]"
+                        >
+                            <label className="flex items-center gap-[0.5rem] cursor-pointer group">
+                                <input
+                                    type="checkbox"
+                                    className="w-[1rem] h-[1rem] rounded-[0.25rem] border border-[color:var(--Neutral-100)] accent-[var(--secondary-500-main)] cursor-pointer"
+                                    checked={isFeaturedChecked}
+                                    onChange={handleFeaturedToggle}
+                                />
+                                <span
+                                    className={`text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 ${isFeaturedChecked ? 'font-semibold text-[color:var(--secondary-500-main)]' : 'font-normal text-[color:var(--Neutral-700)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'}`}
+                                >
+                                    {featuredLabel}{featuredCount ? ` (${featuredCount})` : ''}
+                                </span>
+                            </label>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -404,6 +568,32 @@ const Filters: React.FC<FiltersProps> = ({
                     }}
                 />
             </div>
+
+            {/* Promotional Categories */}
+            {isLoading ? (
+                <div className="space-y-[0.75rem]">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-[0.5rem]">
+                            <div className="w-[1rem] h-[1rem] rounded-[0.25rem] animate-pulse bg-[color:var(--Neutral-200)]"></div>
+                            <div className="h-[1rem] w-[12rem] rounded-[0.25rem] animate-pulse bg-[color:var(--Neutral-200)]"></div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                renderPromotionalCategories()
+            )}
+
+            {/* Featured Products */}
+            {isLoading ? (
+                <div className="space-y-[0.75rem]">
+                    <div className="flex items-center gap-[0.5rem]">
+                        <div className="w-[1rem] h-[1rem] rounded-[0.25rem] animate-pulse bg-[color:var(--Neutral-200)]"></div>
+                        <div className="h-[1rem] w-[10rem] rounded-[0.25rem] animate-pulse bg-[color:var(--Neutral-200)]"></div>
+                    </div>
+                </div>
+            ) : (
+                renderFeaturedSection()
+            )}
 
             {/* Categories */}
             {showCategoriesSection && (
