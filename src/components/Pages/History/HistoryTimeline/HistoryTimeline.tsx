@@ -273,7 +273,7 @@ const HistoryTimeline = () => {
                 True Value cooperative
               </a>
               , gaining access to better supplier pricing and strengthening its
-              offerings to contractors and vendors.
+              offerings to contractors and homeowners.
             </>
           ),
         },
@@ -374,7 +374,7 @@ const HistoryTimeline = () => {
         {
           year: "2017",
           description:
-            "Marks Owego's revamped kitchen, appliance, paint, and building material showroom. That same year, the Candor location moved, further optimizing its space to serve local contractors and vendors efficiently.",
+            "Marks Owego's revamped kitchen, appliance, paint, and building material showroom. That same year, the Candor location moved, further optimizing its space to serve local contractors and homeowners efficiently.",
         },
         {
           year: "2020",

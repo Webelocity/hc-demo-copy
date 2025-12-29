@@ -48,6 +48,9 @@ export default function PoliciesSection() {
                 access to materials and products you can&apos;t find anywhere
                 else
               </p>
+              <p className="mb-0">
+                We may require a 50% deposit before before placing the order, depending on credit status.
+              </p>
             </div>
           </div>
         </div>

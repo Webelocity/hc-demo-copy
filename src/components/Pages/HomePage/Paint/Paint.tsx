@@ -13,7 +13,7 @@ export default function Paint() {
                     Our expert staff and advanced color-matching system can replicate any sample or adjust your favorite shade, ensuring your paint is exactly what you want for your project.
                 </p>
                 <div className="flex justify-center items-center gap-[1.5rem]">
-                    <QuoteRequestPopup dashboardUrl={Customer_Dashboard_Url} />
+                    <Button variant="primary" size="large" href="/paint">More Details</Button>
                 </div>
             </div>
         </div>

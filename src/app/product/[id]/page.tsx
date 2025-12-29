@@ -55,10 +55,12 @@ export default async function ProductPage({
             return (last as any)?.name ?? '';
         };
         const renderStock = () => {
-            if (product?.trackQuantity && selectedVariant) {
-                if (selectedVariant?.inventoryCount > 0) {
+            const selectedInventory = selectedVariant?.allInventories.find(inventory => inventory.addressId === storeAddressId);
+
+            if (product?.trackQuantity && selectedVariant && selectedInventory) {
+                if (selectedInventory?.quantity > 0) {
                     return <div className="flex justify-start items-center gap-[0.5rem]">
-                        <span className="text-[0.75rem] font-semibold">{selectedVariant?.inventoryCount} In stock</span>
+                        <span className="text-[0.75rem] font-semibold">{selectedInventory?.quantity} In stock</span>
                     </div>
                 } else {
                     return <div className="flex justify-start items-center gap-[0.5rem]">

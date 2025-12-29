@@ -23,7 +23,7 @@ export default function Faqs() {
                 <Accordion expanded={true}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>How can I become a Pro contractor and access rewards?</AccordionSummary>
                     <AccordionDetails className="text-[1rem] font-medium text-[#1E1E1E]">
-                        Contractors and vendors can <Link className="underline text-[var(--primary-500-main)]" href="https://customer.homecentralstores.com/auth/register/pro" target="_blank" rel="noopener noreferrer">Become a Pro</Link> with Home Central Stores by signing up for our Contractor Zone. As a Pro, you’ll enjoy exclusive rewards, Pro pricing, bulk discounts, and special promotions designed to help you save on every project.
+                        Contractors  can <Link className="underline text-[var(--primary-500-main)]" href="https://customer.homecentralstores.com/auth/register/pro" target="_blank" rel="noopener noreferrer">Become a Pro</Link> with Home Central Stores by signing up for our Contractor Zone. As a Pro, you’ll enjoy exclusive rewards, Pro pricing, bulk discounts, and special promotions designed to help you save on every project.
                     </AccordionDetails>
                 </Accordion>
 

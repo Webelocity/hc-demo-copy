@@ -18,7 +18,7 @@ export default function OurCoreValues() {
       icon: "/assets/image/AboutUs/ears.svg",
       title: "Open Ears & Eager Communication",
       description:
-        "Honest, clear communication is key. Listening and responding thoughtfully to our customers, vendors, and coworkers builds trust and strengthens relationships.",
+        "Honest, clear communication is key. Listening and responding thoughtfully to our customers and coworkers builds trust and strengthens relationships.",
     },
     {
       icon: "/assets/image/AboutUs/tread.svg",
@@ -36,7 +36,7 @@ export default function OurCoreValues() {
       icon: "/assets/image/AboutUs/best.svg",
       title: "Be the Best",
       description:
-        "Always give your best. Be approachable, dependable, and friendly. When everyone brings their best, Home Central becomes the top choice for homeowners, contractors, and vendors, and the best company to work with",
+        "Always give your best. Be approachable, dependable, and friendly. When everyone brings their best, Home Central becomes the top choice for homeowners and contractors",
     },
   ];
 

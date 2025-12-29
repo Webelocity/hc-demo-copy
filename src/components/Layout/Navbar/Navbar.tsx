@@ -57,7 +57,7 @@ export default function Navbar() {
           />        </div>
       </div>
 
-      <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} />
+      {isMegaMenuOpen && <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} />}
     </nav>
   );
 }
