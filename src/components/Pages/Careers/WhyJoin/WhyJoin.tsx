@@ -11,7 +11,7 @@ export default function WhyJoinUs() {
                 <div className=" flex flex-col gap-[1.5rem] flex-[1] ps-[1rem]">
                     <h2 className="text-[2.5rem] font-bold text-white tracking-[0.8px]">Why Join Home Central Stores Team</h2>
 
-                    <p className="text-[1.125rem] text-[var(--Neutral-100)]">Jobs at Home Central are diverse and are never limited to a single role. Team members are encouraged to learn all facets of our operations, including</p>
+                    <p className="text-[1.125rem] text-[var(--Neutral-100)]">Jobs at Home Central are diverse and are never limited to a single role. Team members are encouraged to develop a wide set of skills that impact all facets of our operations.</p>
                     <div className="flex flex-col md:flex-row gap-[1.5rem] items-center">
                         <Button onClick={() => router.push('/careers/apply')} variant="secondary" size="large" className="bg-[var(--Neutral-100)] text-[var(--primary-500-main)] w-full md:w-fit">
                             Apply Now

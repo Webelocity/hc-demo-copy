@@ -3,6 +3,7 @@ import PerfectColorBanner from "@/components/Pages/CustomPaint/PerfectColorBanne
 import WhyChoseSection from "@/components/Pages/CustomPaint/WhyChoseSection/WhyChoseSection";
 import SampleKit from "@/components/Pages/CustomPaint/SampleKit/SampleKit";
 import StartProjectSection from "@/components/Pages/CustomPaint/StartProjectSection/StartProjectSection";
+import Image from "next/image";
 
 export const metadata = {
     title: "Custom Paint Matching & Mixing - Home Central Stores",
@@ -15,8 +16,13 @@ export default function Paint() {
             <PaintBanner />
             <PerfectColorBanner />
             <WhyChoseSection />
-            <SampleKit />
-            <StartProjectSection />
+            {/* <SampleKit /> */}
+            {/* <StartProjectSection /> */}
+            <div className="baseContainer py-[2.5rem]">
+                <div className="maxWidth relative aspect-[1338/338]">
+                    <Image src="/assets/image/Paint/MooreBanner.svg" alt="paint" fill />
+                </div>
+            </div>
         </>
     )
 }

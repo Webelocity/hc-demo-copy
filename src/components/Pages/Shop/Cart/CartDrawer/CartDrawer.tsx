@@ -61,7 +61,6 @@ export default function CartDrawer() {
             anchor="right"
             open={open}
             onClose={handleClose}
-            keepMounted
             PaperProps={{
                 sx: {
                     width: '37.5%',

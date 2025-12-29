@@ -145,19 +145,25 @@ export default function Banners() {
                                 <div className="relative p-[0.5rem] w-[2.5rem] h-[2.5rem] rounded-[10rem] bg-[#AD6465] box-content">
                                     <Image src="/assets/image/HomePage/pro.svg" className="!relative w-[2rem] h-[2rem]" alt="contractor-zone-1" fill />
                                 </div>
-                                <p className="text-[1.25rem] font-bold text-white ">Pro Pricing</p>
+                                <p className="text-[1.25rem] font-bold text-white ">Volume Based Pricing</p>
                             </div>
-                            <div className="flex justify-start items-center gap/[1rem]">
+                            <div className="flex justify-start items-center gap-[1rem]">
                                 <div className="relative p-[0.5rem] w-[2.5rem] h-[2.5rem] rounded-[10rem] bg-[#AD6465] box-content">
                                     <Image src="/assets/image/HomePage/discount.svg" className="!relative w-[2rem] h-[2rem]" alt="contractor-zone-1" fill />
                                 </div>
                                 <p className="text-[1.25rem] font-bold text-white ">Pro Offers</p>
                             </div>
-                            <div className="flex justify-start items-center gap/[1rem]">
+                            <div className="flex justify-start items-center gap-[1rem]">
                                 <div className="relative p-[0.5rem] w-[2.5rem] h-[2.5rem] rounded-[10rem] bg-[#AD6465] box-content">
                                     <Image src="/assets/image/HomePage/special.svg" className="!relative w-[2rem] h-[2rem]" alt="contractor-zone-1" fill />
                                 </div>
-                                <p className="text/[1.25rem] font-bold text-white ">Special & Custom Orders</p>
+                                <p className="text-[1.25rem] font-bold text-white ">Special & Custom Orders</p>
+                            </div>
+                            <div className="flex justify-start items-center gap-[1rem]">
+                                <div className="relative p-[0.5rem] w-[2.5rem] h-[2.5rem] rounded-[10rem] bg-[#AD6465] box-content">
+                                    <Image src="/assets/image/HomePage/Illustrations.png" className="!relative w-[2rem] h-[2rem]" alt="contractor-zone-1" fill />
+                                </div>
+                                <p className="text-[1.25rem] font-bold text-white ">Track Sales Better</p>
                             </div>
                         </div>
                         <div className="flex justify-start mt-[1.5rem] w-full">

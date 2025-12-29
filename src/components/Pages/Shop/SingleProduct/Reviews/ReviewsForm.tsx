@@ -226,7 +226,6 @@ export default function ReviewsForm({ product }: ReviewsFormProps) {
             <Dialog
                 open={isSuccessOpen}
                 TransitionComponent={Transition}
-                keepMounted
                 onClose={() => setIsSuccessOpen(false)}
                 aria-describedby="review-submitted-description"
                 PaperProps={{

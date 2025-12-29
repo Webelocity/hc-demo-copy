@@ -18,7 +18,7 @@ export default function WhyChooseUs() {
       logo: "/assets/image/AboutUs/true-value.svg",
       title: "True Value",
       description:
-        "A buying cooperative that services approximately 4,000 stores worldwide, giving contractors and vendors access to the more than 70,000 in-stock items with thousands of vendors.",
+        "A buying cooperative that services approximately 4,000 stores worldwide, giving contractors and homeowners access to the more than 70,000 in-stock items with thousands of vendors.",
     },
     {
       logo: "/assets/image/AboutUs/additional.svg",
@@ -83,7 +83,7 @@ export default function WhyChooseUs() {
                 buying department secures competitively priced hardware and
                 building materials. Whether you're sourcing a single tool, a
                 roll of tape, or a complete house package, Home Central Stores
-                helps contractors and vendors save—every time.
+                helps contractors and homeowners save—every time.
               </p>
             </div>
 

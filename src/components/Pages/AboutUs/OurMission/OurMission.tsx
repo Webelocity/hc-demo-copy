@@ -12,7 +12,7 @@ export default function OurMission() {
             </h2>
             <p className="text-[1.125rem] text-[var(--Neutral-700)] leading-[1.5] tracking-[0.0225rem]">
               At Home Central Stores, our mission is to provide contractors and
-              vendors with high-quality hardware, building supplies, and expert
+              homeowners with high-quality hardware, building supplies, and expert
               support across Owego, Vestal, and Candor, NY. We combine
               exceptional service, local knowledge, and exclusive rewards to
               help professionals complete projects efficiently and

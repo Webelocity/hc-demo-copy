@@ -11,7 +11,6 @@ export default function Explore() {
             alt="explore"
             fill
           />
-          <div className="absolute inset-0 bg-[rgba(24,20,100,0.55)] rounded-[var(--Radius-md)]" />
         </div>
         <div className="flex-1 flex flex-col gap-[1rem] min-w-0">
           <h1 className="text-[2.5rem] font-bold tracking-[0.05rem] leading-[1.2]">
