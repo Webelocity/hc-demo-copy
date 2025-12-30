@@ -5,7 +5,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { useSetAtom } from "jotai";
 import { versapayCardSummaryAtom } from "@/atoms/paymentAtom";
-import Button from "@/components/shared/Button";
 
 interface VersapayProps {
     setIsVersapayValid: (v: boolean) => void;
@@ -27,6 +26,14 @@ type FieldErrorMap = {
     cvv?: string | null;
 };
 
+type CardSummary = {
+    brand?: string;
+    last4?: string;
+    exp?: string;
+} | null;
+
+const REQUIRED_FIELDS: Array<keyof FieldErrorMap> = ["ccnumber", "ccexp", "cvv"];
+
 export default function VersapayComponent({
     setIsVersapayValid,
     setVersapayToken,
@@ -35,6 +42,8 @@ export default function VersapayComponent({
     const [loading, setLoading] = useState(false);
     const [formReady, setFormReady] = useState(false); // fields actually mounted
     const [fieldErrors, setFieldErrors] = useState<FieldErrorMap>({});
+    const [fieldTouched, setFieldTouched] = useState<Record<string, boolean>>({});
+    const [cardSummary, setLocalCardSummary] = useState<CardSummary>(null);
     const setCardSummary = useSetAtom(versapayCardSummaryAtom);
 
     const configureCollectJs = useCallback(() => {
@@ -84,39 +93,44 @@ export default function VersapayComponent({
                         setToken(response.token);
                         setIsVersapayValid(true);
                         setVersapayToken(response.token);
-
-                        setCardSummary({
-                            brand,
-                            last4,
-                            exp,
-                        });
+                        const summary = { brand, last4, exp };
+                        setLocalCardSummary(summary);
+                        setCardSummary(summary);
 
                         toast.success("Payment card validated successfully!");
                     } else if (response.error) {
                         console.error("VersaPay tokenization error:", response.error);
                         setIsVersapayValid(false);
                         setVersapayToken(null);
+                        setLocalCardSummary(null);
                         setCardSummary(null);
                         toast.error(response.error.message || "Card validation failed");
                     } else {
                         console.warn("VersaPay response without token or error:", response);
                         setIsVersapayValid(false);
                         setVersapayToken(null);
+                        setLocalCardSummary(null);
                         setCardSummary(null);
                         toast.error("Card validation failed");
                     }
                 },
                 validationCallback: (field: string, status: boolean, message: string) => {
                     // Keep a simple map of errors per field
+                    setFieldTouched((prev) => ({
+                        ...prev,
+                        [field]: true,
+                    }));
                     setFieldErrors((prev) => ({
                         ...prev,
                         [field]: status ? null : message || "Invalid field",
                     }));
                     if (status === false) {
+                        setToken(null);
                         // Stop loading immediately if validation fails inside the iframe
                         setLoading(false);
                         setIsVersapayValid(false);
                         setVersapayToken(null);
+                        setLocalCardSummary(null);
                         setCardSummary(null);
                         if (message) {
                             toast.error(message);
@@ -197,33 +211,48 @@ export default function VersapayComponent({
         document.body.appendChild(script);
     }, [configureCollectJs]);
 
-    const handleGenerateToken = (e?: React.MouseEvent) => {
-        if (e) e.preventDefault();
-        // Pre-check for any known validation errors and prevent stuck loading
-        const hasErrors = Object.values(fieldErrors).some((v) => v);
-        if (hasErrors) {
-            toast.error("Please correct the highlighted fields.");
-            return;
-        }
+    const handleGenerateToken = useCallback(
+        (e?: React.MouseEvent) => {
+            if (e) e.preventDefault();
+            // Pre-check for any known validation errors and prevent stuck loading
+            const hasErrors = Object.values(fieldErrors).some((v) => v);
+            if (hasErrors) {
+                toast.error("Please correct the highlighted fields.");
+                return;
+            }
 
-        if (!formReady || !window.CollectJS) {
-            toast.error("Payment form is still loading. Please wait...");
-            return;
-        }
+            if (!formReady || !window.CollectJS) {
+                toast.error("Payment form is still loading. Please wait...");
+                return;
+            }
 
-        setLoading(true);
+            setLoading(true);
 
-        try {
-            window.CollectJS.startPaymentRequest();
-        } catch (err) {
-            console.error("Error calling startPaymentRequest:", err);
-            toast.error("Unable to process payment. Please try again.");
-            setLoading(false);
+            try {
+                window.CollectJS.startPaymentRequest();
+            } catch (err) {
+                console.error("Error calling startPaymentRequest:", err);
+                toast.error("Unable to process payment. Please try again.");
+                setLoading(false);
+            }
+        },
+        [fieldErrors, formReady],
+    );
+
+    useEffect(() => {
+        const allTouched = REQUIRED_FIELDS.every((field) => fieldTouched[field]);
+        const allValid = REQUIRED_FIELDS.every(
+            (field) => fieldErrors[field] === null || fieldErrors[field] === undefined,
+        );
+
+        if (token) return;
+
+        if (formReady && !loading && allTouched && allValid) {
+            handleGenerateToken();
         }
-    };
+    }, [fieldErrors, fieldTouched, formReady, loading, handleGenerateToken, token]);
 
     const hasValidationErrors = Object.values(fieldErrors).some((v) => v);
-    const buttonDisabled = loading || !formReady || hasValidationErrors;
 
     return (
         <div className="versapay-component mt-4">
@@ -308,26 +337,46 @@ export default function VersapayComponent({
                         )}
                     </div>
                 </div>
-
-                <Button
-                    variant="primary"
-                    size="small"
-                    className="w-full"
-                    onClick={handleGenerateToken}
-                    type="submit"
-                    disabled={buttonDisabled}
-                >
-                    {loading
-                        ? "Validating..."
-                        : !formReady
-                            ? "Loading Payment Form..."
-                            : "Validate Payment Card"}
-                </Button>
+                <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600">
+                    <span className="font-medium text-gray-800">Auto-validate</span>
+                    <span className="flex items-center gap-1">
+                        <span
+                            className={`h-2 w-2 rounded-full ${loading || !formReady || hasValidationErrors
+                                ? "bg-amber-400"
+                                : "bg-emerald-500"
+                                }`}
+                        />
+                        {loading
+                            ? "Validating..."
+                            : !formReady
+                                ? "Loading payment form..."
+                                : hasValidationErrors
+                                    ? "Waiting for valid details"
+                                    : "Will validate automatically"}
+                    </span>
+                </div>
             </form>
 
             {token && (
-                <div className="mt-3 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-900">
-                    ✓ Payment card validated successfully
+                <div className="mt-4 flex items-start gap-3 rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-900">
+                    <div className="mt-[2px] flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-green-700">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="h-4 w-4"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m5 13 4 4L19 7" />
+                        </svg>
+                    </div>
+                    <div className="text-sm">
+                        <p className="font-semibold text-green-900">Payment method confirmed</p>
+                        <p className="text-green-900/80">
+                            Card validated and tokenized. We’ll use this token to complete your order.
+                        </p>
+                    </div>
                 </div>
             )}
         </div>
