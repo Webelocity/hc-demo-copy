@@ -33,6 +33,13 @@ type Order = {
     isInventoryReduced: boolean;
     createdAt: string;
     updatedAt: string;
+    shippingCost: number;
+    shippingCostBase: number;
+    shippingTax: number;
+    deliveryCost: number;
+    deliveryCostBase: number;
+    deliveryTax: number;
+    grandTotal: number;
     __v: number;
     payment: Record<string, unknown> | null;
     shipments: Shipment[];

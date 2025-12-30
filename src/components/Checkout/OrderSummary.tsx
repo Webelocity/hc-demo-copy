@@ -36,7 +36,6 @@ export default function OrderSummary({
     cart,
     totals,
     isLoading,
-    hasShippingOrDelivery,
     hasShipping,
     hasDelivery,
     totalsError,
@@ -51,10 +50,7 @@ export default function OrderSummary({
     const versapayToken = useAtomValue(versapayTokenAtom);
     const versapayValid = useAtomValue(versapayValidAtom);
     const storeAddressId = useAtomValue(selectedStoreAtom);
-    const setCart = useSetAtom(cartAtom);
     const setSelectedShipping = useSetAtom(selectedShippingOptionAtom);
-    const setAppliedDiscounts = useSetAtom(appliedDiscountsAtom);
-    const setSelectedAddresses = useSetAtom(selectedAddressesAtom);
     const setVersapayToken = useSetAtom(versapayTokenAtom);
     const setVersapayValid = useSetAtom(versapayValidAtom);
     const setVersapaySummary = useSetAtom(versapayCardSummaryAtom);
