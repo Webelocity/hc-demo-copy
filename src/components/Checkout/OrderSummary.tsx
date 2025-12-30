@@ -77,6 +77,7 @@ export default function OrderSummary({
 
         const shipping = selectedAddresses?.shipping;
         const billing = selectedAddresses?.billing ?? (selectedAddresses?.billingSameAsShipping ? selectedAddresses?.shipping : undefined);
+        const isPickupOnly = !hasShipping && !hasDelivery;
 
         // For pickup orders, we need minimal billing address for payment processing
         // Use contact info if no explicit billing address
@@ -127,7 +128,7 @@ export default function OrderSummary({
             orderPaymentMethod: versapayValid ? 'Card' : 'Cash',
             // Pass payment provider so backend knows to skip Stripe-specific logic for VersaPay
             paymentProvider: versapayValid ? 'Versapay' : undefined,
-            isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true,
+            ...(isPickupOnly ? {} : { isSameAsShipping: selectedAddresses?.billingSameAsShipping ?? true }),
             pickupAddressId: storeAddressId
         };
 

@@ -292,7 +292,7 @@ export default function OrderPage() {
                             <div className="flex items-center justify-center gap-[1rem]">
                                 <div className="flex items-center justify-center gap-[0.5rem]">
                                     <p className="text-[1.25rem] text-[var(--Colors-Neutral-700)] ">Order ID</p>
-                                    <p className="text-[1rem] text-[var(--primary-500-main)]">{fetchedOrder?._id}</p>
+                                    <p className="text-[1rem] text-[var(--primary-500-main)]">{fetchedOrder?.reducedId}</p>
                                 </div>
                             </div>
                             <h1 className="text-[2.5rem] font-bold text-center">Thank you for the order </h1>
