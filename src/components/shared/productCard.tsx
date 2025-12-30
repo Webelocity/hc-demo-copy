@@ -23,6 +23,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
 
     const renderDiscountTag = () => {
+
         if (product?.isDiscounted) {
             return <div className="absolute top-2 left-2 z-10 flex items-center gap-[0.25rem] p-[0.25rem] rounded-[0.5rem] bg-[#F0BB35] text-[0.75rem] font-semibold text-white">
                 <Image src="/assets/icon/discount_icon.svg" alt="Discount" width={16} height={16} />
@@ -31,6 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         }
     }
     const renderStock = () => {
+
         if (isTrackQuantity) {
             if (product?.inventoryCount && product.inventoryCount > 0) {
                 return <div className="flex justify-start items-center gap-[0.5rem]">
