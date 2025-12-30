@@ -224,6 +224,11 @@ export type CartTotals = {
     taxAmount: number;
     additionalCosts: Record<string, number>;
     subTotal: number;
+    deliveryCostBase: number;
+    deliveryTax: number;
+
+
+
 };
 
 // Shipping Options
@@ -239,6 +244,8 @@ export type ShippingOption = {
     objectId: string;
     shipmentGateway: string;
     version: string;
+    shippingCostBase: number;
+    shippingTax: number;
 };
 
 export const fetchShippingOptions = async (

@@ -267,7 +267,7 @@ export default function OrderSummary({
                                 {isLoading ? (
                                     <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                                 ) : (
-                                    totals?.deliveryCosts && `$${totals?.deliveryCosts.toFixed(2)}`
+                                    totals?.deliveryCosts && `$${totals?.deliveryCostBase.toFixed(2)}`
                                 )}
                             </span>
                         </div>
@@ -279,7 +279,7 @@ export default function OrderSummary({
                             {isLoading ? (
                                 <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                             ) : selectedShipping ? (
-                                <span className="text-sm font-medium">${Number(selectedShipping.price ?? 0).toFixed(2)}</span>
+                                <span className="text-sm font-medium">${Number(selectedShipping.shippingCostBase ?? 0).toFixed(2)}</span>
                             ) : (
                                 <span className="text-sm font-medium text-[var(--Colors-Neutral-600)]">Choose Shipping Option</span>
                             )}
@@ -291,7 +291,7 @@ export default function OrderSummary({
                             {isLoading ? (
                                 <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                             ) : (
-                                totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
+                                (totals?.taxAmount ?? 0) + (totals?.deliveryTax ?? 0) + (selectedShipping?.shippingTax ?? 0) ? `$${((totals?.taxAmount ?? 0) + (totals?.deliveryTax ?? 0) + (selectedShipping?.shippingTax ?? 0)).toFixed(2)}` : 'Calculated at checkout'
                             )}
                         </span>
                     </div>

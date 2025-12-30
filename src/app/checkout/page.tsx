@@ -43,7 +43,7 @@ export default function CheckoutPage() {
     });
     const [paymentResetCounter, setPaymentResetCounter] = useState<number>(0);
     const [contactData, setContactData] = useState<CheckoutContactFormData | null>(null);
-    
+
     // Watch versapayValid to reset payment section when token becomes invalid
     // This handles cases where payment fails and token is cleared in OrderSummary
     const versapayValid = useAtomValue(versapayValidAtom);
@@ -132,7 +132,7 @@ export default function CheckoutPage() {
 
     return (
         <div className="baseContainer py-[2.5rem]">
-            <div className="flex flex-col lg:flex-row gap-[1.5rem]">
+            <div className="maxWidth flex flex-col lg:flex-row gap-[1.5rem]">
                 <div className="flex-[2] flex flex-col gap-[1rem]">
                     <h1 className="text-[1.75rem] font-bold">Checkout</h1>
 
