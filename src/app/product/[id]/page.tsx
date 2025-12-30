@@ -155,9 +155,6 @@ export default async function ProductPage({
                             <span className={`px-[0.55rem] py-[0.15rem] rounded-full border ${shippingOnlyNote ? 'border-[var(--Colors-Primary-200)] bg-[var(--Colors-Primary-50)] text-[var(--Colors-Primary-700)]' : 'border-[var(--Colors-Neutral-200)] text-[var(--Colors-Neutral-700)]'}`}>
                                 {shippingOnlyNote ? 'Available for online order only' : 'Shipping available'}
                             </span>
-                            {shippingStock.quantity !== undefined && !shippingOnlyNote && (
-                                <span className="text-[0.75rem] text-[var(--Colors-Neutral-700)]">{shippingStock.quantity} available for shipping</span>
-                            )}
                         </div>
                     )}
                 </div>
