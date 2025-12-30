@@ -150,10 +150,10 @@ export default async function ProductPage({
                         </div>
                     )}
 
-                    {shippingStock && (
+                    {shippingStock && shippingOnlyNote && (
                         <div className="flex items-center gap-[0.4rem] text-[0.8rem] font-semibold">
-                            <span className={`px-[0.55rem] py-[0.15rem] rounded-full border ${shippingOnlyNote ? 'border-[var(--Colors-Primary-200)] bg-[var(--Colors-Primary-50)] text-[var(--Colors-Primary-700)]' : 'border-[var(--Colors-Neutral-200)] text-[var(--Colors-Neutral-700)]'}`}>
-                                {shippingOnlyNote ? 'Available for online order only' : 'Shipping available'}
+                            <span className="px-[0.55rem] py-[0.15rem] rounded-full border border-[var(--Colors-Primary-200)] bg-[var(--Colors-Primary-50)] text-[var(--Colors-Primary-700)]">
+                                Available for online order only
                             </span>
                         </div>
                     )}
