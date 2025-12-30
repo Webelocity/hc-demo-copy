@@ -83,6 +83,7 @@ export const fetchAllProducts = async (
 
     return response;
 };
+
 export const fetchDiscountedProducts = async (
     params: Record<string, string | number | boolean> = {}
 ): Promise<ApiResponse<Product>> => {

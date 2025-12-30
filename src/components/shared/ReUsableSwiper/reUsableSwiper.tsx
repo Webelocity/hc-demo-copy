@@ -41,6 +41,7 @@ export default function ReUsableSwiper<T>({
 
     const hasError = isError || Boolean(error);
     const errorMessage = error?.message || 'Something went wrong. Please try again.';
+    const noData = !isLoading && data.length === 0;
 
     const handlePrev = () => {
         swiperInstance?.slidePrev();
@@ -56,6 +57,14 @@ export default function ReUsableSwiper<T>({
         return (
             <div className="w-full flex-[1] min-h-fit">
                 <CustomNoData text={errorMessage} />
+            </div>
+        );
+    }
+
+    if (noData) {
+        return (
+            <div className="w-full flex-[1] min-h-fit">
+                <CustomNoData text="No Products" />
             </div>
         );
     }

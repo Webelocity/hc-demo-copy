@@ -37,6 +37,12 @@ export interface StoreSchedule {
   sunday: DaySchedule;
 }
 
+export interface HolidayClosure {
+  month: number; // 1-12
+  day: number; // 1-31
+  label: string;
+}
+
 export const STORES: Record<StoreId, StoreLocation> = {
   "69142c80e1597ae70a5390d8": {
     id: "69142c80e1597ae70a5390d8",
@@ -93,6 +99,11 @@ export const STORES: Record<StoreId, StoreLocation> = {
     gmapLink: 'https://maps.app.goo.gl/noiJnK6aACoAjGC97'
   },
 };
+
+// Public holidays where all stores are closed
+export const HOLIDAY_CLOSURES: HolidayClosure[] = [
+  { month: 12, day: 25, label: "Christmas Day" },
+];
 
 // Store schedules - assuming same hours for all stores (Open until 6:00 PM)
 export const STORE_SCHEDULES: Record<StoreId, StoreSchedule> = {
@@ -172,6 +183,14 @@ function timeToMinutes(time: string): number {
   return hours * 60 + minutes;
 }
 
+function getHolidayForDate(date: Date): HolidayClosure | undefined {
+  const month = date.getMonth() + 1; // JS months are 0-based
+  const day = date.getDate();
+  return HOLIDAY_CLOSURES.find(
+    (holiday) => holiday.month === month && holiday.day === day
+  );
+}
+
 // Helper function to format time in 12-hour format
 export function formatTime12Hour(time: string): string {
   const [hours, minutes] = time.split(":").map(Number);
@@ -186,11 +205,28 @@ export interface StoreStatus {
   closingTime: string; // formatted time
   openingTime?: string; // formatted time, if closed
   isClosed24Hours: boolean; // true if store is closed all day
+  isHoliday?: boolean; // true if closure is due to a holiday
+  holidayName?: string; // label for the holiday
 }
 
 export function getStoreStatus(storeId: StoreId | string): StoreStatus {
   const normalizedStoreId = normalizeStoreId(storeId);
   const schedule = STORE_SCHEDULES[normalizedStoreId];
+  const now = new Date();
+
+  // Holiday closure overrides regular schedule
+  const holiday = getHolidayForDate(now);
+  if (holiday) {
+    return {
+      isOpen: false,
+      closingTime: "",
+      openingTime: undefined,
+      isClosed24Hours: true,
+      isHoliday: true,
+      holidayName: holiday.label,
+    };
+  }
+
   const today = getCurrentDayOfWeek();
   const daySchedule = schedule[today];
 
@@ -200,10 +236,11 @@ export function getStoreStatus(storeId: StoreId | string): StoreStatus {
       isOpen: false,
       closingTime: "",
       isClosed24Hours: true,
+      isHoliday: false,
+      holidayName: undefined,
     };
   }
 
-  const now = new Date();
   const currentMinutes = now.getHours() * 60 + now.getMinutes();
   const openMinutes = timeToMinutes(daySchedule.open);
   const closeMinutes = timeToMinutes(daySchedule.close);
@@ -215,6 +252,8 @@ export function getStoreStatus(storeId: StoreId | string): StoreStatus {
     closingTime: formatTime12Hour(daySchedule.close),
     openingTime: formatTime12Hour(daySchedule.open),
     isClosed24Hours: false,
+    isHoliday: false,
+    holidayName: undefined,
   };
 }
 

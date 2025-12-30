@@ -58,7 +58,7 @@ export default function WeeklyOffers() {
         <div className="baseContainer">
             <div className="w-full maxWidth flex flex-col align-center py-[2.5rem] gap-[3rem]">
                 <div className="flex justify-between items-center w-full">
-                    <p className="text-[2.5rem] font-bold">Weekly Offers</p>
+                    <p className="text-[2.5rem] font-bold"> Offers</p>
                 </div>
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-[1.5rem] items-stretch">
                     {offers.map(renderOfferCard)}
