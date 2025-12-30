@@ -258,16 +258,7 @@ export default function OrderSummary({
                         </div>
                     ) : null}
 
-                    <div className="flex items-center justify-between">
-                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
-                        <span className="text-sm font-medium">
-                            {isLoading ? (
-                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
-                            ) : (
-                                totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
-                            )}
-                        </span>
-                    </div>
+
                     {hasDelivery ? (
                         <div className="flex items-center justify-between">
                             <span className="text-sm text-[var(--Colors-Neutral-700)]">Delivery</span>
@@ -293,6 +284,16 @@ export default function OrderSummary({
                             )}
                         </div>
                     ) : null}
+                    <div className="flex items-center justify-between">
+                        <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
+                        <span className="text-sm font-medium">
+                            {isLoading ? (
+                                <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
+                            ) : (
+                                totals?.taxAmount ? `$${totals?.taxAmount.toFixed(2)}` : 'Calculated at checkout'
+                            )}
+                        </span>
+                    </div>
 
                     <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
                         <span className="text-base font-bold">Total</span>

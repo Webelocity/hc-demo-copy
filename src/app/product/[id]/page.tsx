@@ -14,6 +14,7 @@ import BulkTable from '@/components/Pages/Shop/SingleProduct/BulkTable';
 import { cookies } from 'next/headers';
 import Button from '@/components/shared/Button';
 import RelatedProducts from '@/components/Pages/Shop/SingleProduct/RelatedProducts';
+import { STORES } from '@/util/shedule';
 
 
 export const revalidate = 300;
@@ -48,6 +49,20 @@ export default async function ProductPage({
         const variantId = variant_Id ?? defaultVariant?._id!;
         const selectedVariant = product.productVariants.find(pv => pv._id === variantId);
         const qty = Math.max(1, Number(q ?? 1) || 1);
+        const DO_IT_BEST_ADDRESS_ID = process.env.NEXT_PUBLIC_DO_IT_BEST_ID ?? '';
+        const inStockInventories = selectedVariant?.trackQuantity
+            ? (Array.isArray(selectedVariant?.allInventories) ? selectedVariant?.allInventories : selectedVariant?.inventory ?? [])
+                .filter((inventory) => {
+                    if (!inventory) return false;
+                    const status = (inventory.status ?? '').toUpperCase();
+                    return status === 'IN_STOCK' && (inventory.quantity ?? 0) > 0;
+                })
+            : [];
+        const hasShippingInventory = DO_IT_BEST_ADDRESS_ID
+            ? inStockInventories.some((inventory) => inventory.addressId === DO_IT_BEST_ADDRESS_ID)
+            : false;
+        const hasPhysicalInventory = inStockInventories.some((inventory) => inventory.addressId !== DO_IT_BEST_ADDRESS_ID);
+        const shippingOnly = Boolean(selectedVariant?.trackQuantity && hasShippingInventory && !hasPhysicalInventory);
         const getLastDefaultPathName = (p?: Product) => {
             const path = p?.defaultPath;
             if (!Array.isArray(path) || path.length === 0) return '';
@@ -55,19 +70,98 @@ export default async function ProductPage({
             return (last as any)?.name ?? '';
         };
         const renderStock = () => {
-            const selectedInventory = selectedVariant?.allInventories.find(inventory => inventory.addressId === storeAddressId);
-
-            if (product?.trackQuantity && selectedVariant && selectedInventory) {
-                if (selectedInventory?.quantity > 0) {
-                    return <div className="flex justify-start items-center gap-[0.5rem]">
-                        <span className="text-[0.75rem] font-semibold">{selectedInventory?.quantity} In stock</span>
+            if (!product?.trackQuantity || !selectedVariant) return null;
+            const selectedInventory = selectedVariant.allInventories.find(inventory => inventory.addressId === storeAddressId);
+            const selectedStoreName = storeAddressId
+                ? STORES[storeAddressId as keyof typeof STORES]?.name ?? 'Selected store'
+                : 'Selected store';
+            const physicalStocks = inStockInventories.filter(
+                (inv) => inv.addressId !== DO_IT_BEST_ADDRESS_ID && inv.addressId !== storeAddressId
+            );
+            const allPhysicalInventories = inStockInventories.filter((inv) => inv.addressId !== DO_IT_BEST_ADDRESS_ID);
+            const shippingStock = DO_IT_BEST_ADDRESS_ID
+                ? inStockInventories.find((inv) => inv.addressId === DO_IT_BEST_ADDRESS_ID)
+                : undefined;
+            const nothingAvailable = inStockInventories.length === 0;
+            if (nothingAvailable) {
+                return (
+                    <div className="flex items-center gap-[0.5rem]">
+                        <span className="text-[0.75rem] font-semibold text-[var(--Colors-Danger-600)]">Out of stock</span>
                     </div>
-                } else {
-                    return <div className="flex justify-start items-center gap-[0.5rem]">
-                        <span className="text-[0.75rem] font-semibold">Out of stock</span>
-                    </div>
-                }
+                );
             }
+
+            const renderLocationRow = (inventory: Inventory) => {
+                const label = STORES[inventory.addressId as keyof typeof STORES]?.name ?? 'Other location';
+                return (
+                    <div key={inventory.addressId} className="flex items-center justify-between rounded-[0.65rem] bg-[var(--Colors-Neutral-10)] px-[0.65rem] py-[0.45rem]">
+                        <span className="text-[0.8rem] font-semibold text-[var(--Colors-Neutral-800)]">{label}</span>
+                        <span className="text-[0.8rem] font-semibold text-[var(--Colors-Primary-700)]">{inventory.quantity} available</span>
+                    </div>
+                );
+            };
+
+            const selectedStoreNote = selectedInventory?.quantity
+                ? `${selectedStoreName}: ${selectedInventory.quantity} available`
+                : `${selectedStoreName}: Out of stock`;
+
+            const shippingOnlyNote = Boolean(shippingStock && !allPhysicalInventories.length);
+
+            const stockPill = (text: string, type: 'in' | 'out') => (
+                <span
+                    className={`text-[0.8rem] font-semibold px-[0.4rem] py-[0.2rem] rounded-[0.45rem] ${type === 'in'
+                        ? 'bg-[var(--Colors-Success-50)] text-[var(--Colors-Success-700)]'
+                        : 'bg-[#FEF7F6] text-[#EB4337]'
+                        }`}
+                >
+                    {text}
+                </span>
+            );
+
+            return (
+                <div className="flex flex-col gap-[0.6rem]">
+                    <div className="flex items-center gap-[0.4rem]">
+                        {selectedInventory?.quantity
+                            ? stockPill(`${selectedInventory.quantity} in stock (${selectedStoreName})`, 'in')
+                            : stockPill(`Out of stock (${selectedStoreName})`, 'out')}
+                    </div>
+
+                    {physicalStocks.length > 0 && (
+                        <div className="flex flex-col gap-[0.35rem] border border-[var(--Colors-Neutral-100)] rounded-[0.65rem] p-[0.6rem] bg-[var(--Colors-Neutral-10)]">
+                            <span className="text-[0.75rem] font-semibold text-[var(--Colors-Neutral-700)]">Available nearby:</span>
+                            <div className="flex flex-col gap-[0.3rem]">
+                                {physicalStocks.map((inventory) => {
+                                    const label = STORES[inventory.addressId as keyof typeof STORES]?.name ?? 'Other location';
+                                    return (
+                                        <div
+                                            key={inventory.addressId}
+                                            className="flex items-center justify-between rounded-[0.65rem] bg-white px-[0.7rem] py-[0.45rem] shadow-[0_1px_0_rgba(0,0,0,0.03)]"
+                                        >
+                                            <div className="flex items-center gap-[0.5rem] text-[0.85rem] text-[var(--Colors-Neutral-800)]">
+                                                <span className="font-medium">{label}</span>
+                                            </div>
+                                            <span className="text-[0.85rem] font-semibold text-[var(--Colors-Success-700)]">
+                                                {inventory.quantity} in stock
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {shippingStock && (
+                        <div className="flex items-center gap-[0.4rem] text-[0.8rem] font-semibold">
+                            <span className={`px-[0.55rem] py-[0.15rem] rounded-full border ${shippingOnlyNote ? 'border-[var(--Colors-Primary-200)] bg-[var(--Colors-Primary-50)] text-[var(--Colors-Primary-700)]' : 'border-[var(--Colors-Neutral-200)] text-[var(--Colors-Neutral-700)]'}`}>
+                                {shippingOnlyNote ? 'Available for online order only' : 'Shipping available'}
+                            </span>
+                            {shippingStock.quantity !== undefined && !shippingOnlyNote && (
+                                <span className="text-[0.75rem] text-[var(--Colors-Neutral-700)]">{shippingStock.quantity} available for shipping</span>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
         }
         return (
             <div className='baseContainer'>
@@ -112,6 +206,7 @@ export default async function ProductPage({
                                     productId={product._id}
                                     variantId={variantId}
                                     quantity={qty}
+                                    shippingOnly={shippingOnly}
                                 />
                             </Suspense>
 

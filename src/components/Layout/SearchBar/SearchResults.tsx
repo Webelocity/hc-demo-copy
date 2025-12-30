@@ -114,9 +114,9 @@ export default function SearchResults({
                     onClick={() => handleProductClick(product._id)}
                   >
                     <div className={styles.productImage}>
-                      {product.productMedia?.length > 0 ? (
+                      {product.thumbnail || product.productMedia?.length > 0 ? (
                         <Image
-                          src={product.productMedia[0].file}
+                          src={product.thumbnail?.file || product.productMedia[0].file}
                           alt={product.name}
                           width={48}
                           height={48}

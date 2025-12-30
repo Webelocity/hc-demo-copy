@@ -5,10 +5,12 @@ export default async function SelectedVariantAndPrice({
     productId,
     variantId,
     quantity,
+    shippingOnly = false,
 }: {
     productId: string;       // product.id (public)
     variantId: string;
     quantity: number;
+    shippingOnly?: boolean;
 }) {
     const pricing = await fetchSingleProductByIdPrices(productId, { quantity });
     const row = pricing.productVariants.find((pv) => pv._id === variantId);
@@ -29,6 +31,11 @@ export default async function SelectedVariantAndPrice({
                     ${price !== undefined ? price.toFixed(2) : "N/A"}
                     <span className="inline text-[0.75rem] text-[var(--Colors-Neutral-500)] font-normal">/unit</span>
                 </div>
+                {shippingOnly && (
+                    <span className="px-[0.55rem] py-[0.2rem] rounded-full text-[0.75rem] font-semibold bg-[var(--Colors-Primary-50)] text-[var(--Colors-Primary-700)] border border-[var(--Colors-Primary-100)]">
+                        Online order only
+                    </span>
+                )}
 
                 {isDiscounted && retailPrice !== undefined && (
                     <div className="text-[1rem] text-[var(--Colors-Neutral-500)] ">
