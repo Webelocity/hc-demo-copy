@@ -103,14 +103,24 @@ const Filters: React.FC<FiltersProps> = ({
 
 
     useEffect(() => {
-        if (DynamicFilters?.priceRange) {
-            const { minPrice, maxPrice } = DynamicFilters.priceRange;
-            setTemporaryPriceRange([
-                minPrice,
-                minPrice + Math.floor((maxPrice - minPrice) / 2),
-            ]);
-        }
-    }, [DynamicFilters]);
+        if (!DynamicFilters?.priceRange) return;
+
+        const { minPrice: floorMin, maxPrice: floorMax } = DynamicFilters.priceRange;
+        const minParam = searchParams.get('minPrice');
+        const maxParam = searchParams.get('maxPrice');
+
+        const parsedMin = minParam !== null ? Number(minParam) : floorMin;
+        const parsedMax = maxParam !== null ? Number(maxParam) : floorMax;
+
+        const safeMin = Number.isFinite(parsedMin) ? Math.max(floorMin, parsedMin) : floorMin;
+        const safeMax = Number.isFinite(parsedMax) ? Math.min(floorMax, parsedMax) : floorMax;
+
+        const nextRange: [number, number] = safeMin <= safeMax
+            ? [safeMin, safeMax]
+            : [floorMin, floorMax];
+
+        setTemporaryPriceRange(nextRange);
+    }, [DynamicFilters, searchParams]);
 
     const handlePriceChangeCommitted = (
         event: Event | React.SyntheticEvent<Element, Event>,
