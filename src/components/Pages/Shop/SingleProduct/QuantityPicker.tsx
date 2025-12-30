@@ -6,7 +6,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { Input } from '@mui/material';
 import Button from '@/components/shared/Button';
 import { LuShoppingCart } from 'react-icons/lu';
-import { FiPlusCircle, FiMinusCircle } from "react-icons/fi";
+import { FiPlusCircle, FiMinusCircle, FiMapPin, FiInfo } from "react-icons/fi";
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { addToCartAtom } from '@/atoms/cartAtom';
 import { selectedStoreAtom } from '@/atoms/storeAtom';
@@ -19,6 +19,7 @@ import { wishlistAtom, toggleWishlistAtom } from '@/atoms/wishlistAtom';
 import { FaHeart } from "react-icons/fa";
 import { LuHeart } from "react-icons/lu";
 import { toast } from 'react-toastify';
+import { STORES } from '@/util/shedule';
 
 const DO_IT_BEST_ADDRESS_ID = process.env.NEXT_PUBLIC_DO_IT_BEST_ID ?? '';
 
@@ -76,6 +77,43 @@ export default function QuantityPicker({
         }
         return `${activeMethodInfo.ceiling} available`;
     })();
+    const shippingAddressId = DO_IT_BEST_ADDRESS_ID;
+    const inStockInventories = useMemo(() => {
+        if (!selectedVariant?.trackQuantity) return [];
+        const inventories = Array.isArray(selectedVariant?.allInventories)
+            ? selectedVariant.allInventories
+            : Array.isArray(selectedVariant?.inventory)
+                ? selectedVariant.inventory ?? []
+                : [];
+        return inventories.filter((inventory) => {
+            if (!inventory) return false;
+            const status = (inventory.status ?? '').toUpperCase();
+            return status === 'IN_STOCK' && (inventory.quantity ?? 0) > 0;
+        });
+    }, [selectedVariant?._id, selectedVariant?.trackQuantity]);
+
+    const otherStoreStocks = useMemo(
+        () =>
+            inStockInventories
+                .filter(
+                    (inventory) =>
+                        inventory.addressId &&
+                        inventory.addressId !== selectedStoreId &&
+                        inventory.addressId !== shippingAddressId
+                )
+                .map((inventory) => ({
+                    addressId: inventory.addressId,
+                    quantity: inventory.quantity ?? 0,
+                    label: (STORES as Record<string, { name?: string }>)[inventory.addressId]?.name ?? 'Another location',
+                })),
+        [inStockInventories, selectedStoreId, shippingAddressId]
+    );
+
+    const showOtherLocationHint =
+        Boolean(selectedVariant?.trackQuantity) &&
+        activeFulfillmentMethod === 'pickup' &&
+        !activeMethodInfo?.available &&
+        otherStoreStocks.length > 0;
     const debouncedQty = useDebounce(localQty, 2000);
 
     useEffect(() => {
@@ -174,6 +212,31 @@ export default function QuantityPicker({
                 <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
                     Fulfillment inventory for {formatFulfillmentMethodLabel(activeFulfillmentMethod)}: {fulfillmentInventoryLabel}
                 </p>
+                {showOtherLocationHint && (
+                    <div className="rounded-[0.75rem] border border-[var(--Colors-Primary-100)] bg-[var(--Colors-Primary-50)] px-[0.85rem] py-[0.75rem] flex flex-col gap-[0.4rem]">
+                        <div className="flex items-center gap-[0.5rem] text-[0.9rem] font-semibold text-[var(--Colors-Primary-700)]">
+                            <FiInfo className="text-[1rem]" />
+                            <span>Available at other locations</span>
+                        </div>
+                        <div className="flex flex-col gap-[0.3rem]">
+                            {otherStoreStocks.map((stock) => (
+                                <div
+                                    key={`${stock.addressId}-${stock.quantity}`}
+                                    className="flex items-center justify-between rounded-[0.65rem] bg-white px-[0.7rem] py-[0.45rem] shadow-[0_1px_0_rgba(0,0,0,0.03)]"
+                                >
+                                    <div className="flex items-center gap-[0.5rem] text-[0.85rem] text-[var(--Colors-Neutral-800)]">
+                                        <FiMapPin className="text-[var(--Colors-Primary-500)]" />
+                                        <span className="font-medium">{stock.label}</span>
+                                    </div>
+                                    <span className="text-[0.85rem] font-semibold text-[var(--Colors-Primary-700)]">{stock.quantity} available</span>
+                                </div>
+                            ))}
+                        </div>
+                        <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
+                            Switch your pickup location to reserve items from a different store.
+                        </p>
+                    </div>
+                )}
             </div>
             <div className=' flex gap-[0.5rem] items-center'>
                 <div className="flex-[1.1] p-[0.25rem] border border-[var(--Colors-Neutral-100)] rounded-[1rem] flex justify-center items-center gap-[0.5rem]">
