@@ -279,7 +279,7 @@ export default function OrderSummary({
                             {isLoading ? (
                                 <span className="inline-block h-[1rem] w-[6rem] rounded-[var(--Radius-sm)] bg-[var(--Colors-Neutral-100)] animate-pulse" />
                             ) : selectedShipping ? (
-                                <span className="text-sm font-medium">${Number(selectedShipping.shippingCostBase ?? 0).toFixed(2)}</span>
+                                <span className="text-sm font-medium">${Number(selectedShipping.shipmentCostBase ?? 0).toFixed(2)}</span>
                             ) : (
                                 <span className="text-sm font-medium text-[var(--Colors-Neutral-600)]">Choose Shipping Option</span>
                             )}
