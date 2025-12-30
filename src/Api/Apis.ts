@@ -244,7 +244,7 @@ export type ShippingOption = {
     objectId: string;
     shipmentGateway: string;
     version: string;
-    shippingCostBase: number;
+    shipmentCostBase: number;
     shippingTax: number;
 };
 
