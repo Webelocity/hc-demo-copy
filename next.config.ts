@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'toolswift.s3.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
       // Add your production Strapi domain here:
       // {
       //   protocol: 'https',

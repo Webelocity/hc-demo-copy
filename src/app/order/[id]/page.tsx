@@ -391,24 +391,25 @@ export default function OrderPage() {
                                         <span className="text-sm font-medium">-{money(fetchedOrder?.discountedAmount)}</span>
                                     </div>
                                 ) : null}
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
-                                    <span className="text-sm font-medium">
-                                        {money(fetchedOrder?.tax)}
-                                    </span>
-                                </div>
+
                                 {(fetchedOrder?.deliveryCost ?? 0) > 0 ? (
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-[var(--Colors-Neutral-700)]">Delivery</span>
-                                        <span className="text-sm font-medium">{money(fetchedOrder?.deliveryCost)}</span>
+                                        <span className="text-sm font-medium">{money(fetchedOrder?.deliveryCostBase)}</span>
                                     </div>
                                 ) : null}
                                 {(fetchedOrder?.shippingCost ?? 0) > 0 ? (
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm text-[var(--Colors-Neutral-700)]">Shipping</span>
-                                        <span className="text-sm font-medium">{money(fetchedOrder?.shippingCost)}</span>
+                                        <span className="text-sm font-medium">{money(fetchedOrder?.shippingCostBase)}</span>
                                     </div>
                                 ) : null}
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm text-[var(--Colors-Neutral-700)]">Taxes</span>
+                                    <span className="text-sm font-medium">
+                                        {money(fetchedOrder?.tax + fetchedOrder?.deliveryTax + fetchedOrder?.shippingTax)}
+                                    </span>
+                                </div>
                                 <div className="flex items-center justify-between pt-2 border-t border-[var(--Colors-Neutral-100)]">
                                     <span className="text-base font-bold">Total</span>
                                     <span className="text-base font-bold">
