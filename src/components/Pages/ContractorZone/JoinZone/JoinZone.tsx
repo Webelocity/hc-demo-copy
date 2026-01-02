@@ -16,6 +16,10 @@ export default function JoinZone() {
       title: "Special & Custom Orders",
       icon: "/assets/image/ContractorZone/custom-orders-icon.svg",
     },
+    {
+      title: "Track Sales Better",
+      icon: "/assets/image/HomePage/Illustrations.png",
+    },
   ];
 
   return (

@@ -6,13 +6,13 @@ export default function OurCoreValues() {
       icon: "/assets/image/AboutUs/positive.svg",
       title: "Make Your Legacy Positive",
       description:
-        "We strive to leave a lasting impact on our communities and our team. Every action reflects the sustainability and strength of Home Central Stores, benefiting the contractors, vendors, and neighborhoods we serve in Owego, Vestal, and Candor, NY.",
+        "We strive to leave a lasting impact on our communities and our team. Every action reflects the sustainability and strength of Home Central Stores, benefiting the contractors, homeowners, and neighborhoods we serve in Owego, Vestal, and Candor, NY.",
     },
     {
       icon: "/assets/image/AboutUs/book.svg",
       title: "Learn & Adapt",
       description:
-        "The world of hardware and building supplies is always evolving. Embrace innovation, seek knowledge, and share insights to better serve homeowners, contractors and vendors while improving the team around you",
+        "The world of hardware and building supplies is always evolving. Embrace innovation, seek knowledge, and share insights to better serve homeowners and contractors  while improving the team around you",
     },
     {
       icon: "/assets/image/AboutUs/ears.svg",
