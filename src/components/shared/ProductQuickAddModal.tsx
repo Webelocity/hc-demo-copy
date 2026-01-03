@@ -152,7 +152,7 @@ export default function ProductQuickAddModal({ product, open, onClose }: Product
                 `}
             >
                 <span className="text-sm font-semibold capitalize text-[var(--Colors-Neutral-800)]">{method}</span>
-                <span className="text-xs text-[var(--Colors-Neutral-600)]">{limitLabel}</span>
+                <span className="text-xs text-[var(--Colors-Neutral-700)]">{limitLabel}</span>
             </button>
         );
     };
@@ -227,7 +227,7 @@ export default function ProductQuickAddModal({ product, open, onClose }: Product
                                             {selectedVariant?.name}
                                         </p>
                                         {selectedVariant?.trackQuantity && (
-                                            <p className="text-xs font-medium text-[var(--Colors-Neutral-600)]">
+                                            <p className="text-xs font-medium text-[var(--Colors-Neutral-700)]">
                                                 {selectedVariant.inventoryCount > 0 ? `${selectedVariant.inventoryCount} in stock` : 'Out of stock'}
                                             </p>
                                         )}
@@ -254,7 +254,7 @@ export default function ProductQuickAddModal({ product, open, onClose }: Product
                                                 </p>
                                             )}
                                     </div>
-                                    <p className="text-xs text-[var(--Colors-Neutral-600)]">
+                                    <p className="text-xs text-[var(--Colors-Neutral-700)]">
                                         {fulfillmentInventoryLabel}
                                     </p>
                                 </div>

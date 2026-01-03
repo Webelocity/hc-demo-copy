@@ -209,7 +209,7 @@ export default function QuantityPicker({
                         );
                     })}
                 </div>
-                <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
+                <p className="text-[0.75rem] text-[var(--Colors-Neutral-700)]">
                     Fulfillment inventory for {formatFulfillmentMethodLabel(activeFulfillmentMethod)}: {fulfillmentInventoryLabel}
                 </p>
                 {showOtherLocationHint && (
@@ -232,7 +232,7 @@ export default function QuantityPicker({
                                 </div>
                             ))}
                         </div>
-                        <p className="text-[0.75rem] text-[var(--Colors-Neutral-600)]">
+                        <p className="text-[0.75rem] text-[var(--Colors-Neutral-700)]">
                             Switch your pickup location to reserve items from a different store.
                         </p>
                     </div>
