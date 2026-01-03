@@ -73,16 +73,15 @@ const Filters: React.FC<FiltersProps> = ({
     const filtersParams = useMemo(() => {
         const params: Record<string, string | number | boolean> = { isActive: true };
 
-        const categoryActive = searchParams.get('category_active');
-        const subcats = searchParams.get('subcats');
+        const categoryIds = searchParams.get('cat');
+        const subCategoryIds = searchParams.get('sub');
 
-        // Align with filters API: send categoryIds/subCategoryIds (comma-separated) instead of UI param keys.
-        if (categoryActive) params.categoryIds = categoryActive;
-        if (subcats) params.subCategoryIds = subcats;
+        if (categoryIds) params.categoryIds = categoryIds;
+        if (subCategoryIds) params.subCategoryIds = subCategoryIds;
 
         searchParams.forEach((value, key) => {
             // Skip pagination/sort + the UI-only category selectors; include everything else (brands, attrs, promo, isFeatured, etc.)
-            if (['page', 'limit', 'sort', 'category_active', 'subcats'].includes(key)) return;
+            if (['page', 'limit', 'sort', 'cat', 'sub'].includes(key)) return;
             const numeric = Number(value);
             params[key] = Number.isNaN(numeric) ? value : numeric;
         });
@@ -170,18 +169,6 @@ const Filters: React.FC<FiltersProps> = ({
     };
 
     const handleSubcatChange = (value: Subcategory | ChildSubCategory | undefined) => {
-        const newParams = new URLSearchParams(searchParams);
-
-        if (value) {
-            newParams.set('subcats', value._id);
-            newParams.delete('category_active');
-        } else {
-            newParams.delete('subcats');
-        }
-
-        router.push(`?${newParams.toString()}`, {
-            scroll: false,
-        });
         setSelectedSubCat(value);
     };
 
