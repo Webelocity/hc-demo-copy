@@ -108,12 +108,12 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   };
 
   const handleSubcategoryClick = (subcategoryId: string) => {
-    router.push(`/shop/catalogue?subcats=${subcategoryId}&page=1`);
+    router.push(`/shop/catalogue?sub=${subcategoryId}&page=1`);
     onClose?.();
   };
 
   const handleShopAllClick = (categoryId: string) => {
-    router.push(`/shop/catalogue?category_active=${categoryId}&page=1`);
+    router.push(`/shop/catalogue?cat=${categoryId}&page=1`);
     onClose?.();
   };
 
