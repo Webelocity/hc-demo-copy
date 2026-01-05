@@ -88,7 +88,7 @@ export default function Banners() {
                                     {banner1?.Description || "Compact heaters that deliver serious comfort, right where you need it."}
                                 </p>
                                 <div className="mt-[2.5rem] ">
-                                    <Button href={banner1?.CTA || "/shop/catalogue?cat=69143e9d6ac9361831e46266&page=1"} variant="primary">
+                                    <Button href={banner1?.CTA || "/shop/catalogue?category_active=69143e9d6ac9361831e46266&page=1"} variant="primary">
                                         {"Shop Now"}
                                     </Button>
                                 </div>
@@ -104,7 +104,7 @@ export default function Banners() {
                                     {banner2?.Description || "Value-packed deals for the home, shop, and jobsite."}
                                 </p>
                                 <div className="mt-[2.5rem] ">
-                                    <Button href={banner2?.CTA || "/shop/catalogue?cat=69143ed86ac9361831e465f6&page=1"} variant="primary">
+                                    <Button href={banner2?.CTA || "/shop/catalogue?category_active=69143ed86ac9361831e465f6&page=1"} variant="primary">
                                         {"Shop Now"}
                                     </Button>
                                 </div>
@@ -126,7 +126,7 @@ export default function Banners() {
                                 {banner3?.Description || "Great prices on lights, ornaments, inflatables, and seasonal décor."}
                             </p>
                             <div className="flex justify-center mt-[2.5rem]">
-                                <Button href={banner3?.CTA || "/shop/catalogue?cat=69143f1d6ac9361831e4752d&page=1"} variant="primary">
+                                <Button href={banner3?.CTA || "/shop/catalogue?category_active=69143f1d6ac9361831e4752d&page=1"} variant="primary">
                                     {"Shop  Now"}
                                 </Button>
                             </div>

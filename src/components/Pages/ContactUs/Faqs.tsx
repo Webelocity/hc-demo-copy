@@ -30,7 +30,7 @@ export default function Faqs() {
                 <Accordion expanded={true}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>Can I request a quote online for materials or tools?</AccordionSummary>
                     <AccordionDetails className="text-[1rem] font-medium text-[#1E1E1E]">
-                        Yes! You can easily request a quote online for <Link className="underline text-[var(--primary-500-main)]" href="/shop/catalogue?cat=69143ed86ac9361831e465f6&page=1">building materials</Link>, tools, or <Link className="underline text-[var(--primary-500-main)]" href="/special-ordering">Special Ordering</Link> through our website. Simply fill out the <QuoteRequestPopup triggerVariant="link" triggerLabel="quote form" triggerClassName="underline text-[var(--primary-500-main)] !text-[var(--primary-500-main)]" dashboardUrl="https://customer.homecentralstores.com" />, and our team will provide a fast, personalized response to support your project needs.
+                        Yes! You can easily request a quote online for <Link className="underline text-[var(--primary-500-main)]" href="/shop/catalogue?category_active=69143ed86ac9361831e465f6&page=1">building materials</Link>, tools, or <Link className="underline text-[var(--primary-500-main)]" href="/special-ordering">Special Ordering</Link> through our website. Simply fill out the <QuoteRequestPopup triggerVariant="link" triggerLabel="quote form" triggerClassName="underline text-[var(--primary-500-main)] !text-[var(--primary-500-main)]" dashboardUrl="https://customer.homecentralstores.com" />, and our team will provide a fast, personalized response to support your project needs.
                     </AccordionDetails>
                 </Accordion>
             </div>
