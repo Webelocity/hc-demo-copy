@@ -59,7 +59,7 @@ const services: Service[] = [
       "Home Central offers basic material cutting services for your projects. We cut boards to length and sheet goods into halves, thirds, or quarters. Small cuts are quick, and larger orders are available—call ahead for bulk requests.",
     ctaName: "Contact Us",
     ctaLink: "/contact",
-    imagePath: "/assets/image/Services/serviceList/images/MaterialCutting.svg",
+    imagePath: "/assets/image/Services/serviceList/images/MaterialCutting.png",
     icon: "/assets/image/Services/serviceList/icons/Scissors.svg", // Import and pass the JSX element as needed
   },
   {
