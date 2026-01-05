@@ -1,11 +1,9 @@
 'use client';
-import { fetchAllShopFilters } from "@/Api/Apis";
 import Filters from "@/components/Pages/Shop/Catalogue/Filters/Filters";
 import { useMediaQuery } from "@mui/material";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Suspense, useMemo } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { useProducts } from "@/hooks/usefetchProducts";
-import { useSubcategory } from "@/hooks/usefetchSubcategory";
 import ProductPages from "@/components/Pages/Shop/Catalogue/ProductPages/ProductPages";
 import SortDropdown from "@/components/Pages/Shop/Catalogue/SortDropdown/SortDropdown";
 import AvailabilityDropdown from "@/components/Pages/Shop/Catalogue/AvailabilityDropdown/AvailabilityDropdown";
@@ -19,25 +17,50 @@ function CatalogueContent() {
     const router = useRouter();
     const pathname = usePathname();
     const categories = useAtomValue(categoriesQueryAtom);
-    const categoryActive = searchParams.get('category_active') ?? undefined;
-    const isSubcatActive = searchParams.get('subcats') ?? undefined;
+    const [lastSelectedSubCat, setLastSelectedSubCat] = useState<Subcategory | ChildSubCategory | undefined>(undefined);
+
+    const catParam = searchParams.get('cat') ?? '';
+    const subParam = searchParams.get('sub') ?? '';
+    const catIds = useMemo(() => catParam.split(',').filter(Boolean), [catParam]);
+    const subIds = useMemo(() => subParam.split(',').filter(Boolean), [subParam]);
+
+    const findNodeById = (id: string): Category | Subcategory | ChildSubCategory | undefined => {
+        if (!categories.data) return undefined;
+        for (const cat of categories.data as Category[]) {
+            if (cat._id === id) return cat;
+            if (cat.categorySubCategories) {
+                for (const sub of cat.categorySubCategories) {
+                    if (sub._id === id) return sub;
+                    if (sub.childSubCategories) {
+                        for (const child of sub.childSubCategories) {
+                            if (child._id === id) return child;
+                        }
+                    }
+                }
+            }
+        }
+        return undefined;
+    };
+
+    const selectedCats = useMemo(
+        () => catIds.map((id) => findNodeById(id)).filter(Boolean) as (Category | Subcategory | ChildSubCategory)[],
+        [catIds, categories.data]
+    );
+    const selectedSubCats = useMemo(
+        () => subIds.map((id) => findNodeById(id)).filter(Boolean) as (Subcategory | ChildSubCategory)[],
+        [subIds, categories.data]
+    );
 
     // react-query hooks
     const {
         data: ProductsAPI,
         isLoading: isProductsLoading,
-        isFetching,
     } = useProducts();
-
-    const {
-        data: selectedSubCat,
-        isLoading: isSubcatLoading,
-    } = useSubcategory(isSubcatActive);
     // derive filters for Sort
     const filters = useMemo(() => {
         const out: Record<string, any> = {};
         searchParams.forEach((v, k) => {
-            if (!['page', 'limit', 'sort', 'category_active', 'subcats'].includes(k)) {
+            if (!['page', 'limit', 'sort', 'cat', 'sub'].includes(k)) {
                 out[k] = isNaN(+v) ? v : +v;
             }
         });
@@ -48,26 +71,6 @@ function CatalogueContent() {
     const pushSearch = (params: URLSearchParams) => {
         const q = params.toString();
         router.push(q ? `${pathname}?${q}` : pathname, { scroll: false });
-    };
-
-    const removeFilter = (name: string) => {
-        const p = new URLSearchParams(searchParams.toString());
-        switch (name) {
-            case 'category_active':
-            case 'subcats':
-                p.delete(name);
-                break;
-            case 'minPrice':
-                p.delete('minPrice');
-                p.delete('maxPrice');
-                break;
-            case 'sort':
-                p.delete('sort');
-                break;
-            default:
-                p.delete(name);
-        }
-        pushSearch(p);
     };
 
     const handlePage = (_: unknown, value: number) => {
@@ -85,11 +88,8 @@ function CatalogueContent() {
     };
 
     // same prop-name as before:
-    const handleSetSubcat = (sc: typeof selectedSubCat | undefined) => {
-        const p = new URLSearchParams(searchParams.toString());
-        if (sc) p.set('subcats', sc._id);
-        else p.delete('subcats');
-        pushSearch(p);
+    const handleSetSubcat = (sc: Subcategory | ChildSubCategory | undefined) => {
+        setLastSelectedSubCat(sc ?? undefined);
     };
 
     const renderPaginationInfo = () => {
@@ -106,11 +106,13 @@ function CatalogueContent() {
     };
 
     const renderTitle = () => {
-        if (selectedSubCat) {
-            return selectedSubCat.name;
+        if (selectedSubCats.length > 0) {
+            const [first, ...rest] = selectedSubCats;
+            return rest.length ? `${first.name} (+${rest.length} more)` : first.name;
         }
-        if (categoryActive) {
-            return categories.data?.find((c: Category) => c._id === categoryActive)?.name;
+        if (selectedCats.length > 0) {
+            const [first, ...rest] = selectedCats;
+            return rest.length ? `${first.name} (+${rest.length} more)` : first.name;
         }
         return 'All products';
     };
@@ -120,7 +122,7 @@ function CatalogueContent() {
             <div className=" maxWidth py-[2.5rem] flex gap-[1.5rem]">
                 {!isMobile && <Filters
                     setFilters={setFilters}
-                    selectedSubCat={selectedSubCat}
+                    selectedSubCat={lastSelectedSubCat}
                     setSelectedSubCat={handleSetSubcat}
                 />}
 
@@ -135,7 +137,7 @@ function CatalogueContent() {
                         <div className="flex items-center gap-[1rem]">
                             {isMobile ? <Filters
                                 setFilters={setFilters}
-                                selectedSubCat={selectedSubCat}
+                                selectedSubCat={lastSelectedSubCat}
                                 setSelectedSubCat={handleSetSubcat}
                             /> : <>
                                 <SortDropdown />
@@ -146,7 +148,7 @@ function CatalogueContent() {
                     </div>
 
                     {/* Active Filters */}
-                    <ActiveFilters selectedSubCat={selectedSubCat} />
+                    <ActiveFilters selectedSubCat={lastSelectedSubCat} />
 
                     <ProductPages ProductsAPI={ProductsAPI} isLoading={isProductsLoading} handlePage={handlePage} />
 

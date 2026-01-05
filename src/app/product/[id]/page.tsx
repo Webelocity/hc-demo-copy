@@ -1,7 +1,7 @@
 // app/products/[id]/page.tsx
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { FiAlertTriangle, FiRefreshCw, FiEdit3 } from 'react-icons/fi';
+import { FiAlertTriangle, FiRefreshCw, FiEdit3, FiChevronRight } from 'react-icons/fi';
 import { fetchSingleProductById } from '@/Api/Apis';
 import SelectedVariantAndPrice from '@/components/Pages/Shop/SingleProduct/SelectedVariantAndPrice';
 import VariantAttributes from '@/components/Pages/Shop/SingleProduct/VariantSelector';
@@ -160,9 +160,51 @@ export default async function ProductPage({
                 </div>
             );
         }
+
+        const defaultPathSegments = Array.isArray(product?.defaultPath) ? product.defaultPath.filter(Boolean) : [];
+        const primaryCategoryId = defaultPathSegments[0]?._id;
+        const breadcrumbItems = [
+            { label: 'Home', href: '/' },
+            { label: 'Shop', href: '/shop/catalogue' },
+            ...defaultPathSegments
+                .map((segment, idx) => {
+                    if (!segment?._id) return null;
+                    const label = segment?.name ?? 'Category';
+                    const href = idx === 0
+                        ? `/shop/catalogue?category_active=${segment._id}`
+                        : `/shop/catalogue?subcats=${segment._id}`;
+                    return { label, href };
+                })
+                .filter((item): item is { label: string; href: string } => Boolean(item)),
+        ];
         return (
             <div className='baseContainer'>
                 <div className='maxWidth py-[2.5rem]  flex flex-col  gap-[1.5rem]'>
+                    <div className="w-full overflow-x-auto">
+                        <nav
+                            aria-label="Breadcrumb"
+                            className="flex items-center gap-[0.5rem] rounded-[0.75rem] border border-[var(--Colors-Neutral-100)] bg-white px-[1rem] py-[0.9rem] shadow-[0_6px_20px_rgba(0,0,0,0.04)]"
+                        >
+                            {breadcrumbItems.map((crumb, idx) => (
+                                <div key={`${crumb.href}-${idx}`} className="flex items-center gap-[0.5rem] text-[0.9rem] text-[var(--Colors-Primary-700)] whitespace-nowrap">
+                                    <Link
+                                        href={crumb.href}
+                                        className="flex items-center gap-[0.35rem] transition-colors hover:text-[var(--Colors-Primary-600)]"
+                                    >
+                                        <span
+                                            className="truncate max-w-[8rem] sm:max-w-[11rem] md:max-w-[14rem]"
+                                            title={crumb.label}
+                                        >
+                                            {crumb.label}
+                                        </span>
+                                    </Link>
+                                    {idx < breadcrumbItems.length - 1 && (
+                                        <FiChevronRight className="text-[var(--Colors-Neutral-400)]" aria-hidden />
+                                    )}
+                                </div>
+                            ))}
+                        </nav>
+                    </div>
                     {/* Product Gallery */}
                     <div className='w-full flex flex-col lg:flex-row gap-[1.5rem]'>
                         <div className='flex-1' >

@@ -25,39 +25,55 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
         refetchOnWindowFocus: false,
     });
 
+    const findNodeById = (id: string): Category | Subcategory | ChildSubCategory | undefined => {
+        if (!categoriesData) return undefined;
+        for (const cat of categoriesData as Category[]) {
+            if (cat._id === id) return cat;
+            if (cat.categorySubCategories) {
+                for (const sub of cat.categorySubCategories) {
+                    if (sub._id === id) return sub;
+                    if (sub.childSubCategories) {
+                        for (const child of sub.childSubCategories) {
+                            if (child._id === id) return child;
+                        }
+                    }
+                }
+            }
+        }
+        return undefined;
+    };
+
     // Get active filters from URL
     const activeFilters = useMemo(() => {
         const filters: Array<{ key: string; value: string; displayValue: string }> = [];
 
+        const catParam = searchParams.get('cat');
+        if (catParam) {
+            catParam.split(',').filter(Boolean).forEach((id) => {
+                const node = findNodeById(id);
+                filters.push({
+                    key: 'cat',
+                    value: id,
+                    displayValue: node?.name ?? id,
+                });
+            });
+        }
+
+        const subParam = searchParams.get('sub');
+        if (subParam) {
+            subParam.split(',').filter(Boolean).forEach((id) => {
+                const node = findNodeById(id);
+                filters.push({
+                    key: 'sub',
+                    value: id,
+                    displayValue: node?.name ?? id,
+                });
+            });
+        }
+
         searchParams.forEach((value, key) => {
             // Skip pagination, sort, and internal params
-            if (['page', 'limit', 'sort', 'availability', 'sort'].includes(key)) {
-                return;
-            }
-
-            // Handle category_active
-            if (key === 'category_active' && categoriesData) {
-                const category = (categoriesData as Category[])?.find(
-                    (cat: Category) => cat._id === value
-                );
-                if (category) {
-                    filters.push({
-                        key,
-                        value,
-                        displayValue: category.name,
-                    });
-                }
-                return;
-            }
-
-            // Handle subcategory
-            if (key === 'subcats' && selectedSubCat) {
-
-                filters.push({
-                    key,
-                    value,
-                    displayValue: selectedSubCat.name,
-                });
+            if (['page', 'limit', 'sort', 'availability', 'cat', 'sub'].includes(key)) {
                 return;
             }
 
@@ -142,13 +158,23 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
             newParams.delete('minPrice');
             newParams.delete('maxPrice');
         }
-        // Handle category_active removal
-        else if (filterKey === 'category_active') {
+        // Handle category removal
+        else if (filterKey === 'cat') {
+            const current = newParams.get('cat')?.split(',').filter(Boolean) ?? [];
+            const updated = current.filter((v) => v !== filterValue);
+            if (updated.length) newParams.set('cat', updated.join(','));
+            else newParams.delete('cat');
             newParams.delete('category_active');
+            newParams.delete('categoryIds');
         }
-        // Handle subcats removal
-        else if (filterKey === 'subcats') {
+        // Handle subcategory removal
+        else if (filterKey === 'sub') {
+            const current = newParams.get('sub')?.split(',').filter(Boolean) ?? [];
+            const updated = current.filter((v) => v !== filterValue);
+            if (updated.length) newParams.set('sub', updated.join(','));
+            else newParams.delete('sub');
             newParams.delete('subcats');
+            newParams.delete('subCategoryIds');
         }
         // Handle multi-value filters (brandFilter and attributes)
         else {

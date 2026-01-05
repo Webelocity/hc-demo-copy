@@ -1,6 +1,6 @@
 // src/components/Shared/CategoryItem.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isCategory, isChildSubCategory, isSubcategory } from '@/util/guards';
@@ -14,6 +14,7 @@ interface CategoryItemProps {
     selected: Subcategory | ChildSubCategory | undefined
   ) => void;
   parentIsSelected?: boolean;
+  parentId?: string | null;
   filterQuery?: string;
 }
 
@@ -23,12 +24,50 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   selectedSubCat,
   setSelectedSubCat,
   parentIsSelected = false,
+  parentId = null,
   filterQuery = '',
 }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const currentActiveId = searchParams.get('category_active');
-  const isActive = currentActiveId === category._id;
+
+  const selectedCategoryIds = useMemo(
+    () =>
+      new Set(
+        (searchParams.get('cat') ?? '')
+          .split(',')
+          .filter(Boolean)
+      ),
+    [searchParams]
+  );
+
+  const selectedSubCategoryIds = useMemo(
+    () =>
+      new Set(
+        (searchParams.get('sub') ?? '')
+          .split(',')
+          .filter(Boolean)
+      ),
+    [searchParams]
+  );
+
+  const isNodeSelected = (node: Category | Subcategory | ChildSubCategory) =>
+    isCategory(node) ? selectedCategoryIds.has(node._id) : selectedSubCategoryIds.has(node._id);
+
+  const hasSelectedDescendant = (
+    cat: Category | Subcategory | ChildSubCategory
+  ): boolean => {
+    if (isCategory(cat) && cat.categorySubCategories) {
+      return cat.categorySubCategories.some(
+        (sub) => isNodeSelected(sub) || hasSelectedDescendant(sub)
+      );
+    }
+    if ((isSubcategory(cat) || isChildSubCategory(cat)) && cat.childSubCategories) {
+      return cat.childSubCategories.some(
+        (child) => isNodeSelected(child) || hasSelectedDescendant(child)
+      );
+    }
+    return false;
+  };
 
   const handleItemClick = (e?: React.MouseEvent | React.KeyboardEvent) => {
     if (e) {
@@ -36,30 +75,56 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     }
     const newSearchParams = new URLSearchParams(searchParams);
 
-    if (level === 0) {
-      if (isActive) {
-        newSearchParams.delete('category_active');
+    const toggleId = (key: 'cat' | 'sub', id: string) => {
+      const current = newSearchParams.get(key)?.split(',').filter(Boolean) ?? [];
+      const exists = current.includes(id);
+      const next = exists ? current.filter((item) => item !== id) : [...current, id];
+
+      if (next.length) {
+        newSearchParams.set(key, next.join(','));
       } else {
-        newSearchParams.set('category_active', category._id);
-        newSearchParams.delete('subcats');
-        setSelectedSubCat(undefined);
+        newSearchParams.delete(key);
       }
+    };
+
+    const removeId = (key: 'cat' | 'sub', id: string) => {
+      const current = newSearchParams.get(key)?.split(',').filter(Boolean) ?? [];
+      const next = current.filter((item) => item !== id);
+      if (next.length) newSearchParams.set(key, next.join(','));
+      else newSearchParams.delete(key);
+    };
+
+    // Remove legacy params proactively
+    ['category_active', 'subcats', 'categoryIds', 'subCategoryIds'].forEach((k) => newSearchParams.delete(k));
+
+    if (isCategory(category)) {
+      toggleId('cat', category._id);
     } else {
-      if (selectedSubCat?._id === category._id) {
-        newSearchParams.delete('subcats');
-        setSelectedSubCat(undefined);
-      } else {
-        newSearchParams.set('subcats', category._id);
-        if (isSubcategory(category) || isChildSubCategory(category)) {
-          setSelectedSubCat(category);
-        }
-        newSearchParams.delete('category_active');
+      // If a direct parent is selected, drop it when choosing the child
+      if (parentId) {
+        if (selectedCategoryIds.has(parentId)) removeId('cat', parentId);
+        if (selectedSubCategoryIds.has(parentId)) removeId('sub', parentId);
       }
+      toggleId('sub', category._id);
     }
+
     newSearchParams.set('page', '1');
     router.push(`?${newSearchParams.toString()}`, {
       scroll: false,
     });
+
+    const nextSubcatIds =
+      newSearchParams.get('sub')?.split(',').filter(Boolean) ?? [];
+
+    if (isSubcategory(category) || isChildSubCategory(category)) {
+      if (nextSubcatIds.includes(category._id)) {
+        setSelectedSubCat(category);
+      } else if (nextSubcatIds.length === 0) {
+        setSelectedSubCat(undefined);
+      }
+    } else if (nextSubcatIds.length === 0) {
+      setSelectedSubCat(undefined);
+    }
   };
 
   const hasChildren = isCategory(category)
@@ -76,40 +141,10 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     setIsExpanded((prev) => !prev);
   };
 
-  // Determine if the current category is selected as a subcategory
-  const isSubcatActive = searchParams.get('subcats') === category._id;
-
   useEffect(() => {
-    const checkIfDescendantActive = (
-      cat: Category | Subcategory | ChildSubCategory
-    ): boolean => {
-      if (searchParams.get('subcats') === cat._id) {
-        return true;
-      }
-
-      if (isCategory(cat)) {
-        return cat.categorySubCategories.some((sub) =>
-          checkIfDescendantActive(sub)
-        );
-      } else if (isSubcategory(cat)) {
-        return cat.childSubCategories.some((child) =>
-          checkIfDescendantActive(child)
-        );
-      } else if (isChildSubCategory(cat)) {
-        return cat.childSubCategories.some((child) =>
-          checkIfDescendantActive(child)
-        );
-      }
-      return false;
-    };
-
-    const shouldExpand = checkIfDescendantActive(category);
-    if (shouldExpand) {
-      setIsExpanded(true);
-    } else {
-      setIsExpanded(false);
-    }
-  }, [category, selectedSubCat, searchParams]);
+    const shouldExpand = hasSelectedDescendant(category) || isNodeSelected(category);
+    setIsExpanded(shouldExpand);
+  }, [category, selectedCategoryIds, selectedSubCategoryIds]);
 
   // Helper function to check if category or any descendant matches the query
   const categoryMatchesQuery = (
@@ -140,7 +175,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   const renderChildCategories = () => {
     // If this item is selected, pass down that info to children
     const childrenParentSelected =
-      isActive || isSubcatActive || parentIsSelected;
+      isNodeSelected(category) || parentIsSelected;
 
     if (isCategory(category)) {
       // Filter subcategories based on search query
@@ -158,6 +193,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           selectedSubCat={selectedSubCat}
           setSelectedSubCat={setSelectedSubCat}
           parentIsSelected={childrenParentSelected}
+          parentId={category._id}
           filterQuery={filterQuery}
         />
       ));
@@ -177,6 +213,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           selectedSubCat={selectedSubCat}
           setSelectedSubCat={setSelectedSubCat}
           parentIsSelected={childrenParentSelected}
+          parentId={category._id}
           filterQuery={filterQuery}
         />
       ));
@@ -185,7 +222,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   };
 
   // Item is checked if it's directly selected OR if its parent is selected
-  const isChecked = isActive || isSubcatActive || parentIsSelected;
+  const isChecked =
+    isNodeSelected(category) || parentIsSelected || hasSelectedDescendant(category);
 
   // Calculate indentation for nested levels
   const getIndentClass = () => {
