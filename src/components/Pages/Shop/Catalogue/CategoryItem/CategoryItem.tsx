@@ -94,8 +94,6 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
       else newSearchParams.delete(key);
     };
 
-    // Remove legacy params proactively
-    ['category_active', 'subcats', 'categoryIds', 'subCategoryIds'].forEach((k) => newSearchParams.delete(k));
 
     if (isCategory(category)) {
       toggleId('cat', category._id);
@@ -275,8 +273,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               handleItemClick(e);
             }}
             className={`flex-grow text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 cursor-pointer break-words ${isChecked
-                ? 'font-bold text-[color:var(--secondary-500-main)]'
-                : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
+              ? 'font-bold text-[color:var(--secondary-500-main)]'
+              : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
               }`}
             style={{ fontFamily: 'var(--font-figtree)' }}
           >

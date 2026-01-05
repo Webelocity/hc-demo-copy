@@ -164,8 +164,6 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
             const updated = current.filter((v) => v !== filterValue);
             if (updated.length) newParams.set('cat', updated.join(','));
             else newParams.delete('cat');
-            newParams.delete('category_active');
-            newParams.delete('categoryIds');
         }
         // Handle subcategory removal
         else if (filterKey === 'sub') {
@@ -173,8 +171,6 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
             const updated = current.filter((v) => v !== filterValue);
             if (updated.length) newParams.set('sub', updated.join(','));
             else newParams.delete('sub');
-            newParams.delete('subcats');
-            newParams.delete('subCategoryIds');
         }
         // Handle multi-value filters (brandFilter and attributes)
         else {
