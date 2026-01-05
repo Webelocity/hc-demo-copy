@@ -9,7 +9,7 @@ interface ButtonProps extends Omit<MuiButtonProps, 'variant' | 'size'> {
     href?: string;
 }
 
-export default function Button({ variant = 'primary', size = 'medium', children, sx, href, ...props }: ButtonProps) {
+export default function Button({ variant = 'primary', size = 'medium', children, sx, href, onClick, ...props }: ButtonProps) {
     const router = useRouter();
     const getVariantStyles = () => {
         switch (variant) {
@@ -78,9 +78,18 @@ export default function Button({ variant = 'primary', size = 'medium', children,
         }
     };
 
+    const handleClick: MuiButtonProps['onClick'] = (event) => {
+        if (onClick) {
+            onClick(event);
+        }
+        if (href) {
+            router.push(href);
+        }
+    };
+
     return (
         <MuiButton
-            onClick={() => href && router.push(href)}
+            onClick={handleClick}
             {...props}
 
             sx={{

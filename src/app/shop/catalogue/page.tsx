@@ -55,6 +55,8 @@ function CatalogueContent() {
     const {
         data: ProductsAPI,
         isLoading: isProductsLoading,
+        isError: isProductsError,
+        error: productsError,
     } = useProducts();
     // derive filters for Sort
     const filters = useMemo(() => {
@@ -150,7 +152,13 @@ function CatalogueContent() {
                     {/* Active Filters */}
                     <ActiveFilters selectedSubCat={lastSelectedSubCat} />
 
-                    <ProductPages ProductsAPI={ProductsAPI} isLoading={isProductsLoading} handlePage={handlePage} />
+                    <ProductPages
+                        ProductsAPI={ProductsAPI}
+                        isLoading={isProductsLoading}
+                        isError={isProductsError}
+                        errorMessage={productsError?.message}
+                        handlePage={handlePage}
+                    />
 
                     {/* your grid/list */}
                 </div>

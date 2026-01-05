@@ -10,18 +10,51 @@ import Skeleton from '@mui/material/Skeleton';
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
 import ProductCard from '@/components/shared/productCard';
 import CustomNoData from '@/components/shared/CustomNoData';
+import StandardErrorState from '@/components/shared/StandardErrorState';
 
 interface ProductPagesProps {
-    ProductsAPI: ApiResponse<Product> | null | undefined
-    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    isLoading: Boolean;
+    ProductsAPI: ApiResponse<Product> | null | undefined;
+    isLoading: boolean;
+    isError?: boolean;
+    errorMessage?: string;
     handlePage: (event: React.ChangeEvent<unknown>, value: number) => void;
 }
-export default function ProductPages({ ProductsAPI, isLoading, handlePage }: ProductPagesProps) {
+export default function ProductPages({ ProductsAPI, isLoading, isError, errorMessage, handlePage }: ProductPagesProps) {
     const Shopref = useRef<HTMLDivElement>(null);
     const scrollToTop = () => {
         Shopref.current?.scrollIntoView({ behavior: 'smooth' });
     };
+
+    const shouldShowError = Boolean(isError || (!isLoading && !ProductsAPI));
+    if (shouldShowError) {
+        return (
+            <div className="ProductsParent">
+                <div className="ProductsContainer maxW">
+                    <StandardErrorState
+                        dense
+                        title="We couldn't load products"
+                        description={errorMessage ? `(${errorMessage})` : "Please try again in a moment."}
+                        actions={[
+                            {
+                                label: 'Retry',
+                                variant: 'primary',
+                                onClick: () => window?.location?.reload(),
+                            },
+                            {
+                                label: 'Back to home',
+                                variant: 'secondary',
+                                href: '/',
+                            },
+                        ]}
+                        hints={[
+                            'Check your internet connection or try reloading.',
+                            'Adjust your filters or sorting and try again.',
+                        ]}
+                    />
+                </div>
+            </div>
+        );
+    }
 
 
     return (

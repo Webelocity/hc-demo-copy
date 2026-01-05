@@ -22,6 +22,8 @@ import { fetchAllShopFilters } from "@/Api/Apis";
 import { useAtomValue } from "jotai";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { CiFilter } from "react-icons/ci";
+import { FiAlertTriangle } from "react-icons/fi";
+import Button from "@/components/shared/Button";
 
 interface FiltersProps {
     initialCatId?: string;
@@ -254,6 +256,34 @@ const Filters: React.FC<FiltersProps> = ({
         });
 
     };
+
+    const filtersErrorFallback = (
+        <div className="flex flex-col items-center gap-[0.75rem] text-center rounded-[var(--Radius-md)] border border-[color:var(--Neutral-100)] bg-[color:var(--Neutral-10)] p-[1.25rem]">
+            <div className="flex items-center gap-[0.4rem] text-[var(--secondary-600-main)]">
+                <FiAlertTriangle className="text-lg" />
+                <span className="text-[1rem] font-semibold">Filters unavailable</span>
+            </div>
+            <p className="text-[0.9rem] text-[color:var(--Neutral-600)]">
+                Something went wrong while loading filters. Please try again.
+            </p>
+            <div className="flex items-center gap-[0.5rem]">
+                <Button
+                    size="small"
+                    variant="primary"
+                    onClick={() => window?.location?.reload()}
+                >
+                    Retry
+                </Button>
+                <Button
+                    size="small"
+                    variant="secondary"
+                    href="/"
+                >
+                    Home
+                </Button>
+            </div>
+        </div>
+    );
 
     // Render dynamic brands
     const renderDynamicBrands = () => {
@@ -804,12 +834,12 @@ const Filters: React.FC<FiltersProps> = ({
                         }}
                     >
                         <div className="mx-auto w-full max-w-[48rem]">
-                            {!isError ? filtersContent : <span>Failed to load filters</span>}
+                            {!isError ? filtersContent : filtersErrorFallback}
                         </div>
                     </Drawer>
                 </>
             ) : (
-                !isError ? filtersContent : <span>Failed to Load</span>
+                !isError ? filtersContent : filtersErrorFallback
             )}
         </>
     );

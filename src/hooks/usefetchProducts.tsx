@@ -46,7 +46,7 @@ export function useProducts() {
 
     const queryFn = () => fetchAllProducts({ page, limit, sort, ...filters });
 
-    return useQuery<ApiResponse<Product>>({
+    return useQuery<ApiResponse<Product>, Error>({
         queryKey,
         queryFn,
         staleTime: 5 * 60 * 1000,
