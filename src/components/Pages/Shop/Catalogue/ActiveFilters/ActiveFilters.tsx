@@ -164,6 +164,7 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
             const updated = current.filter((v) => v !== filterValue);
             if (updated.length) newParams.set('cat', updated.join(','));
             else newParams.delete('cat');
+
         }
         // Handle subcategory removal
         else if (filterKey === 'sub') {
@@ -171,6 +172,7 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
             const updated = current.filter((v) => v !== filterValue);
             if (updated.length) newParams.set('sub', updated.join(','));
             else newParams.delete('sub');
+
         }
         // Handle multi-value filters (brandFilter and attributes)
         else {
