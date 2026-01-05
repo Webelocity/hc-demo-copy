@@ -95,7 +95,7 @@ export default function Categories() {
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[1.25rem] justify-center">
                             {/* category card */}
                             {(categories ?? []).map((category) => (
-                                <Link href={`/shop/catalogue?category_active=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
+                                <Link href={`/shop/catalogue?cat=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
                                     <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
                                         {category.image ? (
                                             <Image src={category.image} className="!relative !w-[6rem] !object-contain !h-[6.5rem]" alt="category" fill />

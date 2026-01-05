@@ -31,7 +31,7 @@ export default function CategorySwiper({ categoryId, categoryName }: CategorySwi
                     <h3 className="text-[2.5rem] font-bold text-start">
                         {categoryName}
                     </h3>
-                    <Button variant="secondary" href={`/shop/catalogue?category_active=${categoryId}&page=1`}>View Shop</Button>
+                    <Button variant="secondary" href={`/shop/catalogue?cat=${categoryId}&page=1`}>View Shop</Button>
                 </div>
 
                 <ReUsableSwiper

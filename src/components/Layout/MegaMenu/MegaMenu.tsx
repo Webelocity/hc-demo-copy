@@ -27,13 +27,13 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
     const isLoading = categoriesStatus === 'pending';
 
     const handleSubcategoryClick = (subcategoryId: string) => {
-        router.push(`/shop/catalogue?subcats=${subcategoryId}&page=1`);
+        router.push(`/shop/catalogue?sub=${subcategoryId}&page=1`);
         onClose?.();
     };
 
     const handleShopAllClick = () => {
         if (activeCategory) {
-            router.push(`/shop/catalogue?category_active=${activeCategory}&page=1`);
+            router.push(`/shop/catalogue?cat=${activeCategory}&page=1`);
             onClose?.();
         }
     };

@@ -171,8 +171,8 @@ export default async function ProductPage({
                     if (!segment?._id) return null;
                     const label = segment?.name ?? 'Category';
                     const href = idx === 0
-                        ? `/shop/catalogue?category_active=${segment._id}`
-                        : `/shop/catalogue?subcats=${segment._id}`;
+                        ? `/shop/catalogue?cat=${segment._id}`
+                        : `/shop/catalogue?sub=${segment._id}`;
                     return { label, href };
                 })
                 .filter((item): item is { label: string; href: string } => Boolean(item)),
@@ -288,7 +288,7 @@ export default async function ProductPage({
 
                     <div className="flex flex-col md:flex-row gap-[1rem] w-full md:w-auto justify-center">
                         <Button
-                            href="/shop/catalogue?category_active=69143ed86ac9361831e465f6&page=1"
+                            href="/shop/catalogue"
                             variant="primary"
                             size="large"
                         >
