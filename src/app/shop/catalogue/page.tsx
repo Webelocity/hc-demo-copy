@@ -8,6 +8,7 @@ import ProductPages from "@/components/Pages/Shop/Catalogue/ProductPages/Product
 import SortDropdown from "@/components/Pages/Shop/Catalogue/SortDropdown/SortDropdown";
 import AvailabilityDropdown from "@/components/Pages/Shop/Catalogue/AvailabilityDropdown/AvailabilityDropdown";
 import ActiveFilters from "@/components/Pages/Shop/Catalogue/ActiveFilters/ActiveFilters";
+import SubcategorySelector from "@/components/Pages/Shop/Catalogue/SubcategorySelector/SubcategorySelector";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { useAtomValue } from "jotai";
 
@@ -121,15 +122,16 @@ function CatalogueContent() {
 
     return (
         <div className="baseContainer">
-            <div className=" maxWidth py-[2.5rem] flex gap-[1.5rem]">
+            <div className=" maxWidth py-[2.5rem] flex gap-[1.5rem] min-w-0">
                 {!isMobile && <Filters
                     setFilters={setFilters}
                     selectedSubCat={lastSelectedSubCat}
                     setSelectedSubCat={handleSetSubcat}
                 />}
 
-                <div className="flex-[3] flex flex-col gap-[1rem]">
+                <div className="flex-[3] flex flex-col gap-[1rem] min-w-0 w-full">
                     <div className="flex items-center justify-between w-full">
+                        {/* title and pagination info */}
                         <div className="flex flex-col items-start gap-[0.5rem]">
                             <h1 className="text-[2rem] font-bold">{renderTitle()}</h1>
                             {renderPaginationInfo()}
@@ -148,6 +150,12 @@ function CatalogueContent() {
 
                         </div>
                     </div>
+
+                    {/* subcategories selector */}
+                    <SubcategorySelector
+                        selectedSubCat={lastSelectedSubCat}
+                        onSelect={handleSetSubcat}
+                    />
 
                     {/* Active Filters */}
                     <ActiveFilters selectedSubCat={lastSelectedSubCat} />

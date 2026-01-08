@@ -82,7 +82,6 @@ const Filters: React.FC<FiltersProps> = ({
         if (subCategoryIds) params.subCategoryIds = subCategoryIds;
 
         searchParams.forEach((value, key) => {
-            // Skip pagination/sort + the UI-only category selectors; include everything else (brands, attrs, promo, isFeatured, etc.)
             if (['page', 'limit', 'sort', 'cat', 'sub'].includes(key)) return;
             const numeric = Number(value);
             params[key] = Number.isNaN(numeric) ? value : numeric;

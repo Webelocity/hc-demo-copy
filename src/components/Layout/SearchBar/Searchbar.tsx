@@ -106,12 +106,11 @@ export default function Searchbar() {
             <CircularProgress color='primary' />
           </MenuItem>
         ) : (
-          categories?.map((option) => (
+          <>
             <MenuItem
-              key={option._id}
-              value={option._id}
+              value=''
               className={
-                selectedOption === option._id
+                selectedOption === ''
                   ? `${styles.menuItem} ${styles.menuItemActive}`
                   : styles.menuItem
               }
@@ -124,9 +123,30 @@ export default function Searchbar() {
                 },
               }}
             >
-              {option.name}
+              All Categories
             </MenuItem>
-          ))
+            {categories?.map((option) => (
+              <MenuItem
+                key={option._id}
+                value={option._id}
+                className={
+                  selectedOption === option._id
+                    ? `${styles.menuItem} ${styles.menuItemActive}`
+                    : styles.menuItem
+                }
+                sx={{
+                  borderRadius: 'var(--Radius-md)',
+                  padding: '1rem 1.5rem',
+                  fontWeight: 500,
+                  '&.Mui-selected': {
+                    backgroundColor: 'var(--Secondary-100)',
+                  },
+                }}
+              >
+                {option.name}
+              </MenuItem>
+            ))}
+          </>
         )}
       </Select>
 
