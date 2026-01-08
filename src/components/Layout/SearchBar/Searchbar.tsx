@@ -62,8 +62,10 @@ export default function Searchbar() {
   const handleEnterPress = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set('searchTerm', searchTerm);
-    if (selectedOption) params.set('category', selectedOption);
-    router.push(`/shop?${params.toString()}`);
+    // Catalogue uses `cat` for selected category ids
+    if (selectedOption) params.set('cat', selectedOption);
+    const qs = params.toString();
+    router.push(qs ? `/shop/catalogue?${qs}` : `/shop/catalogue`);
     handleCloseDropdown();
   };
   return (
@@ -73,7 +75,11 @@ export default function Searchbar() {
     >
       <Select
         value={selectedOption}
-        onChange={(e) => setSelectedOption(e.target.value)}
+        onChange={(e) => {
+          setSelectedOption(e.target.value);
+          // Close search results dropdown so it doesn't block interactions
+          setIsDropdownOpen(false);
+        }}
         displayEmpty
         renderValue={(selected) => {
           if (!selected) {
@@ -101,17 +107,18 @@ export default function Searchbar() {
           },
         }}
       >
-        {isLoading ? (
-          <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress color='primary' />
-          </MenuItem>
-        ) : (
-          categories?.map((option) => (
+        {isLoading
+          ? (
+            <MenuItem disabled sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress color='primary' />
+            </MenuItem>
+          )
+          : [
             <MenuItem
-              key={option._id}
-              value={option._id}
+              key="all-categories"
+              value=""
               className={
-                selectedOption === option._id
+                selectedOption === ''
                   ? `${styles.menuItem} ${styles.menuItemActive}`
                   : styles.menuItem
               }
@@ -124,10 +131,30 @@ export default function Searchbar() {
                 },
               }}
             >
-              {option.name}
-            </MenuItem>
-          ))
-        )}
+              All Categories
+            </MenuItem>,
+            ...(categories ?? []).map((option) => (
+              <MenuItem
+                key={option._id}
+                value={option._id}
+                className={
+                  selectedOption === option._id
+                    ? `${styles.menuItem} ${styles.menuItemActive}`
+                    : styles.menuItem
+                }
+                sx={{
+                  borderRadius: 'var(--Radius-md)',
+                  padding: '1rem 1.5rem',
+                  fontWeight: 500,
+                  '&.Mui-selected': {
+                    backgroundColor: 'var(--Secondary-100)',
+                  },
+                }}
+              >
+                {option.name}
+              </MenuItem>
+            )),
+          ]}
       </Select>
 
       <div className='flex items-center pl-[0.75rem]' />

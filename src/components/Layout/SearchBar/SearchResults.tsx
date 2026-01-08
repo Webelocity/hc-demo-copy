@@ -45,8 +45,10 @@ export default function SearchResults({
   const handleViewAllClick = () => {
     const params = new URLSearchParams();
     if (searchTerm) params.set('searchTerm', searchTerm);
-    if (categoryId) params.set('category', categoryId);
-    router.push(`/shop?${params.toString()}`);
+    // Catalogue uses `cat` for selected category ids
+    if (categoryId) params.set('cat', categoryId);
+    const qs = params.toString();
+    router.push(qs ? `/shop/catalogue?${qs}` : `/shop/catalogue`);
     onClose();
   };
 

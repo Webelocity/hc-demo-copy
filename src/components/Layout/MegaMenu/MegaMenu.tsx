@@ -83,6 +83,28 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                         </>
                     ) : (
                         <>
+                            <div className="flex items-center gap-[0.75rem] mb-[0.75rem] rounded-[var(--Radius-md)] bg-[color:var(--Secondary-50)] px-[0.875rem] py-[0.65rem] text-[color:var(--Neutral-700)]">
+                                <span className="flex h-[2.25rem] w-[2.25rem] items-center justify-center rounded-full bg-white shadow-sm text-[color:var(--secondary-500-main)]">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.6}
+                                        stroke="currentColor"
+                                        className="h-[1.15rem] w-[1.15rem]"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M12 9v3.75m-9.303 1.125a10.125 10.125 0 1 0 18.606 0 10.125 10.125 0 0 0-18.606 0zM12 15.75h.008v.008H12v-.008z"
+                                        />
+                                    </svg>
+                                </span>
+                                <div className="leading-tight">
+                                    <p className="text-[0.95rem] font-semibold text-[color:var(--Neutral-900)]">Choose a subcategory</p>
+                                    <p className="text-[0.85rem] text-[color:var(--Neutral-500)]">Click a subcategory to see its products instantly.</p>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-4 gap-[0.5rem]">
                                 {categories
                                     ?.find((category) => category._id === activeCategory)

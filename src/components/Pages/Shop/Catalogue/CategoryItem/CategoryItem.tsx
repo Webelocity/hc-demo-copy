@@ -1,6 +1,6 @@
 // src/components/Shared/CategoryItem.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { isCategory, isChildSubCategory, isSubcategory } from '@/util/guards';
@@ -171,9 +171,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   };
 
   const renderChildCategories = () => {
-    // If this item is selected, pass down that info to children
-    const childrenParentSelected =
-      isNodeSelected(category) || parentIsSelected;
+    // Pass down only *explicit* ancestor selection (from URL), not implied selection.
+    const childrenParentSelected = isNodeSelected(category) || parentIsSelected;
 
     if (isCategory(category)) {
       // Filter subcategories based on search query
@@ -219,9 +218,17 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     return null;
   };
 
-  // Item is checked if it's directly selected OR if its parent is selected
-  const isChecked =
-    isNodeSelected(category) || parentIsSelected || hasSelectedDescendant(category);
+  // Tri-state:
+  // - checked: explicitly selected (present in URL params)
+  // - indeterminate: implied by an explicitly-selected descendant OR explicitly-selected ancestor
+  const isExplicitlySelected = isNodeSelected(category);
+  const isIndeterminate = !isExplicitlySelected && (parentIsSelected || hasSelectedDescendant(category));
+  const checkboxRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (!checkboxRef.current) return;
+    checkboxRef.current.indeterminate = isIndeterminate;
+  }, [isIndeterminate]);
 
   // Calculate indentation for nested levels
   const getIndentClass = () => {
@@ -264,7 +271,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           <input
             type='checkbox'
             className='w-[1rem] h-[1rem] rounded-[0.25rem] border border-[color:var(--Neutral-100)] accent-[var(--secondary-500-main)] cursor-pointer flex-shrink-0 mt-[0.125rem]'
-            checked={isChecked}
+            ref={checkboxRef}
+            checked={isExplicitlySelected}
             onChange={() => handleItemClick()}
           />
           <span
@@ -272,10 +280,13 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               e.preventDefault();
               handleItemClick(e);
             }}
-            className={`flex-grow text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 cursor-pointer break-words ${isChecked
-              ? 'font-bold text-[color:var(--secondary-500-main)]'
-              : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
-              }`}
+            className={`flex-grow text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 cursor-pointer break-words ${
+              isExplicitlySelected
+                ? 'font-bold text-[color:var(--secondary-500-main)]'
+                : isIndeterminate
+                  ? 'font-semibold text-[color:var(--secondary-500-main)]'
+                  : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
+            }`}
             style={{ fontFamily: 'var(--font-figtree)' }}
           >
             {category.name} (

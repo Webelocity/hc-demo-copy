@@ -22,6 +22,10 @@ import { fetchAllShopFilters } from "@/Api/Apis";
 import { useAtomValue } from "jotai";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { CiFilter } from "react-icons/ci";
+import { FiAlertTriangle } from "react-icons/fi";
+import Button from "@/components/shared/Button";
+import SortDropdown from "@/components/Pages/Shop/Catalogue/SortDropdown/SortDropdown";
+import AvailabilityDropdown from "@/components/Pages/Shop/Catalogue/AvailabilityDropdown/AvailabilityDropdown";
 
 interface FiltersProps {
     initialCatId?: string;
@@ -42,6 +46,7 @@ const Filters: React.FC<FiltersProps> = ({
     const categoriesData = categories.data;
     const isMobile = useMediaQuery('(max-width:1024px)');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [drawerTab, setDrawerTab] = useState<'filters' | 'sort'>('filters');
     const searchParams = useSearchParams();
     const router = useRouter();
     const [temporaryPriceRange, setTemporaryPriceRange] = useState<number[]>([0, 0]);
@@ -53,7 +58,7 @@ const Filters: React.FC<FiltersProps> = ({
         promotionalCategories: boolean;
         featured: boolean;
     }>({
-        categories: true,
+        categories: false,
         price: false,
         brands: false,
         promotionalCategories: true,
@@ -80,13 +85,50 @@ const Filters: React.FC<FiltersProps> = ({
         if (subCategoryIds) params.subCategoryIds = subCategoryIds;
 
         searchParams.forEach((value, key) => {
-            // Skip pagination/sort + the UI-only category selectors; include everything else (brands, attrs, promo, isFeatured, etc.)
             if (['page', 'limit', 'sort', 'cat', 'sub'].includes(key)) return;
             const numeric = Number(value);
             params[key] = Number.isNaN(numeric) ? value : numeric;
         });
 
         return params;
+    }, [searchParams]);
+
+
+    const activeFiltersCount = useMemo(() => {
+        let count = 0;
+
+        const hasCatOrSub = Boolean(searchParams.get('cat') || searchParams.get('sub'));
+        if (hasCatOrSub) count += 1;
+
+        const hasPrice = Boolean(searchParams.get('minPrice') || searchParams.get('maxPrice'));
+        if (hasPrice) count += 1;
+
+        const hasSort = Boolean(searchParams.get('sort'));
+        if (hasSort) count += 1;
+
+        const hasAvailability = Boolean(searchParams.get('availability'));
+        if (hasAvailability) count += 1;
+
+        const groupedKeys = new Set([
+            'page',
+            'limit',
+            'cat',
+            'sub',
+            'minPrice',
+            'maxPrice',
+            'sort',
+            'availability',
+            'searchTerm',
+        ]);
+
+        const otherKeys = new Set<string>();
+        searchParams.forEach((value, key) => {
+            if (groupedKeys.has(key)) return;
+            if (!value) return;
+            otherKeys.add(key);
+        });
+
+        return count + otherKeys.size;
     }, [searchParams]);
 
     const {
@@ -254,6 +296,34 @@ const Filters: React.FC<FiltersProps> = ({
         });
 
     };
+
+    const filtersErrorFallback = (
+        <div className="flex flex-col items-center gap-[0.75rem] text-center rounded-[var(--Radius-md)] border border-[color:var(--Neutral-100)] bg-[color:var(--Neutral-10)] p-[1.25rem]">
+            <div className="flex items-center gap-[0.4rem] text-[var(--secondary-600-main)]">
+                <FiAlertTriangle className="text-lg" />
+                <span className="text-[1rem] font-semibold">Filters unavailable</span>
+            </div>
+            <p className="text-[0.9rem] text-[color:var(--Neutral-600)]">
+                Something went wrong while loading filters. Please try again.
+            </p>
+            <div className="flex items-center gap-[0.5rem]">
+                <Button
+                    size="small"
+                    variant="primary"
+                    onClick={() => window?.location?.reload()}
+                >
+                    Retry
+                </Button>
+                <Button
+                    size="small"
+                    variant="secondary"
+                    href="/"
+                >
+                    Home
+                </Button>
+            </div>
+        </div>
+    );
 
     // Render dynamic brands
     const renderDynamicBrands = () => {
@@ -783,11 +853,19 @@ const Filters: React.FC<FiltersProps> = ({
                 <>
                     <button
                         id="filterButton"
-                        onClick={() => setDrawerOpen(true)}
+                        onClick={() => {
+                            setDrawerTab('filters');
+                            setDrawerOpen(true);
+                        }}
                         className="flex items-center gap-[0.5rem] justify-center text-black rounded-[var(--Radius-md)] px-[1.25rem] py-[0.625rem] text-[1.2rem] font-medium bg-[color:var(--Colors-Neutral-50)]"
                     >
                         <CiFilter className="text-2xl" />
-                        Filters
+                        <span>Filter</span>
+                        {activeFiltersCount > 0 && (
+                            <span className="ml-[0.25rem] w-[2.75rem] h-[2.75rem] rounded-full bg-[color:var(--secondary-500-main)] text-white flex items-center justify-center text-[1.25rem] font-semibold leading-none">
+                                {activeFiltersCount}
+                            </span>
+                        )}
                     </button>
                     <Drawer
                         anchor="bottom"
@@ -803,13 +881,76 @@ const Filters: React.FC<FiltersProps> = ({
                             }
                         }}
                     >
-                        <div className="mx-auto w-full max-w-[48rem]">
-                            {!isError ? filtersContent : <span>Failed to load filters</span>}
+                        <div className="mx-auto w-full max-w-[48rem] flex flex-col gap-[1rem]">
+                            {/* Drawer tabs: Filters / Sort */}
+                            <div className="flex items-center justify-between">
+                                <div className="inline-flex items-center rounded-[0.75rem] bg-[color:var(--Colors-Neutral-50)] p-[0.25rem] border border-[color:var(--Neutral-100)]">
+                                    <button
+                                        type="button"
+                                        onClick={() => setDrawerTab('filters')}
+                                        className={[
+                                            'px-[0.9rem] py-[0.55rem] rounded-[0.625rem] text-[0.9rem] font-semibold transition-colors',
+                                            drawerTab === 'filters'
+                                                ? 'bg-white text-[color:var(--secondary-500-main)] shadow-[0_0.125rem_0.5rem_rgba(0,0,0,0.06)]'
+                                                : 'text-[color:var(--Neutral-700)] hover:text-[color:var(--secondary-500-main)]',
+                                        ].join(' ')}
+                                    >
+                                        Filters
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setDrawerTab('sort')}
+                                        className={[
+                                            'px-[0.9rem] py-[0.55rem] rounded-[0.625rem] text-[0.9rem] font-semibold transition-colors',
+                                            drawerTab === 'sort'
+                                                ? 'bg-white text-[color:var(--secondary-500-main)] shadow-[0_0.125rem_0.5rem_rgba(0,0,0,0.06)]'
+                                                : 'text-[color:var(--Neutral-700)] hover:text-[color:var(--secondary-500-main)]',
+                                        ].join(' ')}
+                                    >
+                                        Sort
+                                    </button>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    aria-label="Close drawer"
+                                    onClick={() => setDrawerOpen(false)}
+                                    className="text-[1.25rem] text-[color:var(--Neutral-700)]"
+                                >
+                                    <IoMdClose />
+                                </button>
+                            </div>
+
+                            {drawerTab === 'filters' ? (
+                                !isError ? filtersContent : filtersErrorFallback
+                            ) : (
+                                <div className="flex flex-col gap-[1.25rem] p-[1.5rem] rounded-[var(--Radius-md)] bg-white shadow-[0_0.125rem_0.75rem_rgba(0,65,40,0.08)]">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-[1.25rem] font-semibold text-[color:var(--Neutral-800)]">
+                                            Sort & Availability
+                                        </h3>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[0.95rem] font-medium text-[color:var(--Neutral-700)]">
+                                            Sort
+                                        </span>
+                                        <SortDropdown />
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-[0.95rem] font-medium text-[color:var(--Neutral-700)]">
+                                            Availability
+                                        </span>
+                                        <AvailabilityDropdown />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </Drawer>
                 </>
             ) : (
-                !isError ? filtersContent : <span>Failed to Load</span>
+                !isError ? filtersContent : filtersErrorFallback
             )}
         </>
     );
