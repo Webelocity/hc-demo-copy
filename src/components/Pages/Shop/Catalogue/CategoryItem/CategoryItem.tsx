@@ -114,13 +114,16 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     const nextSubcatIds =
       newSearchParams.get('sub')?.split(',').filter(Boolean) ?? [];
 
+    // Update selectedSubCat state for subcategory selector
     if (isSubcategory(category) || isChildSubCategory(category)) {
       if (nextSubcatIds.includes(category._id)) {
         setSelectedSubCat(category);
       } else if (nextSubcatIds.length === 0) {
+        // Clear selection if no subcategories are selected
         setSelectedSubCat(undefined);
       }
     } else if (nextSubcatIds.length === 0) {
+      // Clear selection if no subcategories are selected
       setSelectedSubCat(undefined);
     }
   };
@@ -220,9 +223,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
   // Tri-state:
   // - checked: explicitly selected (present in URL params)
-  // - indeterminate: implied by an explicitly-selected descendant OR explicitly-selected ancestor
+  // - indeterminate: only for parents when descendants are selected (upwards only)
+  //   Children should never show indeterminate, only normal checked when explicitly selected
   const isExplicitlySelected = isNodeSelected(category);
-  const isIndeterminate = !isExplicitlySelected && (parentIsSelected || hasSelectedDescendant(category));
+  // Only show indeterminate for nodes that have children AND have selected descendants
+  // Don't show indeterminate for leaf nodes or when parent is selected (downwards)
+  const isIndeterminate = !isExplicitlySelected && hasChildren && hasSelectedDescendant(category);
   const checkboxRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {

@@ -83,28 +83,61 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
     // there's no "next level" to browse, so hide this section entirely.
     const lastSelectedNode = useMemo(() => {
         if (selectedSubCat) return selectedSubCat;
-        if (subIds.length === 0) return undefined;
+        if (subIds.length === 0) {
+            // Check if any selected category has children (subcategories)
+            if (catIds.length > 0) {
+                const selectedCat = findNodeById(catIds[catIds.length - 1]);
+                if (selectedCat && isCategory(selectedCat) && selectedCat.categorySubCategories && selectedCat.categorySubCategories.length > 0) {
+                    // Return the category so we can show its children
+                    return selectedCat;
+                }
+            }
+            return undefined;
+        }
         return findNodeById(subIds[subIds.length - 1]);
-    }, [findNodeById, selectedSubCat, subIds]);
+    }, [findNodeById, selectedSubCat, subIds, catIds]);
 
-    const shouldHide = Boolean(lastSelectedNode && isChildSubCategory(lastSelectedNode));
+    // Hide only if the last selected node is a child subcategory (deepest level) with no children
+    // Show if it's a category or subcategory with children
+    const shouldHide = Boolean(
+        lastSelectedNode && 
+        isChildSubCategory(lastSelectedNode) && 
+        (!('childSubCategories' in lastSelectedNode) || !lastSelectedNode.childSubCategories || lastSelectedNode.childSubCategories.length === 0)
+    );
 
     const selectedParents = useMemo(() => {
         if (shouldHide) return [];
         const seen = new Set<string>();
         const nodes: Array<Category | Subcategory | ChildSubCategory> = [];
 
+        // Include selected categories and subcategories
         [...catIds, ...subIds].forEach((id) => {
             if (seen.has(id)) return;
             const node = findNodeById(id);
             if (node) {
                 seen.add(id);
-                nodes.push(node);
+                // Only include nodes that have children (can show subcategories)
+                const hasChildren = isCategory(node) 
+                    ? (node.categorySubCategories && node.categorySubCategories.length > 0)
+                    : (node.childSubCategories && node.childSubCategories.length > 0);
+                if (hasChildren) {
+                    nodes.push(node);
+                }
             }
         });
 
+        // If no nodes found but we have selectedSubCat or lastSelectedNode with children, include it
+        if (nodes.length === 0 && lastSelectedNode) {
+            const hasChildren = isCategory(lastSelectedNode)
+                ? (lastSelectedNode.categorySubCategories && lastSelectedNode.categorySubCategories.length > 0)
+                : (lastSelectedNode.childSubCategories && lastSelectedNode.childSubCategories.length > 0);
+            if (hasChildren && !seen.has(lastSelectedNode._id)) {
+                nodes.push(lastSelectedNode);
+            }
+        }
+
         return nodes;
-    }, [catIds, subIds, findNodeById, shouldHide]);
+    }, [catIds, subIds, findNodeById, shouldHide, lastSelectedNode]);
 
     const options = useMemo<Option[]>(() => {
         if (shouldHide) return [];
