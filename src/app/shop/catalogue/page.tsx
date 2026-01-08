@@ -2,13 +2,14 @@
 import Filters from "@/components/Pages/Shop/Catalogue/Filters/Filters";
 import { useMediaQuery } from "@mui/material";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useProducts } from "@/hooks/usefetchProducts";
 import ProductPages from "@/components/Pages/Shop/Catalogue/ProductPages/ProductPages";
 import SortDropdown from "@/components/Pages/Shop/Catalogue/SortDropdown/SortDropdown";
 import AvailabilityDropdown from "@/components/Pages/Shop/Catalogue/AvailabilityDropdown/AvailabilityDropdown";
 import ActiveFilters from "@/components/Pages/Shop/Catalogue/ActiveFilters/ActiveFilters";
 import SubcategorySelector from "@/components/Pages/Shop/Catalogue/SubcategorySelector/SubcategorySelector";
+import CatalogueSearchBar from "@/components/Pages/Shop/Catalogue/CatalogueSearchBar/CatalogueSearchBar";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { useAtomValue } from "jotai";
 
@@ -159,6 +160,9 @@ function CatalogueContent() {
 
                     {/* Active Filters */}
                     <ActiveFilters selectedSubCat={lastSelectedSubCat} />
+
+                    {/* Search (scoped to current filter selection) */}
+                    <CatalogueSearchBar />
 
                     <ProductPages
                         ProductsAPI={ProductsAPI}
