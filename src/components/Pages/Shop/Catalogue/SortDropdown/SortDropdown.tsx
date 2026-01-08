@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { BsSortDownAlt } from "react-icons/bs";
 import { motion, AnimatePresence } from "framer-motion";
@@ -29,6 +29,11 @@ const SortDropdown: React.FC = () => {
     ];
 
     const currentSort = searchParams.get('sort') || 'rating';
+    const isSortActive = searchParams.has('sort');
+    const currentLabel = useMemo(
+        () => sortOptions.find((o) => o.value === currentSort)?.label ?? 'Featured',
+        [currentSort]
+    );
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -57,10 +62,18 @@ const SortDropdown: React.FC = () => {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-[0.375rem] text-[0.75rem] text-[color:var(--Neutral-700)] cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors font-figtree"
+                className="flex items-center gap-[0.5rem] text-[0.75rem] text-[color:var(--Neutral-700)] cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors font-figtree"
             >
                 <BsSortDownAlt className="text-xl" />
-                <span className="text-[0.875rem]">Sort by</span>
+                <span
+                    className={[
+                        'text-[0.875rem] max-w-[12.5rem] truncate',
+                        isSortActive ? 'font-semibold text-[color:var(--secondary-500-main)]' : 'text-[color:var(--Neutral-700)]',
+                    ].join(' ')}
+                    title={currentLabel}
+                >
+                    {currentLabel}
+                </span>
             </button>
 
             <AnimatePresence>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { HiOutlineChevronDown } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +23,11 @@ const AvailabilityDropdown: React.FC = () => {
     ];
 
     const currentAvailability = searchParams.get('availability') || '';
+    const isAvailabilityActive = Boolean(currentAvailability);
+    const currentLabel = useMemo(() => {
+        if (!currentAvailability) return 'All';
+        return availabilityOptions.find((o) => o.value === currentAvailability)?.label ?? 'All';
+    }, [currentAvailability]);
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -55,9 +60,17 @@ const AvailabilityDropdown: React.FC = () => {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-[0.375rem] text-[0.75rem] text-[color:var(--Neutral-700)] cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors font-figtree"
+                className="flex items-center gap-[0.5rem] text-[0.75rem] text-[color:var(--Neutral-700)] cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors font-figtree"
             >
-                <span className="text-[0.875rem]">Availability</span>
+                <span
+                    className={[
+                        'text-[0.875rem] max-w-[12.5rem] truncate',
+                        isAvailabilityActive ? 'font-semibold text-[color:var(--secondary-500-main)]' : 'text-[color:var(--Neutral-700)]',
+                    ].join(' ')}
+                    title={currentLabel}
+                >
+                    {currentLabel}
+                </span>
                 <HiOutlineChevronDown className="text-xl" />
 
             </button>
