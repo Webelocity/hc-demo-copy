@@ -9,13 +9,21 @@ import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import { useAtomValue } from "jotai";
 import { motion, AnimatePresence } from "framer-motion";
 import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
+import { selectedStoreAtom } from "@/atoms/storeAtom";
+import { getStoreById } from "@/util/shedule";
+import { SlLocationPin } from "react-icons/sl";
 
 interface MobileDrawerProps {
   isOpen: boolean;
   onClose?: () => void;
+  onOpenStoreSelector?: () => void;
 }
 
-export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
+export default function MobileDrawer({
+  isOpen,
+  onClose,
+  onOpenStoreSelector,
+}: MobileDrawerProps) {
   const router = useRouter();
   const { data: categories, status: categoriesStatus } =
     useAtomValue(categoriesQueryAtom);
@@ -23,11 +31,38 @@ export default function MobileDrawer({ isOpen, onClose }: MobileDrawerProps) {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   );
+  const selectedStoreId = useAtomValue(selectedStoreAtom);
+  const store = getStoreById(selectedStoreId);
 
   const renderMain = () => {
     const Customer_Dashboard_Url = process.env.NEXT_PUBLIC_CUSTOMER_DASHBOARD;
     return (
       <div className="flex flex-col">
+        <button
+          type="button"
+          className="w-full cursor-pointer p-[1rem] rounded-[var(--Radius-md)] bg-white text-start transition-colors hover:bg-[var(--Secondary-100)]"
+          onClick={() => {
+            onClose?.();
+            onOpenStoreSelector?.();
+          }}
+          aria-label="Select or change store"
+        >
+          <div className="flex items-center justify-between gap-[1rem]">
+            <div className="flex items-center gap-[0.75rem]">
+              <SlLocationPin className="text-[1.5rem] text-[var(--secondary-500-main)]" />
+              <div className="flex flex-col leading-tight">
+                <span className="text-[1.1rem] font-semibold">Store</span>
+                <span className="text-[0.95rem] text-[color:var(--Neutral-600)]">
+                  {store?.name ?? "Select store"}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-[0.5rem] text-[var(--secondary-500-main)]">
+              <span className="text-[1rem] font-semibold">Change</span>
+              <GoArrowRight className="text-[1.5rem]" aria-hidden />
+            </div>
+          </div>
+        </button>
         <Link
           className="p-[1rem] text-[1.25rem] font-medium text-start"
           href="/"

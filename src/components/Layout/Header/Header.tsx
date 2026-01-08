@@ -91,10 +91,15 @@ export default function Header() {
                   )}
                 </>
               )}
-              <LuChevronDown
-                className='text-xl cursor-pointer'
+              <button
+                type='button'
+                className='ml-[0.25rem] inline-flex cursor-pointer items-center gap-[0.25rem] rounded-[var(--Radius-xs)] bg-[var(--Secondary-50)] px-[0.5rem] py-[0.25rem] text-[0.95rem] font-semibold text-[var(--secondary-500-main)] transition-colors hover:bg-[var(--Secondary-100)]'
                 onClick={() => setIsSelectorOpen(true)}
-              />
+                aria-label='Change store'
+              >
+                <span>Change Store</span>
+                <LuChevronDown className='text-xl' aria-hidden />
+              </button>
             </div>
           </div>
           <div className='hidden lg:flex flex-[4]'>
@@ -151,6 +156,10 @@ export default function Header() {
         <MobileDrawer
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
+          onOpenStoreSelector={() => {
+            setIsDrawerOpen(false);
+            setIsSelectorOpen(true);
+          }}
         />
       </div>
 

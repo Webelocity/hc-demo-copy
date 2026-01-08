@@ -73,7 +73,7 @@ export default function ActiveFilters({ selectedSubCat }: ActiveFiltersProps) {
 
         searchParams.forEach((value, key) => {
             // Skip pagination, sort, and internal params
-            if (['page', 'limit', 'sort', 'availability', 'cat', 'sub'].includes(key)) {
+            if (['page', 'limit', 'sort', 'availability', 'cat', 'sub', 'searchTerm'].includes(key)) {
                 return;
             }
 

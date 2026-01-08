@@ -7,7 +7,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { HiOutlineCollection } from 'react-icons/hi';
 import { FiAlertTriangle } from 'react-icons/fi';
 import { categoriesQueryAtom } from '@/atoms/categoryAtom';
-import { isCategory } from '@/util/guards';
+import { isCategory, isChildSubCategory } from '@/util/guards';
 
 type SubcategorySelectorProps = {
     selectedSubCat?: Subcategory | ChildSubCategory;
@@ -79,7 +79,18 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
         [categories.data]
     );
 
+    // If the user is already at the deepest level (child subcategory),
+    // there's no "next level" to browse, so hide this section entirely.
+    const lastSelectedNode = useMemo(() => {
+        if (selectedSubCat) return selectedSubCat;
+        if (subIds.length === 0) return undefined;
+        return findNodeById(subIds[subIds.length - 1]);
+    }, [findNodeById, selectedSubCat, subIds]);
+
+    const shouldHide = Boolean(lastSelectedNode && isChildSubCategory(lastSelectedNode));
+
     const selectedParents = useMemo(() => {
+        if (shouldHide) return [];
         const seen = new Set<string>();
         const nodes: Array<Category | Subcategory | ChildSubCategory> = [];
 
@@ -93,9 +104,10 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
         });
 
         return nodes;
-    }, [catIds, subIds, findNodeById]);
+    }, [catIds, subIds, findNodeById, shouldHide]);
 
     const options = useMemo<Option[]>(() => {
+        if (shouldHide) return [];
         const list: Option[] = [];
         const seenChildren = new Set<string>();
 
@@ -110,16 +122,17 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
         });
 
         return list;
-    }, [selectedParents]);
+    }, [selectedParents, shouldHide]);
 
     // Keep parent selection state in sync with URL (initial hydration)
     useEffect(() => {
+        if (shouldHide) return;
         if (!onSelect || selectedSubCat || subIds.length === 0) return;
         const firstSelected = findNodeById(subIds[subIds.length - 1]);
         if (firstSelected && !isCategory(firstSelected)) {
             onSelect(firstSelected as Subcategory | ChildSubCategory);
         }
-    }, [findNodeById, onSelect, selectedSubCat, subIds]);
+    }, [findNodeById, onSelect, selectedSubCat, subIds, shouldHide]);
 
     const handleSelect = (child: Subcategory | ChildSubCategory, parent?: Category | Subcategory | ChildSubCategory) => {
         const nextParams = new URLSearchParams(searchParams.toString());
@@ -273,6 +286,8 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
             </div>
         );
     };
+
+    if (shouldHide) return null;
 
     return (
         <div className="flex flex-col gap-[0.75rem] rounded-[var(--Radius-md)] bg-white border border-[color:var(--Neutral-100)] shadow-[0_0.125rem_0.75rem_rgba(0,65,40,0.08)] p-[1rem] w-full max-w-full min-w-0">

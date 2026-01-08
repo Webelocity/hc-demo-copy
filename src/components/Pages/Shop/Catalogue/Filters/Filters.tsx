@@ -58,7 +58,7 @@ const Filters: React.FC<FiltersProps> = ({
         promotionalCategories: boolean;
         featured: boolean;
     }>({
-        categories: true,
+        categories: false,
         price: false,
         brands: false,
         promotionalCategories: true,
