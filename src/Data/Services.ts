@@ -38,7 +38,7 @@ const services: Service[] = [
   {
     title: "Business Solutions",
     description:
-      "Running a business in Owego, Vestal, or Candor? Home Central’ Business Solutions sales team helps you streamline bulk orders of building materials, tools, and supplies. With local delivery, online billing, and personalized ordering, we make it easy for schools, farms, banks, and contractors to get what they need—just like a national supplier, but with the support of a family-owned business.",
+      "Running a business in Owego, Vestal, or Candor? Home Central’s Business Solutions sales team helps you streamline bulk orders of building materials, tools, and supplies. With local delivery, online billing, and personalized ordering, we make it easy for schools, farms, banks, and contractors to get what they need—just like a national supplier, but with the support of a family-owned business.",
     ctaName: "Request a Quote",
     ctaLink: "/request-quote",
     imagePath: "/assets/image/Services/serviceList/images/Business.png", // Replace with actual image paths later

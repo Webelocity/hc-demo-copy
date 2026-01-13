@@ -3,22 +3,29 @@
 import Button from "@/components/shared/Button";
 import Link from "next/link";
 import { PiListBold } from "react-icons/pi";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import MegaMenu from "../MegaMenu/MegaMenu";
 import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function Navbar() {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const shopButtonRef = useRef<HTMLDivElement>(null);
+
   const onCloseMegaMenu = () => {
     setIsMegaMenuOpen(false);
   }
+
+  const handleShopClick = () => {
+    setIsMegaMenuOpen(!isMegaMenuOpen);
+  }
+
   return (
     <nav className={"relative baseContainer py-[1rem]"}>
       <div className="hidden lg:flex  justify-between items-center maxWidth">
-        <div className="flex items-center">
+        <div className="flex items-center" ref={shopButtonRef}>
           <Button
             variant={isMegaMenuOpen ? "secondary" : "outline"}
-            onClick={() => setIsMegaMenuOpen(!isMegaMenuOpen)}
+            onClick={handleShopClick}
           >
             <PiListBold className="text-2xl cursor-pointer " />
             Shop
@@ -57,7 +64,7 @@ export default function Navbar() {
           />        </div>
       </div>
 
-      {isMegaMenuOpen && <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} />}
+      <MegaMenu isOpen={isMegaMenuOpen} onClose={onCloseMegaMenu} shopButtonRef={shopButtonRef} />
     </nav>
   );
 }

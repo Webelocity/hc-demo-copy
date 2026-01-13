@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './MegaMenu.module.scss';
 import Button from '@/components/shared/Button';
@@ -10,12 +10,14 @@ import { useAtomValue } from 'jotai';
 interface MegaMenuProps {
     isOpen: boolean;
     onClose?: () => void;
+    shopButtonRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
+export default function MegaMenu({ isOpen, onClose, shopButtonRef }: MegaMenuProps) {
     const router = useRouter();
     const { data: categories, status: categoriesStatus } = useAtomValue(categoriesQueryAtom);
     const [activeCategory, setActiveCategory] = useState<string>('');
+    const menuRef = useRef<HTMLDivElement>(null);
 
     // Set first category as active when data loads
     useEffect(() => {
@@ -23,6 +25,36 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             setActiveCategory(categories[0]._id);
         }
     }, [categories, activeCategory]);
+
+    // Handle click outside to close menu
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as Node;
+
+            // Don't close if clicking inside the menu
+            if (menuRef.current && menuRef.current.contains(target)) {
+                return;
+            }
+
+            // Don't close if clicking on the Shop button (it handles its own toggle)
+            if (shopButtonRef?.current && shopButtonRef.current.contains(target)) {
+                return;
+            }
+
+            // Close the menu if clicking outside
+            if (isOpen) {
+                onClose?.();
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen, onClose, shopButtonRef]);
 
     const isLoading = categoriesStatus === 'pending';
 
@@ -39,7 +71,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
     };
 
     return (
-        <div className={`baseContainer ${styles.megaMenu} ${isOpen ? styles.open : ''}`}>
+        <div ref={menuRef} className={`baseContainer ${styles.megaMenu} ${isOpen ? styles.open : ''}`}>
             <div className="w-full maxWidth flex bg-white border-[1.5px] border-solid border-[var(--Secondary-100)] rounded-[var(--Radius-md)] p-[0.5rem]">
                 {/* Left side - Categories */}
                 <div className="flex flex-col gap-[0.5rem] p-[0.5rem] flex-1 border-r border-solid border-r-[var(--Secondary-100)]">

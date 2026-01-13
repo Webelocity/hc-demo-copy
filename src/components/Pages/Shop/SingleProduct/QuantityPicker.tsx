@@ -41,21 +41,48 @@ export default function QuantityPicker({
     const [localQty, setLocalQty] = useState<number>(quantity);
     const selectedStoreId = useAtomValue(selectedStoreAtom);
     const addToCartAction = useSetAtom(addToCartAtom);
-    const [selectedFulfillmentMethod, setSelectedFulfillmentMethod] = useState<FulfillmentMethodEnum | null>(() =>
-        resolveFulfillmentMethod(selectedVariant, selectedVariant?.supportedFulfillmentMethods?.[0] ?? null)
-    );
+    const [selectedFulfillmentMethod, setSelectedFulfillmentMethod] = useState<FulfillmentMethodEnum | null>(null);
     const [wishlist] = useAtom(wishlistAtom);
     const toggleWishlist = useSetAtom(toggleWishlistAtom);
     const isWishlisted = wishlist.some((item) => item._id === product?._id);
     useEffect(() => setLocalQty(quantity), [quantity]);
-    useEffect(() => {
-        setSelectedFulfillmentMethod((prev) => resolveFulfillmentMethod(selectedVariant, prev));
-    }, [selectedVariant?._id]);
+
     const fulfillmentAvailability = useMemo(
         () => computeFulfillmentAvailability(selectedVariant, selectedStoreId, { doItBestId: DO_IT_BEST_ADDRESS_ID }),
         [selectedVariant, selectedStoreId]
     );
     console.log(fulfillmentAvailability);
+
+    // Sort fulfillment methods: pickup first, then delivery, then shipping
+    const sortedFulfillmentMethods = useMemo(() => {
+        if (!selectedVariant?.supportedFulfillmentMethods) return [];
+        const methodOrder: FulfillmentMethodEnum[] = ['pickup', 'delivery', 'shipping'];
+        const supported = selectedVariant.supportedFulfillmentMethods;
+        return methodOrder.filter(method => supported.includes(method));
+    }, [selectedVariant?.supportedFulfillmentMethods]);
+
+    // Auto-select first available method
+    useEffect(() => {
+        if (sortedFulfillmentMethods.length === 0) {
+            setSelectedFulfillmentMethod(null);
+            return;
+        }
+
+        // Find first available method in sorted order
+        const firstAvailable = sortedFulfillmentMethods.find(method => {
+            const info = fulfillmentAvailability[method];
+            // If trackQuantity is false, all methods are available
+            if (!selectedVariant?.trackQuantity) return true;
+            return info?.available === true;
+        });
+
+        if (firstAvailable) {
+            setSelectedFulfillmentMethod(firstAvailable);
+        } else {
+            // If no method is available, select the first one anyway (will be disabled)
+            setSelectedFulfillmentMethod(sortedFulfillmentMethods[0]);
+        }
+    }, [sortedFulfillmentMethods, fulfillmentAvailability, selectedVariant?.trackQuantity]);
     const activeFulfillmentMethod = resolveFulfillmentMethod(selectedVariant, selectedFulfillmentMethod);
     const activeMethodInfo = activeFulfillmentMethod ? fulfillmentAvailability[activeFulfillmentMethod] : undefined;
     const methodLimit = !selectedVariant?.trackQuantity
@@ -166,9 +193,9 @@ export default function QuantityPicker({
     return (
         <>
             <div className='flex flex-col gap-[1rem]'>
-                <p className='text-[1rem] font-medium'>How you’ll get this item</p>
+                <p className='text-[1rem] font-medium'>How you'll get this item</p>
                 <div className="flex items-center gap-[0.5rem]">
-                    {selectedVariant?.supportedFulfillmentMethods?.map((method) => {
+                    {sortedFulfillmentMethods.map((method) => {
                         const info = fulfillmentAvailability ? fulfillmentAvailability[method] : undefined;
                         const isDisabled = Boolean(selectedVariant?.trackQuantity && !info?.available);
                         const isSelected = selectedFulfillmentMethod === method;

@@ -1,7 +1,7 @@
 "use client";
 
-import Button from "@/components/shared/Button";
 import Image from "next/image";
+import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteRequestPopup";
 
 export default function BulkOrdersSection() {
   return (
@@ -36,18 +36,13 @@ export default function BulkOrdersSection() {
               Our bulk order service makes it easy to get high-volume products at competitive pricing for your large projects. From lumber and hardware to specialized tools and supplies, we can handle large quantities for your construction or renovation projects.
             </p>
 
-            <Button
-              variant="secondary"
-              sx={{
-                alignSelf: 'flex-start',
-                backgroundColor: 'var(--Secondary-100)',
-                '&:hover': {
-                  backgroundColor: 'color-mix(in srgb, var(--Secondary-100) 85%, black)',
-                }
-              }}
-            >
-              Request a Quote
-            </Button>
+            <div className="self-start">
+              <QuoteRequestPopup
+                triggerVariant="button"
+                buttonVariant="secondary"
+                triggerClassName="!self-start"
+              />
+            </div>
           </div>
 
           {/* Image on bottom for mobile, right for desktop */}
