@@ -226,7 +226,8 @@ export type CartTotals = {
     subTotal: number;
     deliveryCostBase: number;
     deliveryTax: number;
-
+    subTotalBeforeDiscounts: number;
+    appliedDiscounts: Discount[];
 
 
 };
