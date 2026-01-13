@@ -10,6 +10,7 @@ type QuoteRequestPopupProps = {
     triggerLabel?: string;
     triggerVariant?: 'button' | 'link';
     triggerClassName?: string;
+    buttonVariant?: 'primary' | 'secondary' | 'outline';
 };
 
 export default function QuoteRequestPopup({
@@ -17,12 +18,24 @@ export default function QuoteRequestPopup({
     triggerLabel = "Request a Quote",
     triggerVariant = "button",
     triggerClassName,
+    buttonVariant = "primary",
 }: QuoteRequestPopupProps) {
 
     const [isOpen, setIsOpen] = useState(false);
     const signupHref = dashboardUrl ? `${dashboardUrl}/auth/register/regular` : '#';
+    const loginHref = dashboardUrl ? `${dashboardUrl}/auth/login` : '#';
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
+    const handleSignup = () => {
+        if (signupHref !== '#') {
+            window.open(signupHref, '_blank', 'noopener,noreferrer');
+        }
+    };
+    const handleLogin = () => {
+        if (loginHref !== '#') {
+            window.open(loginHref, '_blank', 'noopener,noreferrer');
+        }
+    };
 
     return (
         <>
@@ -35,7 +48,7 @@ export default function QuoteRequestPopup({
                     {triggerLabel}
                 </button>
             ) : (
-                <Button size="medium" variant="primary" onClick={handleOpen} className={triggerClassName}>
+                <Button size="medium" variant={buttonVariant} onClick={handleOpen} className={triggerClassName}>
                     {triggerLabel}
                 </Button>
             )}
@@ -53,16 +66,22 @@ export default function QuoteRequestPopup({
                             The quote experience is faster, more personalized, and keeps all of your projects organized inside our Customer Dashboard. Sign up to unlock live order tracking, saved quotes, and instant re-orders.
                         </p>
                     </div>
-                    <Button size="large" variant="primary" href={signupHref}>
+                    <Button size="large" variant="primary" onClick={handleSignup}>
                         Sign up & Start Ordering
                     </Button>
-                    <button
-                        type="button"
-                        onClick={handleClose}
-                        className="text-sm cursor-pointer font-medium text-gray-500 hover:text-gray-700 transition-colors"
-                    >
-                        Maybe later
-                    </button>
+                    <div className="flex flex-col items-center gap-2">
+                        <p className="text-sm text-gray-600">
+                            Already have an account?{' '}
+                            <button
+                                type="button"
+                                onClick={handleLogin}
+                                className="text-[var(--primary-500-main)] font-medium hover:underline cursor-pointer"
+                            >
+                                Login here
+                            </button>
+                        </p>
+
+                    </div>
                 </div>
             </Modal>
         </>
