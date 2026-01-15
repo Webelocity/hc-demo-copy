@@ -78,6 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             toggleWishlist(product);
         }
     }
+    const thumbnail = product?.thumbnail?.file ?? product?.productMedia[0]?.file;
 
     return (
         <div className="h-full min-h-[16.25rem] !box-border p-[1.125rem] flex flex-col gap-[0.75rem] rounded-[var(--Radius-xs)] border-[var(--Colors-Neutral-100)] border-solid border-[1px] bg-white cursor-pointer relative group "
@@ -97,7 +98,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             <div className="flex justify-between items-center relative w-[9.5rem] h-[9.5rem] m-auto">
-                {product?.thumbnail?.file ? <Image src={product.thumbnail.file} className="object-contain" fill alt="product-card" /> : <FallBackImage />}
+                {thumbnail ? <Image src={thumbnail} className="object-contain" fill alt="product-card" /> : <FallBackImage />}
             </div>
             <div className="flex flex-col gap-[0.25rem]">
                 <span className="py-[0.25rem] px-[0.5rem] text-[0.75rem] rounded-[1.125rem] bg-[var(--Colors-Neutral-50)] w-fit">{getLastDefaultPathName(product)}</span>
