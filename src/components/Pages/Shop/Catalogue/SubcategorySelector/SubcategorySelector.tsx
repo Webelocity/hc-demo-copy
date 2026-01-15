@@ -100,8 +100,8 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
     // Hide only if the last selected node is a child subcategory (deepest level) with no children
     // Show if it's a category or subcategory with children
     const shouldHide = Boolean(
-        lastSelectedNode && 
-        isChildSubCategory(lastSelectedNode) && 
+        lastSelectedNode &&
+        isChildSubCategory(lastSelectedNode) &&
         (!('childSubCategories' in lastSelectedNode) || !lastSelectedNode.childSubCategories || lastSelectedNode.childSubCategories.length === 0)
     );
 
@@ -117,7 +117,7 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
             if (node) {
                 seen.add(id);
                 // Only include nodes that have children (can show subcategories)
-                const hasChildren = isCategory(node) 
+                const hasChildren = isCategory(node)
                     ? (node.categorySubCategories && node.categorySubCategories.length > 0)
                     : (node.childSubCategories && node.childSubCategories.length > 0);
                 if (hasChildren) {
@@ -274,9 +274,6 @@ const SubcategorySelector = ({ selectedSubCat, onSelect }: SubcategorySelectorPr
                         <div className="flex flex-col gap-[0.2rem] min-w-0">
                             <span className="text-[0.95rem] font-semibold text-[color:var(--Neutral-800)] leading-[1.3rem] line-clamp-2">
                                 {child.name}
-                            </span>
-                            <span className="text-[0.8rem] text-[color:var(--Neutral-600)] leading-[1.1rem] line-clamp-1">
-                                {isCategory(parent) ? 'Under ' : 'Child of '} {parent.name}
                             </span>
                             <span className="text-[0.75rem] text-[color:var(--secondary-500-main)] font-medium whitespace-nowrap">
                                 {productCount} item{productCount === 1 ? '' : 's'}

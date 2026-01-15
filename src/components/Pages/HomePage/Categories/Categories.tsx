@@ -94,24 +94,29 @@ export default function Categories() {
                     ) : (
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[1.25rem] justify-center">
                             {/* category card */}
-                            {(categories ?? []).map((category) => (
-                                <Link href={`/shop/catalogue?cat=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
-                                    <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
-                                        {category.image ? (
-                                            <Image src={category.image} className="!relative !w-[6rem] !object-contain !h-[6.5rem]" alt="category" fill />
-                                        ) : (
-                                            <FallBackImage className="!w-[6rem] !h-[6.5rem]" />
-                                        )}
-                                    </div>
-                                    <p className="mt-[0.5rem] text-[1.25rem] font-bold text-[var(--Neutral-800)]">
-                                        {category.name}
-                                    </p>
-                                    <p className="text-[1rem] font-semibold text-[var(--Colors-Neutral-500)]">
-                                        {category.productCount} Products
-                                    </p>
+                            {(categories ?? [])
+                                .filter((category) =>
+                                    category.productCount > 0 &&
+                                    category.name !== "Uncategorized"
+                                )
+                                .map((category) => (
+                                    <Link href={`/shop/catalogue?cat=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
+                                        <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
+                                            {category.image ? (
+                                                <Image src={category.image} className="!relative !w-[6rem] !object-contain !h-[6.5rem]" alt="category" fill />
+                                            ) : (
+                                                <FallBackImage className="!w-[6rem] !h-[6.5rem]" />
+                                            )}
+                                        </div>
+                                        <p className="mt-[0.5rem] text-[1.25rem] font-bold text-[var(--Neutral-800)]">
+                                            {category.name}
+                                        </p>
+                                        <p className="text-[1rem] font-semibold text-[var(--Colors-Neutral-500)]">
+                                            {category.productCount} Products
+                                        </p>
 
-                                </Link>
-                            ))}
+                                    </Link>
+                                ))}
                         </div>
                     )}
                 </div>

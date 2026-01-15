@@ -178,6 +178,7 @@ export default function ProductQuickAddModal({ product, open, onClose }: Product
     if (!mounted) {
         return null;
     }
+    const thumbnail = selectedVariant?.thumbnail?.file ?? selectedVariant?.productMedia[0]?.file ?? product.thumbnail?.file ?? product.productMedia[0]?.file;
 
     const modal = (
         <AnimatePresence>
@@ -210,10 +211,10 @@ export default function ProductQuickAddModal({ product, open, onClose }: Product
                             <div className="flex-1 space-y-4">
                                 <div className="flex items-start gap-4">
                                     <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg border border-[var(--Colors-Neutral-100)] bg-[var(--Colors-Neutral-50)]">
-                                        {selectedVariant?.thumbnail?.file ? (
+                                        {thumbnail ? (
                                             <Image
-                                                src={selectedVariant.thumbnail.file}
-                                                alt={selectedVariant.name}
+                                                src={thumbnail}
+                                                alt={product.name}
                                                 fill
                                                 className="object-contain"
                                             />
