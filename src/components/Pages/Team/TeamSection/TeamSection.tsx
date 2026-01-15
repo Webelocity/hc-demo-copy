@@ -8,19 +8,19 @@ import { useTeam } from "@/hooks/useStrapi";
 type TabType =
   | "All"
   | "Ownership"
-  | "General Manager"
-  | "Office Manager"
+  | "Managers"
   | "Purchasing"
   | "Accounting"
+  | "Sales"
   | "IT";
 
 const tabs: TabType[] = [
   "All",
   "Ownership",
-  "General Manager",
-  "Office Manager",
+  "Managers",
   "Purchasing",
   "Accounting",
+  "Sales",
   "IT",
 ];
 
@@ -30,6 +30,13 @@ export default function TeamSection() {
   const filteredMembers = useMemo(() => {
     if (activeTab === "All") {
       return teamData?.data;
+    }
+    if (activeTab === "Managers") {
+      return teamData?.data.filter(
+        (member) =>
+          member.category === "General Manager" ||
+          member.category === "Office Manager"
+      );
     }
     return teamData?.data.filter((member) => member.category === activeTab);
   }, [activeTab, teamData?.data]);
@@ -54,11 +61,10 @@ export default function TeamSection() {
                                     px-[1.5rem] py-[1rem] rounded-[var(--Radius-md)] 
                                     font-medium text-[0.875rem] leading-[1.5] tracking-[0.0175rem] 
                                     text-black transition-all cursor-pointer
-                                    ${
-                                      activeTab === tab
-                                        ? "bg-[var(--Secondary-100)]"
-                                        : "bg-transparent hover:bg-[var(--Secondary-100)] hover:bg-opacity-50"
-                                    }
+                                    ${activeTab === tab
+                    ? "bg-[var(--Secondary-100)]"
+                    : "bg-transparent hover:bg-[var(--Secondary-100)] hover:bg-opacity-50"
+                  }
                                 `}
               >
                 {tab}
