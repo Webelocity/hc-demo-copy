@@ -7,7 +7,7 @@ interface FallBackImageProps {
 export default function FallBackImage({ className = 'w-full h-full ' }: FallBackImageProps) {
     return (
         <div className={`relative ${className}`}>
-            <Image src="/assets/image/shared/logo.svg" alt="category" fill />
+            <Image src="/assets/image/shared/NoImage.svg" alt="category" fill />
         </div>
     );
 }
