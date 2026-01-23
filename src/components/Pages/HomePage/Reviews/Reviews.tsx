@@ -4,6 +4,8 @@ import CustomNoData from "@/components/shared/CustomNoData";
 import { useReviews } from "@/hooks/useStrapi";
 import { getStrapiImageUrl } from "@/lib/strapi";
 import Image from "next/image";
+import { FaRegUserCircle } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa6";
 
 export default function Reviews() {
   const { data: reviewsData, isLoading, error, isError } = useReviews();
@@ -31,16 +33,23 @@ export default function Reviews() {
             className="swiper-pagination-reviews"
             slideStyles="pt-[2.75rem]"
             renderSlide={(item) => {
+              console.log(item);
               return (
                 <div className="flex-1 flex flex-col gap-[2.5rem] p-[1.5rem] pt-[3.25rem] bg-white rounded-[var(--Radius-md)] h-[16.25rem] relative box-content">
-                  <Image
-                    className="absolute top-0 !left-[50%] -translate-x-1/2 -translate-y-1/2 !w-[5.5rem] !h-[5.5rem] !rounded-[5.5rem]"
-                    src={getStrapiImageUrl(item.image.url)}
-                    alt="Review"
-                    fill
-                  />
+                  {item?.image?.url ? (
+                    <Image
+                      className="absolute top-0 !left-[50%] -translate-x-1/2 -translate-y-1/2 !w-[5.5rem] !h-[5.5rem] !rounded-[5.5rem]"
+                      src={getStrapiImageUrl(item?.image?.url)}
+                      alt={item.name}
+                      fill
+                    />
+                  ) : (
+                    <div className="absolute top-0 left-[50%] -translate-x-1/2 -translate-y-1/2 w-[5.5rem] h-[5.5rem] rounded-full bg-[var(--Colors-Neutral-100)] flex items-center justify-center">
+                      <FaRegUser className="w-[2.5rem] h-[2.5rem] text-[var(--Colors-Neutral-500)]" />
+                    </div>
+                  )}
                   <div className="flex-1 flex items-center justify-center">
-                    <p className="text-[1.125rem] text-center line-clamp-3">
+                    <p className="text-[1.125rem] text-center line-clamp-5">
                       {item.review}
                     </p>
                   </div>
