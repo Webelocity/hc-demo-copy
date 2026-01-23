@@ -6,7 +6,7 @@ import { useMediaQuery } from "@mui/material";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useAtom } from "jotai";
 import { selectedStoreAtom } from "@/atoms/storeAtom";
-import { StoreLocation, STORES } from "@/util/shedule";
+import { StoreLocation, getStoreById, DEFAULT_STORE_ID } from "@/util/shedule";
 
 type LatLng = { lat: number; lng: number };
 
@@ -45,11 +45,9 @@ const Map: React.FC<MapProps> = ({ size = "medium", customLocation }) => {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
   const [selectedStoreId] = useAtom(selectedStoreAtom);
-  console.log(selectedStoreId);
-
-  console.log(STORES);
-  const selectedStore = STORES[selectedStoreId];
-  console.log(selectedStore);
+  
+  // Safely get the store, with fallback to default store if ID is invalid
+  const selectedStore = getStoreById(selectedStoreId);
 
   // Use custom location when provided, otherwise fall back to the selected store coordinates
   const mapCenter: LatLng =
@@ -71,7 +69,7 @@ const Map: React.FC<MapProps> = ({ size = "medium", customLocation }) => {
   });
 
   const openInGoogleMaps = () => {
-    const url = customLocation?.gmapLink ? customLocation.gmapLink : selectedStore?.gmapLink ?? '';
+    const url = customLocation?.gmapLink ?? selectedStore?.gmapLink ?? '';
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
     }
