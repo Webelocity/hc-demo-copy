@@ -49,7 +49,7 @@ export default function Reviews() {
                     </div>
                   )}
                   <div className="flex-1 flex items-center justify-center">
-                    <p className="text-[1.125rem] text-center line-clamp-5">
+                    <p className="text-[1.125rem] text-center line-clamp-6">
                       {item.review}
                     </p>
                   </div>
