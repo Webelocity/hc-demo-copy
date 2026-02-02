@@ -26,9 +26,57 @@ const sora = Sora({
   weight: ["400", "500", "600", "700"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.hcinc.com";
+
 export const metadata: Metadata = {
-  title: 'Home Central Stores',
-  description: 'Home Central Stores Ecommerce web app ',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    template: "%s | Home Central Stores",
+  },
+  description:
+    "Home Central Stores – your local hardware and building supplies destination in Owego, Vestal, and Candor, NY. Shop tools, paint, lumber, and get contractor rewards.",
+  keywords: [
+    "Home Central Stores",
+    "hardware store",
+    "building supplies",
+    "Owego NY",
+    "Vestal NY",
+    "Candor NY",
+    "lumber",
+    "paint",
+    "contractor supplies",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "Home Central Stores",
+    title: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    description:
+      "Your local hardware and building supplies destination in Owego, Vestal, and Candor, NY. Shop tools, paint, lumber, and get contractor rewards.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    description:
+      "Your local hardware and building supplies destination in Owego, Vestal, and Candor, NY.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
+  verification: {
+    // Add your Google Search Console verification when ready:
+    // google: "your-google-verification-code",
+  },
 };
 
 export default function RootLayout({

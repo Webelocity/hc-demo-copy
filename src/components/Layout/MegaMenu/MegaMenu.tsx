@@ -1,11 +1,43 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './MegaMenu.module.scss';
 import Button from '@/components/shared/Button';
 import { categoriesQueryAtom } from '@/atoms/categoryAtom';
 import { useAtomValue } from 'jotai';
+import { FUSED_CATEGORY_GROUPS } from '@/components/Pages/HomePage/Categories/categoryFusionConfig';
+
+type FusedMenuCategory = {
+    displayName: string;
+    ids: string[];
+    subcategories: Subcategory[];
+};
+
+function buildFusedMenuCategories(backendCategories: Category[]): FusedMenuCategory[] {
+    const byName = new Map<string, Category>();
+    (backendCategories ?? [])
+        .filter((c) => c.name !== 'Uncategorized')
+        .forEach((c) => byName.set(c.name, c));
+
+    return FUSED_CATEGORY_GROUPS.map((group) => {
+        const matched = group.backendNames
+            .map((name) => byName.get(name))
+            .filter((c): c is Category => c != null);
+        const ids = matched.map((c) => c._id);
+        const seenIds = new Set<string>();
+        const subcategories: Subcategory[] = [];
+        for (const cat of matched) {
+            for (const sub of cat.categorySubCategories ?? []) {
+                if (sub?._id && !seenIds.has(sub._id)) {
+                    seenIds.add(sub._id);
+                    subcategories.push(sub);
+                }
+            }
+        }
+        return { displayName: group.displayName, ids, subcategories };
+    }).filter((fused) => fused.ids.length > 0);
+}
 
 interface MegaMenuProps {
     isOpen: boolean;
@@ -16,15 +48,19 @@ interface MegaMenuProps {
 export default function MegaMenu({ isOpen, onClose, shopButtonRef }: MegaMenuProps) {
     const router = useRouter();
     const { data: categories, status: categoriesStatus } = useAtomValue(categoriesQueryAtom);
-    const [activeCategory, setActiveCategory] = useState<string>('');
+    const fusedMenuCategories = useMemo(
+        () => buildFusedMenuCategories((categories ?? []) as Category[]),
+        [categories]
+    );
+    const [activeFusedKey, setActiveFusedKey] = useState<string>('');
     const menuRef = useRef<HTMLDivElement>(null);
 
-    // Set first category as active when data loads
+    // Set first fused category as active when data loads
     useEffect(() => {
-        if (categories && categories.length > 0 && !activeCategory) {
-            setActiveCategory(categories[0]._id);
+        if (fusedMenuCategories.length > 0 && !activeFusedKey) {
+            setActiveFusedKey(fusedMenuCategories[0].displayName);
         }
-    }, [categories, activeCategory]);
+    }, [fusedMenuCategories, activeFusedKey]);
 
     // Handle click outside to close menu
     useEffect(() => {
@@ -58,14 +94,19 @@ export default function MegaMenu({ isOpen, onClose, shopButtonRef }: MegaMenuPro
 
     const isLoading = categoriesStatus === 'pending';
 
+    const activeFused = useMemo(
+        () => fusedMenuCategories.find((f) => f.displayName === activeFusedKey),
+        [fusedMenuCategories, activeFusedKey]
+    );
+
     const handleSubcategoryClick = (subcategoryId: string) => {
         router.push(`/shop/catalogue?sub=${subcategoryId}&page=1`);
         onClose?.();
     };
 
     const handleShopAllClick = () => {
-        if (activeCategory) {
-            router.push(`/shop/catalogue?cat=${activeCategory}&page=1`);
+        if (activeFused?.ids?.length) {
+            router.push(`/shop/catalogue?cat=${activeFused.ids.join(',')}&page=1`);
             onClose?.();
         }
     };
@@ -84,14 +125,14 @@ export default function MegaMenu({ isOpen, onClose, shopButtonRef }: MegaMenuPro
                             />
                         ))
                     ) : (
-                        categories?.map((category, index) => (
+                        fusedMenuCategories.map((fused) => (
                             <span
-                                key={index}
-                                onClick={() => setActiveCategory(category._id)}
-                                className={`text-[1rem] font-medium py-[1rem] px-[1.5rem] text-center rounded-[var(--Radius-md)] cursor-pointer transition-colors duration-200 ${activeCategory === category._id ? 'bg-[var(--Secondary-50)]' : 'hover:bg-[var(--Secondary-50)] hover:opacity-70'
+                                key={fused.displayName}
+                                onClick={() => setActiveFusedKey(fused.displayName)}
+                                className={`text-[1rem] font-medium py-[1rem] px-[1.5rem] text-center rounded-[var(--Radius-md)] cursor-pointer transition-colors duration-200 ${activeFusedKey === fused.displayName ? 'bg-[var(--Secondary-50)]' : 'hover:bg-[var(--Secondary-50)] hover:opacity-70'
                                     }`}
                             >
-                                {category.name}
+                                {fused.displayName}
                             </span>
                         ))
                     )}
@@ -138,17 +179,15 @@ export default function MegaMenu({ isOpen, onClose, shopButtonRef }: MegaMenuPro
                                 </div>
                             </div>
                             <div className="grid grid-cols-4 gap-[0.5rem]">
-                                {categories
-                                    ?.find((category) => category._id === activeCategory)
-                                    ?.categorySubCategories?.map((subcategory, index) => (
-                                        <span
-                                            key={index}
-                                            onClick={() => handleSubcategoryClick(subcategory._id)}
-                                            className="px-[1rem] py-[0.75rem] text-start text-[1rem] font-medium cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors duration-200"
-                                        >
-                                            {subcategory.name}
-                                        </span>
-                                    ))}
+                                {activeFused?.subcategories?.map((subcategory) => (
+                                    <span
+                                        key={subcategory._id}
+                                        onClick={() => handleSubcategoryClick(subcategory._id)}
+                                        className="px-[1rem] py-[0.75rem] text-start text-[1rem] font-medium cursor-pointer hover:text-[color:var(--secondary-500-main)] transition-colors duration-200"
+                                    >
+                                        {subcategory.name}
+                                    </span>
+                                ))}
                             </div>
                             <div className="mt-[1rem]">
                                 <Button variant="outline" onClick={handleShopAllClick}>
