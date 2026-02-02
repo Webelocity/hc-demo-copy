@@ -1,5 +1,6 @@
 // app/products/[id]/page.tsx
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FiAlertTriangle, FiRefreshCw, FiEdit3, FiChevronRight } from 'react-icons/fi';
 import { fetchSingleProductById } from '@/Api/Apis';
@@ -16,11 +17,46 @@ import Button from '@/components/shared/Button';
 import RelatedProducts from '@/components/Pages/Shop/SingleProduct/RelatedProducts';
 import { STORES } from '@/util/shedule';
 
-
 export const revalidate = 300;
 
 type PageParams = { id: string };
 type Search = { variant_Id?: string; q?: string };
+
+function stripHtml(html: string): string {
+    return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+export async function generateMetadata({ params }: { params: Promise<PageParams> }): Promise<Metadata> {
+    const { id } = await params;
+    try {
+        const product = await fetchSingleProductById(id);
+        const title = product?.name ?? 'Product';
+        const rawDesc = product?.description ?? '';
+        const description = rawDesc ? (stripHtml(rawDesc).slice(0, 160) + (stripHtml(rawDesc).length > 160 ? '…' : '')) : `Shop ${product?.name ?? 'this product'} at Home Central Stores – hardware and building supplies in Owego, Vestal, and Candor, NY.`;
+        const image = product?.thumbnail?.file;
+        const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.hcinc.com';
+        return {
+            title,
+            description,
+            openGraph: {
+                title: `${title} | Home Central Stores`,
+                description,
+                ...(image && { images: [{ url: image.startsWith('http') ? image : `${process.env.NEXT_PUBLIC_STRAPI_URL || ''}${image}` }] }),
+                url: `${siteUrl}/product/${id}`,
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: `${title} | Home Central Stores`,
+                description,
+            },
+        };
+    } catch {
+        return {
+            title: 'Product',
+            description: 'Shop at Home Central Stores – hardware and building supplies in Owego, Vestal, and Candor, NY.',
+        };
+    }
+}
 
 export default async function ProductPage({
     params,

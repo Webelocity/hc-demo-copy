@@ -1,5 +1,17 @@
+import type { Metadata } from "next";
 import LocationsSelector from "@/components/Pages/Locations/LocationsSelector/LocationsSelector";
 import ServingBanner from "@/components/Pages/Locations/ServingBanner/ServingBanner";
+
+export const metadata: Metadata = {
+    title: "Store Locations",
+    description:
+        "Find your nearest Home Central Stores in Owego, Vestal, and Candor, NY. Store hours, directions, and contact info for hardware and building supplies.",
+    openGraph: {
+        title: "Store Locations | Home Central Stores",
+        description:
+            "Home Central Stores in Owego, Vestal, and Candor, NY – find your nearest location.",
+    },
+};
 
 export default function Locations() {
     return (

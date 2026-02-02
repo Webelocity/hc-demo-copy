@@ -1,6 +1,18 @@
 import dynamic from "next/dynamic";
+import type { Metadata } from "next";
 import Banners from "@/components/Pages/HomePage/Banners/Banners";
 import SpecialOrdering from "@/components/Pages/HomePage/SpecialOrdering/SpecialOrdering";
+
+export const metadata: Metadata = {
+  title: "Home",
+  description:
+    "Home Central Stores – hardware, building supplies, tools, paint, and contractor rewards in Owego, Vestal, and Candor, NY. Shop online or visit our stores.",
+  openGraph: {
+    title: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    description:
+      "Your local hardware and building supplies destination in Owego, Vestal, and Candor, NY. Shop tools, paint, lumber, and get contractor rewards.",
+  },
+};
 
 const WeeklyOffers = dynamic(
   () => import("@/components/Pages/HomePage/WeeklyOffers/WeeklyOffers"),

@@ -29,6 +29,27 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
+## SEO (Google indexing & crawling)
+
+The app is set up so content pages are crawlable and indexable by Google:
+
+- **Root metadata** (`src/app/layout.tsx`): Default title template, description, Open Graph, Twitter cards, and `metadataBase` for canonical URLs.
+- **Page-level metadata**: Each content page (or its layout) exports `metadata` or `generateMetadata` with a unique title and description so search results show the right snippet.
+- **Sitemap**: `src/app/sitemap.ts` generates `/sitemap.xml` with all public content URLs. Submit this URL in [Google Search Console](https://search.google.com/search-console).
+- **Robots**: `src/app/robots.ts` generates `/robots.txt` that allows crawling of content and points to the sitemap. Checkout, cart, order, and wishlist paths are disallowed.
+
+**Production:**
+
+1. Set the canonical site URL in `.env`:
+   ```bash
+   NEXT_PUBLIC_SITE_URL=https://www.yourdomain.com
+   ```
+   (Used for sitemap, robots, and Open Graph URLs. Default fallback is `https://www.hcinc.com`.)
+
+2. In [Google Search Console](https://search.google.com/search-console), add your property and submit `https://www.yourdomain.com/sitemap.xml`.
+
+3. Optional: In `src/app/layout.tsx`, uncomment the `verification.google` field and add your Google Search Console verification code.
+
 ## Deploy on Vercel (auth account)
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

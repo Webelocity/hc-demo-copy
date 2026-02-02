@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import HeroSection from "@/components/Pages/SpecialOrdering/HeroSection";
 import MaterialsSection from "@/components/Pages/SpecialOrdering/MaterialsSection";
 import CustomQuotesSection from "@/components/Pages/SpecialOrdering/CustomQuotesSection";
@@ -5,10 +6,15 @@ import BulkOrdersSection from "@/components/Pages/SpecialOrdering/BulkOrdersSect
 import PoliciesSection from "@/components/Pages/SpecialOrdering/PoliciesSection";
 import ContactUs from "@/components/shared/ContactUs/ContactUs";
 
-export const metadata = {
-  title: "Special Ordering for Contractors - Home Central Stores",
+export const metadata: Metadata = {
+  title: "Special Ordering for Contractors",
   description:
     "Request hard-to-find items, custom quotes, and bulk orders for your construction projects. Home Central Stores offers comprehensive special ordering services in Owego, Vestal, and Candor.",
+  openGraph: {
+    title: "Special Ordering for Contractors | Home Central Stores",
+    description:
+      "Special ordering, custom quotes, and bulk orders in Owego, Vestal, and Candor, NY.",
+  },
 };
 
 export default function SpecialOrdering() {
