@@ -3,13 +3,49 @@ import { categoriesQueryAtom } from "@/atoms/categoryAtom";
 import FallBackImage from "@/components/shared/FallBackImage";
 import { useAtomValue } from "jotai";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ErrorModal from "@/components/shared/ErrorModal";
 import Link from "next/link";
+import { FUSED_CATEGORY_GROUPS, FUSED_CATEGORY_IMAGES } from "./categoryFusionConfig";
+
+export type FusedCategory = {
+    displayName: string;
+    ids: string[];
+    productCount: number;
+    image: string;
+};
+
+function buildFusedCategories(backendCategories: Category[]): FusedCategory[] {
+    const byName = new Map<string, Category>();
+    (backendCategories ?? [])
+        .filter((c) => c.name !== "Uncategorized")
+        .forEach((c) => byName.set(c.name, c));
+
+    return FUSED_CATEGORY_GROUPS.map((group) => {
+        const matched = group.backendNames
+            .map((name) => byName.get(name))
+            .filter((c): c is Category => c != null);
+        const productCount = matched.reduce((sum, c) => sum + (c.productCount ?? 0), 0);
+        const ids = matched.map((c) => c._id);
+        const configImage = FUSED_CATEGORY_IMAGES[group.displayName];
+        const image = configImage || matched[0]?.image || "";
+        return {
+            displayName: group.displayName,
+            ids,
+            productCount,
+            image,
+        };
+    }).filter((fused) => fused.productCount > 0);
+}
 
 export default function Categories() {
     const { data: categories, status: categoriesStatus, error: categoriesError, refetch: refetchCategories } = useAtomValue(categoriesQueryAtom);
     const [errorOpen, setErrorOpen] = useState(false);
+
+    const fusedCategories = useMemo(
+        () => buildFusedCategories((categories ?? []) as Category[]),
+        [categories]
+    );
     // const categories = [
     //     {
     //         name: "Building Materials",
@@ -93,30 +129,33 @@ export default function Categories() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[1.25rem] justify-center">
-                            {/* category card */}
-                            {(categories ?? [])
-                                .filter((category) =>
-                                    category.productCount > 0 &&
-                                    category.name !== "Uncategorized"
-                                )
-                                .map((category) => (
-                                    <Link href={`/shop/catalogue?cat=${category._id}`} key={category.name} className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer">
-                                        <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
-                                            {category.image ? (
-                                                <Image src={category.image} className="!relative !w-[6rem] !object-contain !h-[6.5rem]" alt="category" fill />
-                                            ) : (
-                                                <FallBackImage className="!w-[6rem] !h-[6.5rem]" />
-                                            )}
-                                        </div>
-                                        <p className="mt-[0.5rem] text-[1.25rem] font-bold text-[var(--Neutral-800)]">
-                                            {category.name}
-                                        </p>
-                                        <p className="text-[1rem] font-semibold text-[var(--Colors-Neutral-500)]">
-                                            {category.productCount} Products
-                                        </p>
-
-                                    </Link>
-                                ))}
+                            {fusedCategories.map((fused) => (
+                                <Link
+                                    href={`/shop/catalogue?cat=${fused.ids.join(",")}`}
+                                    key={fused.displayName}
+                                    className="flex flex-col gap-[0.5rem] text-center justify-start items-center cursor-pointer"
+                                >
+                                    <div className="relative w-fit h-fit py-[1.5rem] px-[1.7rem] rounded-[10rem] bg-white">
+                                        {fused.image ? (
+                                            <Image
+                                                src={fused.image}
+                                                className="!relative !w-[6rem] !object-contain !h-[6.5rem]"
+                                                alt={fused.displayName}
+                                                width={96}
+                                                height={104}
+                                            />
+                                        ) : (
+                                            <FallBackImage className="!w-[6rem] !h-[6.5rem]" />
+                                        )}
+                                    </div>
+                                    <p className="mt-[0.5rem] text-[1.25rem] font-bold text-[var(--Neutral-800)]">
+                                        {fused.displayName}
+                                    </p>
+                                    <p className="text-[1rem] font-semibold text-[var(--Colors-Neutral-500)]">
+                                        {fused.productCount} Products
+                                    </p>
+                                </Link>
+                            ))}
                         </div>
                     )}
                 </div>
