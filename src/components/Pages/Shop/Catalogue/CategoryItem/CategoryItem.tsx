@@ -142,8 +142,10 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
     setIsExpanded((prev) => !prev);
   };
 
+  // Expand only when a descendant is selected (to reveal the selection).
+  // Do not expand when this node itself is selected but no descendant is selected.
   useEffect(() => {
-    const shouldExpand = hasSelectedDescendant(category) || isNodeSelected(category);
+    const shouldExpand = hasSelectedDescendant(category);
     setIsExpanded(shouldExpand);
   }, [category, selectedCategoryIds, selectedSubCategoryIds]);
 
@@ -286,13 +288,12 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
               e.preventDefault();
               handleItemClick(e);
             }}
-            className={`flex-grow text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 cursor-pointer break-words ${
-              isExplicitlySelected
-                ? 'font-bold text-[color:var(--secondary-500-main)]'
-                : isIndeterminate
-                  ? 'font-semibold text-[color:var(--secondary-500-main)]'
-                  : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
-            }`}
+            className={`flex-grow text-[0.875rem] leading-[1.3125rem] transition-colors duration-300 cursor-pointer break-words ${isExplicitlySelected
+              ? 'font-bold text-[color:var(--secondary-500-main)]'
+              : isIndeterminate
+                ? 'font-semibold text-[color:var(--secondary-500-main)]'
+                : 'font-normal text-[color:var(--Neutral-800)] group-hover:text-[color:var(--secondary-500-main)] group-hover:opacity-70'
+              }`}
             style={{ fontFamily: 'var(--font-figtree)' }}
           >
             {category.name} (
