@@ -31,7 +31,7 @@ export const FUSED_CATEGORY_GROUPS: { displayName: string; backendNames: string[
   { displayName: "Lumber", backendNames: ["Lumber"] },
   {
     displayName: "Building Materials",
-    backendNames: ["Building Materials & Insulation", "Masonry", "Roofing", "Mouldings & Millwork"],
+    backendNames: ["Building Materials", "Building Materials & Insulation", "Masonry", "Roofing", "Mouldings & Millwork"],
   },
   { displayName: "Plumbing", backendNames: ["Plumbing"] },
   { displayName: "Electrical", backendNames: ["Electrical", "Electronics"] },
