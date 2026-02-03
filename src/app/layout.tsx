@@ -13,6 +13,7 @@ import Footer from "@/components/Layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
 import PreFetcher from "@/components/shared/PreFetcher";
 import CartDrawer from "@/components/Pages/Shop/Cart/CartDrawer/CartDrawer";
+import PageLoader from "@/components/shared/PageLoader/PageLoader";
 import { Suspense } from "react";
 
 const figtree = Figtree({
@@ -97,7 +98,7 @@ export default function RootLayout({
             <div className='w-full'>
               <hr className='border-[var(--Neutral-100)]' />
             </div>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<PageLoader />}>
               {children}
             </Suspense>
             <CartDrawer />
