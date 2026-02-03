@@ -2,7 +2,7 @@
 
 import Button from "@/components/shared/Button";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { GoArrowRight, GoArrowLeft } from "react-icons/go";
 import { categoriesQueryAtom } from "@/atoms/categoryAtom";
@@ -12,6 +12,38 @@ import QuoteRequestPopup from "@/components/Pages/HomePage/QuoteRequest/QuoteReq
 import { selectedStoreAtom } from "@/atoms/storeAtom";
 import { getStoreById } from "@/util/shedule";
 import { SlLocationPin } from "react-icons/sl";
+import { FUSED_CATEGORY_GROUPS } from "@/components/Pages/HomePage/Categories/categoryFusionConfig";
+
+type FusedMenuCategory = {
+  displayName: string;
+  ids: string[];
+  subcategories: Subcategory[];
+};
+
+function buildFusedMenuCategories(backendCategories: Category[]): FusedMenuCategory[] {
+  const byName = new Map<string, Category>();
+  (backendCategories ?? [])
+    .filter((c) => c.name !== "Uncategorized")
+    .forEach((c) => byName.set(c.name, c));
+
+  return FUSED_CATEGORY_GROUPS.map((group) => {
+    const matched = group.backendNames
+      .map((name) => byName.get(name))
+      .filter((c): c is Category => c != null);
+    const ids = matched.map((c) => c._id);
+    const seenIds = new Set<string>();
+    const subcategories: Subcategory[] = [];
+    for (const cat of matched) {
+      for (const sub of cat.categorySubCategories ?? []) {
+        if (sub?._id && !seenIds.has(sub._id)) {
+          seenIds.add(sub._id);
+          subcategories.push(sub);
+        }
+      }
+    }
+    return { displayName: group.displayName, ids, subcategories };
+  }).filter((fused) => fused.ids.length > 0);
+}
 
 interface MobileDrawerProps {
   isOpen: boolean;
@@ -27,8 +59,12 @@ export default function MobileDrawer({
   const router = useRouter();
   const { data: categories, status: categoriesStatus } =
     useAtomValue(categoriesQueryAtom);
+  const fusedMenuCategories = useMemo(
+    () => buildFusedMenuCategories((categories ?? []) as Category[]),
+    [categories]
+  );
   const [activeTab, setActiveTab] = useState<"main" | "shop">("main");
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+  const [selectedFused, setSelectedFused] = useState<FusedMenuCategory | null>(
     null
   );
   const selectedStoreId = useAtomValue(selectedStoreAtom);
@@ -134,12 +170,12 @@ export default function MobileDrawer({
     );
   };
 
-  const handleCategoryClick = (category: Category) => {
-    setSelectedCategory(category);
+  const handleFusedCategoryClick = (fused: FusedMenuCategory) => {
+    setSelectedFused(fused);
   };
 
   const handleBackToCategories = () => {
-    setSelectedCategory(null);
+    setSelectedFused(null);
   };
 
   const handleSubcategoryClick = (subcategoryId: string) => {
@@ -147,8 +183,8 @@ export default function MobileDrawer({
     onClose?.();
   };
 
-  const handleShopAllClick = (categoryId: string) => {
-    router.push(`/shop/catalogue?cat=${categoryId}&page=1`);
+  const handleShopAllClick = (fused: FusedMenuCategory) => {
+    router.push(`/shop/catalogue?cat=${fused.ids.join(",")}&page=1`);
     onClose?.();
   };
 
@@ -158,8 +194,8 @@ export default function MobileDrawer({
     return (
       <div className="relative overflow-hidden">
         <AnimatePresence mode="wait" initial={false}>
-          {selectedCategory ? (
-            // Subcategories view
+          {selectedFused ? (
+            // Subcategories view (fused)
             <motion.div
               key="subcategories"
               initial={{ x: "100%", opacity: 0 }}
@@ -177,30 +213,28 @@ export default function MobileDrawer({
                 <span>Back to Categories</span>
               </button>
 
-              {/* Category name header */}
+              {/* Fused category name header */}
               <div className="px-[1rem] py-[0.5rem] text-[1.5rem] font-bold text-[color:var(--Neutral-800)]">
-                {selectedCategory.name}
+                {selectedFused.displayName}
               </div>
 
-              {/* Subcategories list */}
+              {/* Merged subcategories list */}
               <div className="flex flex-col mt-[0.5rem]">
-                {selectedCategory.categorySubCategories?.map(
-                  (subcategory, index) => (
-                    <motion.button
-                      key={subcategory._id}
-                      initial={{ x: 20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ duration: 0.2, delay: index * 0.05 }}
-                      onClick={() => handleSubcategoryClick(subcategory._id)}
-                      className="p-[1rem] text-[1.125rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] hover:bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] transition-all duration-200"
-                    >
-                      {subcategory.name}
-                    </motion.button>
-                  )
-                )}
+                {selectedFused.subcategories?.map((subcategory, index) => (
+                  <motion.button
+                    key={subcategory._id}
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    onClick={() => handleSubcategoryClick(subcategory._id)}
+                    className="p-[1rem] text-[1.125rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] hover:bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] transition-all duration-200"
+                  >
+                    {subcategory.name}
+                  </motion.button>
+                ))}
               </div>
 
-              {/* Shop All button */}
+              {/* Shop All button (all backend category IDs in this fusion) */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -210,14 +244,14 @@ export default function MobileDrawer({
                 <Button
                   variant="outline"
                   fullWidth
-                  onClick={() => handleShopAllClick(selectedCategory._id)}
+                  onClick={() => handleShopAllClick(selectedFused)}
                 >
-                  Shop All {selectedCategory.name}
+                  Shop All {selectedFused.displayName}
                 </Button>
               </motion.div>
             </motion.div>
           ) : (
-            // Main categories view
+            // Main fused categories view
             <motion.div
               key="categories"
               initial={{ x: "-100%", opacity: 0 }}
@@ -234,16 +268,16 @@ export default function MobileDrawer({
                     className="h-[3.5rem] rounded-[var(--Radius-md)] animate-pulse bg-[color:var(--Neutral-200)] mb-[0.5rem]"
                   />
                 ))
-                : categories?.map((category, index) => (
+                : fusedMenuCategories.map((fused, index) => (
                   <motion.button
-                    key={category._id}
+                    key={fused.displayName}
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.2, delay: index * 0.05 }}
-                    onClick={() => handleCategoryClick(category)}
+                    onClick={() => handleFusedCategoryClick(fused)}
                     className="flex items-center justify-between p-[1rem] text-[1.25rem] font-medium text-start hover:text-[color:var(--secondary-500-main)] hover:bg-[var(--Secondary-50)] rounded-[var(--Radius-md)] transition-all duration-200 group"
                   >
-                    <span>{category.name}</span>
+                    <span>{fused.displayName}</span>
                     <GoArrowRight className="text-[1.5rem] group-hover:translate-x-[0.25rem] transition-transform duration-200" />
                   </motion.button>
                 ))}
