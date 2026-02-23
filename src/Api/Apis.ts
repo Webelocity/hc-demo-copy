@@ -366,7 +366,6 @@ export const versapayConfirmMethod = async (
     payload?: { orderId?: string; paymentIntentId?: string; billingAddressId?: string }
 ): Promise<any> => {
     try {
-        // eslint-disable-next-line no-console
         // Use guest endpoint for checkout (no JWT required)
         const res = await fetchWithStoreId<any>('/payments/orders/guest-process-payment', {
             method: "POST",
@@ -377,10 +376,8 @@ export const versapayConfirmMethod = async (
                 billingAddressId: payload?.billingAddressId,
             },
         });
-        // eslint-disable-next-line no-console
         return res;
     } catch (err) {
-        // eslint-disable-next-line no-console
         console.error('VersaPay payment error:', err);
         throw err;  // Throw error instead of returning mock for proper error handling
     }
