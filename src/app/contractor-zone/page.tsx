@@ -22,7 +22,7 @@ export default function ContractorZone() {
       <ContractorBanner />
       <GoPro />
       <JoinZone />
-      <CategorySwiper categoryId="69528696e4b6ab1278f34f34" categoryName="Building Materials" />
+      <CategorySwiper categoryId="699ed1e538be36fe0c381f2b" categoryName="Building Materials" />
       <ServiceTailored />
     </div>
   );
