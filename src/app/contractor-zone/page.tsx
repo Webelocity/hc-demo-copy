@@ -5,6 +5,7 @@ import JoinZone from "@/components/Pages/ContractorZone/JoinZone/JoinZone";
 import ServiceTailored from "@/components/Pages/ContractorZone/ServiceTailored/ServiceTailored";
 import CategorySwiper from "@/components/shared/CategorySwiper/CategorySwiper";
 
+
 export const metadata: Metadata = {
   title: "Contractor Zone",
   description:
