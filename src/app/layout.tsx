@@ -13,8 +13,9 @@ import Footer from "@/components/Layout/Footer/Footer";
 import { ToastContainer } from "react-toastify";
 import PreFetcher from "@/components/shared/PreFetcher";
 import CartDrawer from "@/components/Pages/Shop/Cart/CartDrawer/CartDrawer";
+import PageLoader from "@/components/shared/PageLoader/PageLoader";
 import { Suspense } from "react";
-import Script from "next/script";
+import CookieConsentBar from "@/components/shared/CookieConsentBar";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -88,19 +89,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${figtree.variable} ${sora.variable} antialiased`}>
-        {/* Google tag (gtag.js) */}
-        <Script
-          src='https://www.googletagmanager.com/gtag/js?id=G-04MP7D0GB0'
-          strategy='afterInteractive'
-        />
-        <Script id='google-analytics-gtag' strategy='afterInteractive'>
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-04MP7D0GB0');
-          `}
-        </Script>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <JotaiProvider>
@@ -111,7 +99,7 @@ export default function RootLayout({
             <div className='w-full'>
               <hr className='border-[var(--Neutral-100)]' />
             </div>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<PageLoader />}>
               {children}
             </Suspense>
             <CartDrawer />
@@ -128,6 +116,7 @@ export default function RootLayout({
               pauseOnHover
               theme='light'
             />
+            <CookieConsentBar />
           </JotaiProvider>
         </ThemeProvider>
       </body>
