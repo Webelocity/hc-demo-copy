@@ -127,7 +127,7 @@ export default function Home() {
       <OwegoShowRoom />
       <BestSellers />
       {/* <Rent /> */}
-      <GiftCards />
+      {/* <GiftCards /> */}
       <Brands />
       <Reviews />
       <ContactUs />
