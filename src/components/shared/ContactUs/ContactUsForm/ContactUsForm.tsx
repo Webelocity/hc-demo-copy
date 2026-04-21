@@ -8,6 +8,7 @@ import { contactFormSchema, ContactFormData } from './ContactUsForm.schema';
 import { toast } from 'react-toastify';
 import Button from '../../Button';
 import CUstomMUITheme from '@/app/theme';
+import { sendContactFormEmail } from '@/lib/emailjs/sendContactFormEmail';
 
 
 
@@ -30,16 +31,18 @@ export default function ContactUsForm() {
 
     const onSubmit = async (data: ContactFormData) => {
         try {
-            // TODO: Replace with your actual API call
-
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
+            await sendContactFormEmail(data);
             toast.success('Thank you for contacting us! We will get back to you soon.');
             reset();
         } catch (error) {
             console.error('Error submitting form:', error);
-            toast.error('Something went wrong. Please try again.');
+            const message =
+                error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+            toast.error(
+                message.includes('EmailJS is not configured')
+                    ? 'Contact form is not configured. Please try again later.'
+                    : 'Something went wrong. Please try again.',
+            );
         }
     };
 
