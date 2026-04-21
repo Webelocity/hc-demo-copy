@@ -29,6 +29,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Button from "@/components/shared/Button";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useCareers } from "@/hooks/useStrapi";
+import { sendCareerApplicationEmail } from "@/lib/emailjs/sendCareerApplicationEmail";
 
 type FormValues = JobApplication;
 
@@ -110,7 +111,7 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
         trigger,
         watch,
         reset,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<FormValues>({
         defaultValues,
         mode: "onChange",
@@ -204,7 +205,7 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
         setActiveStep((s) => Math.max(s - 1, 0));
     };
 
-    const onSubmit = (values: FormValues) => {
+    const onSubmit = async (values: FormValues) => {
         if (!values.otherExperience.applicantNameSignature) {
             toast.error("Please sign before submitting.");
             return;
@@ -213,12 +214,23 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
             toast.error("Please accept the certifications before submitting.");
             return;
         }
-        console.log(values);
-        toast.success("Your application has been submitted successfully.");
-        reset(createDefaultValues(initialJobName));
-        setActiveStep(0);
-        setCompleted([false, false, false, false]);
-        setShowSuccessModal(true);
+        try {
+            await sendCareerApplicationEmail(values);
+            toast.success("Your application has been submitted successfully.");
+            reset(createDefaultValues(initialJobName));
+            setActiveStep(0);
+            setCompleted([false, false, false, false]);
+            setShowSuccessModal(true);
+        } catch (error) {
+            console.error("Error submitting application:", error);
+            const message =
+                error instanceof Error ? error.message : "Something went wrong. Please try again.";
+            toast.error(
+                message.includes("EmailJS is not configured")
+                    ? "Application form is not configured. Please try again later."
+                    : "Something went wrong. Please try again.",
+            );
+        }
     };
 
     const addExperience = () => {
@@ -834,7 +846,9 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
 
                                 <div className="flex justify-between gap-3">
                                     <Button variant="outline" onClick={onBack}>Back</Button>
-                                    <Button variant="primary" type="submit">Submit Application</Button>
+                                    <Button variant="primary" type="submit" disabled={isSubmitting}>
+                                        {isSubmitting ? "Submitting..." : "Submit Application"}
+                                    </Button>
                                 </div>
                             </div>
                         )}

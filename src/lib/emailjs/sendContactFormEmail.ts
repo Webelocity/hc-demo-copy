@@ -1,23 +1,11 @@
 import emailjs from '@emailjs/browser';
 import type { ContactFormData } from '@/components/shared/ContactUs/ContactUsForm/ContactUsForm.schema';
+import { getEmailJsClientConfig } from './getEmailJsClientConfig';
 
 const CONTACT_EMAILJS_TEMPLATE_ID = 'template_ssjqhpo';
 
-function getConfig() {
-    const serviceId = process.env.EMAILJS_SERVICE_ID;
-    const publicKey = process.env.EMAILJS_USER_ID;
-
-    if (!serviceId || !publicKey) {
-        throw new Error(
-            'EmailJS is not configured. Set EMAILJS_SERVICE_ID and EMAILJS_USER_ID in .env.local.',
-        );
-    }
-
-    return { serviceId, publicKey };
-}
-
 export async function sendContactFormEmail(data: ContactFormData): Promise<void> {
-    const { serviceId, publicKey } = getConfig();
+    const { serviceId, publicKey } = getEmailJsClientConfig();
 
     await emailjs.send(
         serviceId,
