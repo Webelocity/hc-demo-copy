@@ -5,105 +5,116 @@ export default function ReturnRefundPolicy() {
   return (
     <div className="flex flex-col gap-[1.5rem] items-start w-full">
       <h2 className="font-['Sora'] font-bold leading-[1.2] text-[2rem] md:text-[2.5rem] text-[var(--Neutral-800)] tracking-[0.05rem] w-full">
-        Return & Refund Policy
+        Home Central Return Policy
       </h2>
 
       <h3 className="font-['Figtree'] font-normal leading-[1.2] text-[1.5rem] md:text-[1.75rem] text-[var(--Neutral-800)] tracking-[0.0225rem] w-full">
-        Last updated September 11, 2025
+        Customer Facing
       </h3>
 
-      <PolicyTerm title="Return Window">
-        <p>
-          We want you to be completely satisfied with your purchase from Home
-          Central Stores. If you are not satisfied, you may return most items
-          within 30 days of delivery for a full refund or exchange.
-        </p>
-        <p>
-          To be eligible for a return, items must be unused, in their original
-          packaging, and in the same condition as when you received them. You
-          will also need the receipt or proof of purchase.
-        </p>
-        <p>
-          Certain items are not eligible for return, including custom-cut
-          materials, special orders, clearance items, and opened packages of
-          consumable products.
-        </p>
-      </PolicyTerm>
-
-      <PolicyTerm title="How to Initiate a Return">
-        <p>
-          To initiate a return, please contact our customer service team at{" "}
-          <a href="mailto:hc@homecentralstores.com" className="underline text-[#841618]">
-            hc@homecentralstores.com          </a>{" "}
-          or call us at (607) 687-3284. Our team will provide you with return
-          instructions and a return authorization number if applicable.
-        </p>
-        <p>
-          Please include your order number, the item(s) you wish to return, and
-          the reason for the return in your request.
-        </p>
-      </PolicyTerm>
-
-      <PolicyTerm title="Return Shipping">
-        <p>
-          You will be responsible for paying for your own shipping costs for
-          returning your item. Shipping costs are non-refundable. If you receive
-          a refund, the cost of return shipping will be deducted from your
-          refund.
-        </p>
-        <p>
-          If you are returning an item that was damaged or defective upon
-          arrival, we will cover the cost of return shipping. Please contact us
-          for instructions.
-        </p>
-      </PolicyTerm>
-
-      <PolicyTerm title="Refund Processing">
-        <p>
-          Once we receive your returned item, we will inspect it and notify you
-          of the approval or rejection of your refund.
-        </p>
-        <p>
-          If your return is approved, we will initiate a refund to your original
-          method of payment. You will receive the credit within a certain number
-          of days, depending on your card issuer's policies.
-        </p>
-      </PolicyTerm>
-
-      <PolicyTerm title="Non-Returnable Items">
-        <p>Certain items cannot be returned, including:</p>
-        <ul className="list-disc pl-6 space-y-1">
-          <li>Custom-cut materials and special orders</li>
-          <li>Clearance and final sale items</li>
+      <PolicyTerm title="Eligibility">
+        <ul className="list-disc pl-6 space-y-2">
           <li>
-            Opened packages of consumable products (paint, adhesives, etc.)
+            Any returns within 60 days of purchase with original receipt, are
+            eligible for full refund.
           </li>
-          <li>Gift cards</li>
-          <li>Hazardous materials</li>
+          <li>
+            Returns without a receipt will receive store credit at the item&apos;s
+            lowest sale price.
+          </li>
+          <li>
+            Items must be returned in re-sellable condition, with original
+            packaging, manuals, and accessories.
+          </li>
+          <li>
+            Cashiers may request the customer&apos;s full name, address, and phone
+            number on all returns.
+          </li>
         </ul>
       </PolicyTerm>
 
-      <PolicyTerm title="Damaged or Defective Items">
+      <PolicyTerm title="Building Materials">
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            Lumber, panel items, and other building materials must not be
+            weathered, cut, or show any signs of use to receive credit.
+          </li>
+          <li>
+            Quality issues with lumber must be reported within 24 hours of
+            customer receiving product.
+          </li>
+          <li>
+            Home Central reserves the right to refuse refunds for building
+            material items after 7 days of customer receiving product.
+          </li>
+        </ul>
+      </PolicyTerm>
+
+      <PolicyTerm title="Customized products">
+        <p>Returns are not accepted on customized products such as:</p>
+        <ul className="list-disc pl-6 space-y-1 mt-2">
+          <li>Tinted Paint</li>
+          <li>Re-keyed locks</li>
+          <li>Cut rope, chain, glass, wire, pipe, etc.</li>
+        </ul>
+      </PolicyTerm>
+
+      <PolicyTerm title="Small Appliances / Small Engine">
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            Air conditioners, dehumidifiers, and electric pressure washers may
+            only be returned within one week, and only if they are unopened.
+          </li>
+          <li>
+            Generators, mowers, and gas pressure washers may only be returned
+            within one week, and only if no gas or oil has been put in the motor.
+          </li>
+        </ul>
+      </PolicyTerm>
+
+      <PolicyTerm title="Special Orders">
         <p>
-          If you receive a damaged or defective item, please contact us
-          immediately. We will arrange for a replacement or refund at no
-          additional cost to you.
-        </p>
-        <p>
-          Please provide photos of the damaged or defective item to help us
-          process your claim more quickly.
+          Special Orders are non-returnable and non-refundable, unless
+          specifically noted ahead of time.
         </p>
       </PolicyTerm>
 
-      <PolicyTerm title="Exchanges">
-        <p>
-          If you need to exchange an item for a different size, color, or model,
-          please contact our customer service team. We will be happy to assist
-          you with an exchange, subject to availability.
-        </p>
-        <p>
-          Exchanges are subject to the same return eligibility requirements as
-          refunds.
+      <PolicyTerm title="Refund Methods">
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            Refunds for purchases made with a debit or credit card, will only be
+            credited back to the same card that was used to make the purchase.
+          </li>
+          <li>
+            Home Central reserves the right to pay any refund by check.
+          </li>
+        </ul>
+      </PolicyTerm>
+
+      <PolicyTerm title="Return Pick-up">
+        <ul className="list-disc pl-6 space-y-2">
+          <li>
+            If you require a pick-up of returns from your job site, pick-up fees
+            and/or restocking fees may apply.
+          </li>
+          <li>
+            Pick-up returns may take up to 3 business days to process due to
+            verification procedures.
+          </li>
+        </ul>
+        <p className="mt-2">
+          For further questions, please contact us at{" "}
+          <a
+            href="mailto:hc@homecentralstores.com"
+            className="underline text-[#841618]"
+          >
+            hc@homecentralstores.com
+          </a>{" "}
+          or call us at{" "}
+          <a href="tel:6076873284" className="underline text-[#841618]">
+            607-687-3284
+          </a>
+          . We appreciate your understanding and look forward to serving you!
         </p>
       </PolicyTerm>
     </div>
