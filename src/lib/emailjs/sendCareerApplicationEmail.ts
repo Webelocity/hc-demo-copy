@@ -27,12 +27,17 @@ function formatPreviousEmployment(history: JobExperience[]): string {
         .join('\n\n');
 }
 
-function buildCareerTemplateParams(data: JobApplication): Record<string, string> {
+type CareerTemplateParams = Record<string, string>;
+
+function buildCareerTemplateParams(
+    data: JobApplication,
+    overrides?: Partial<CareerTemplateParams>,
+): CareerTemplateParams {
     const d = data.demographicInformation;
     const e = data.employmentData;
     const o = data.otherExperience;
 
-    return {
+    const base: CareerTemplateParams = {
         name: d.name,
         referredBy: d.referredBy,
         email: d.email,
@@ -71,15 +76,20 @@ function buildCareerTemplateParams(data: JobApplication): Record<string, string>
         additionalFileNames:
             o.additionalFiles?.map((f) => f.name).filter(Boolean).join(', ') ?? '',
     };
+
+    return { ...base, ...(overrides ?? {}) };
 }
 
-export async function sendCareerApplicationEmail(data: JobApplication): Promise<void> {
+export async function sendCareerApplicationEmail(
+    data: JobApplication,
+    overrides?: Partial<CareerTemplateParams>,
+): Promise<void> {
     const { serviceId, publicKey } = getEmailJsClientConfig();
 
     await emailjs.send(
         serviceId,
         CAREER_EMAILJS_TEMPLATE_ID,
-        buildCareerTemplateParams(data),
+        buildCareerTemplateParams(data, overrides),
         { publicKey },
     );
 }
