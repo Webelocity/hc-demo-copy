@@ -30,7 +30,8 @@ import Button from "@/components/shared/Button";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { useCareers } from "@/hooks/useStrapi";
 import { sendCareerApplicationEmail } from "@/lib/emailjs/sendCareerApplicationEmail";
-
+import { ref as firebaseStorageRef, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@/firebase";
 type FormValues = JobApplication;
 
 type CareerFormProps = {
@@ -140,6 +141,14 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
         return Array.from(titles);
     }, [careersData, initialJobName]);
 
+    const uploadFileToFirebase = async (file: File, kind: "cv" | "additional") => {
+        const safeName = file.name.replace(/[^\w.\-() ]+/g, "_");
+        const path = `homecentral/careers/${kind}/${Date.now()}_${safeName}`;
+        const fbRef = firebaseStorageRef(storage, path);
+        await uploadBytes(fbRef, file);
+        return await getDownloadURL(fbRef);
+    };
+
     const onNext = async () => {
         const fieldsToValidate: (keyof FormValues | string)[] = [];
         if (activeStep === 0) {
@@ -215,7 +224,30 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
             return;
         }
         try {
-            await sendCareerApplicationEmail(values);
+            const cv = values.employmentData.cv;
+            const additionalFiles = values.otherExperience.additionalFiles ?? [];
+
+            let cvLine = cv?.name ?? "";
+            if (cv) {
+                const url = await uploadFileToFirebase(cv, "cv");
+                cvLine = `${cv.name} — ${url}`;
+            }
+
+            let additionalLines = "";
+            if (additionalFiles.length > 0) {
+                const uploaded = await Promise.all(
+                    additionalFiles.map(async (f) => {
+                        const url = await uploadFileToFirebase(f, "additional");
+                        return `${f.name} — ${url}`;
+                    }),
+                );
+                additionalLines = uploaded.join("\n");
+            }
+
+            await sendCareerApplicationEmail(values, {
+                cvFileName: cvLine,
+                additionalFileNames: additionalLines,
+            });
             toast.success("Your application has been submitted successfully.");
             reset(createDefaultValues(initialJobName));
             setActiveStep(0);
@@ -402,13 +434,20 @@ export default function CareerForm({ initialJobName }: CareerFormProps) {
                                         render={({ field }) => (
                                             <DropzoneUploader
                                                 multiple={false}
-                                                accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                                                 hint="Supports: pdf, word"
                                                 value={field.value as File | null}
                                                 onChange={(val) => {
                                                     const f = (val as File | null);
-                                                    if (f && !["application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(f.type)) {
-                                                        toast.error("CV must be a PDF or DOCX file.");
+                                                    if (
+                                                        f &&
+                                                        ![
+                                                            "application/pdf",
+                                                            "application/msword",
+                                                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                                                        ].includes(f.type)
+                                                    ) {
+                                                        toast.error("CV must be a PDF, DOC, or DOCX file.");
                                                         return;
                                                     }
                                                     field.onChange(val);
