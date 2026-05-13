@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Sora } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ThemeProvider } from "@mui/material/styles";
@@ -17,15 +17,27 @@ import PageLoader from "@/components/shared/PageLoader/PageLoader";
 import { Suspense } from "react";
 import CookieConsentBar from "@/components/shared/CookieConsentBar";
 
-const figtree = Figtree({
+// Fonts from @fontsource-variable/* — no build-time HTTPS to Google Fonts (often
+// breaks behind TLS-inspecting proxies: UNABLE_TO_VERIFY_LEAF_SIGNATURE).
+const figtree = localFont({
+  src: [
+    {
+      path: "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2",
+      style: "normal",
+    },
+    {
+      path: "../../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-italic.woff2",
+      style: "italic",
+    },
+  ],
   variable: "--font-figtree",
-  subsets: ["latin"],
+  display: "swap",
 });
 
-const sora = Sora({
+const sora = localFont({
+  src: "../../node_modules/@fontsource-variable/sora/files/sora-latin-wght-normal.woff2",
   variable: "--font-sora",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.hcinc.com";
@@ -99,9 +111,7 @@ export default function RootLayout({
             <div className='w-full'>
               <hr className='border-[var(--Neutral-100)]' />
             </div>
-            <Suspense fallback={<PageLoader />}>
-              {children}
-            </Suspense>
+            {children}
             <CartDrawer />
             <Footer />
             <ToastContainer

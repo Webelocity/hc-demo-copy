@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Parent folder (D:\Webelocity) has its own package-lock.json; without this,
+  // Next infers the wrong workspace root for output file tracing.
+  outputFileTracingRoot: path.join(__dirname),
   /* config options here */
   env: {
     EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID,

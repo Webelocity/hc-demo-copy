@@ -77,7 +77,10 @@ function buildCareerTemplateParams(
             o.additionalFiles?.map((f) => f.name).filter(Boolean).join(', ') ?? '',
     };
 
-    return { ...base, ...(overrides ?? {}) };
+    const cleanOverrides = Object.fromEntries(
+        Object.entries(overrides ?? {}).filter(([ , v]) => v !== undefined),
+    ) as CareerTemplateParams;
+    return { ...base, ...cleanOverrides };
 }
 
 export async function sendCareerApplicationEmail(
