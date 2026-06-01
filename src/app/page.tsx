@@ -123,8 +123,8 @@ export default function Home() {
   return (
     <>
       <Banners />
-      <MobileBanner />
       <WeeklyOffers />
+      <MobileBanner />
       <Categories />
       <SpecialOrdering />
       <NewArrivals />
