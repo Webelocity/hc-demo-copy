@@ -63,6 +63,13 @@ const FreeDelivery = dynamic(
   }
 );
 
+const MobileBanner = dynamic(
+  () => import("@/components/Pages/HomePage/MobileBanner/MobileBanner"),
+  {
+    loading: () => <div className="h-64 animate-pulse bg-gray-100" />,
+  }
+);
+
 const Rent = dynamic(
   () => import("@/components/Pages/HomePage/Rent/Rent"),
   {
@@ -116,6 +123,7 @@ export default function Home() {
   return (
     <>
       <Banners />
+      <MobileBanner />
       <WeeklyOffers />
       <Categories />
       <SpecialOrdering />

@@ -64,6 +64,9 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-figtree);
+  --color-primary-500: var(--primary-500-main);
+  --color-secondary-500: var(--secondary-500-main);
+  --color-natural-200: var(--Neutral-200);
 }
 
 html {
