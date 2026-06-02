@@ -100,7 +100,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} ${sora.variable} antialiased`}>
+      <body className={`${figtree.variable} ${sora.variable} antialiased overflow-x-hidden`}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <JotaiProvider>
