@@ -40,41 +40,43 @@ const sora = localFont({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.hcinc.com";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL('https://www.hcinc.com'),
   title: {
-    default: "Home Central Stores | Hardware, Building Supplies & More in NY",
-    template: "%s | Home Central Stores",
+    default: 'Home Central Stores | Hardware & Building Supplies in Owego, Vestal & Candor NY',
+    template: '%s | Home Central Stores',
   },
   description:
-    "Home Central Stores – your local hardware and building supplies destination in Owego, Vestal, and Candor, NY. Shop tools, paint, lumber, and get contractor rewards.",
+    'Home Central Stores — your local hardware, lumber, tools, and building supply store in Owego, Vestal, and Candor, NY. Shop 60,000+ products online or visit us. Contractor Zone, custom paint, special ordering, and delivery available.',
   keywords: [
-    "Home Central Stores",
-    "hardware store",
-    "building supplies",
-    "Owego NY",
-    "Vestal NY",
-    "Candor NY",
-    "lumber",
-    "paint",
-    "contractor supplies",
+    'hardware store Owego NY',
+    'building supplies Vestal NY',
+    'lumber store Candor NY',
+    'contractor supplies Southern Tier NY',
+    'hardware store near me',
+    'building materials Owego',
+    'paint store Owego NY',
+    'Home Central Stores',
+    'special ordering hardware',
+    'contractor zone NY',
   ],
+  alternates: {
+    canonical: 'https://www.hcinc.com',
+  },
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: siteUrl,
-    siteName: "Home Central Stores",
-    title: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    type: 'website',
+    siteName: 'Home Central Stores',
+    locale: 'en_US',
+    url: 'https://www.hcinc.com',
+    title: 'Home Central Stores | Hardware & Building Supplies in Owego, Vestal & Candor NY',
     description:
-      "Your local hardware and building supplies destination in Owego, Vestal, and Candor, NY. Shop tools, paint, lumber, and get contractor rewards.",
+      'Your local hardware, lumber, tools, and building supply store in Owego, Vestal, and Candor, NY. Contractor Zone, custom paint mixing, special ordering, and delivery available.',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Home Central Stores | Hardware, Building Supplies & More in NY",
+    card: 'summary_large_image',
+    title: 'Home Central Stores | Hardware & Building Supplies in NY',
     description:
-      "Your local hardware and building supplies destination in Owego, Vestal, and Candor, NY.",
+      'Hardware, lumber, tools, and building supplies in Owego, Vestal, and Candor NY. Shop 60,000+ products online or visit us.',
   },
   robots: {
     index: true,
@@ -82,14 +84,14 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-  alternates: {
-    canonical: siteUrl,
-  },
-  verification: {
-    // Add your Google Search Console verification when ready:
-    // google: "your-google-verification-code",
+  other: {
+    ...(process.env.NEXT_PUBLIC_FB_APP_ID && {
+      'fb:app_id': process.env.NEXT_PUBLIC_FB_APP_ID,
+    }),
   },
 };
 

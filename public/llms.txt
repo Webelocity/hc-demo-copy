@@ -1,32 +1,40 @@
-# Home Central Stores
+Home Central Stores
 
-> Local hardware and building supplies destination in Owego, Vestal, and Candor, NY – tools, paint, lumber, contractor rewards, and more.
+Local hardware, lumber, tools, and building supply retailer
 
-## Primary Pages
+with 4 locations in Owego, Vestal, and Candor, New York.
 
-- [Home](https://www.hcinc.com/): Main landing page with weekly offers, categories, and featured products
-- [Shop](https://www.hcinc.com/shop): Browse and purchase hardware, tools, and building supplies online
-- [Shop Catalogue](https://www.hcinc.com/shop/catalogue): Full product catalog for hardware and building materials
-- [About Us](https://www.hcinc.com/about-us): Company mission, values, and community contributions
-- [Contact](https://www.hcinc.com/contact): Contact information, FAQs, and support for Owego, Vestal, and Candor, NY
-- [Locations](https://www.hcinc.com/locations): Store locations and directions in Owego, Vestal, and Candor
-- [Services](https://www.hcinc.com/services): Hardware and contractor services offered
-- [Contractor Zone](https://www.hcinc.com/contractor-zone): Contractor rewards and professional programs
-- [Special Ordering](https://www.hcinc.com/special-ordering): Custom and special order products
-- [Paint](https://www.hcinc.com/paint): Paint products, color matching, and expertise
-- [Owego Showroom](https://www.hcinc.com/owego-showroom): Owego store showroom information
-- [Resources](https://www.hcinc.com/resources): Helpful guides and resources
-- [Careers](https://www.hcinc.com/careers): Job openings and employment opportunities
-- [Apply for Careers](https://www.hcinc.com/careers/apply): Job application form
-- [Policies](https://www.hcinc.com/policies): Privacy, terms, and store policies
-- [History](https://www.hcinc.com/history): Company history and milestones
-- [Team](https://www.hcinc.com/team): Leadership and team members
+Serving homeowners and contractors across the Southern Tier of NY.
 
-## Optional
+Store Locations
 
-- [Sitemap](https://www.hcinc.com/sitemap.xml): Full list of indexed pages
-- [Robots](https://www.hcinc.com/robots.txt): Crawler access rules
+Owego: 151 Central Ave, Owego NY 13827 — (607) 687-3284
+Vestal: 199 Stage Rd, Vestal NY 13850 — (607) 785-3307
+Candor: 309 Owego Rd, Candor NY 13743 — (607) 659-4205
+Owego Showroom: 133 Central Ave, Owego NY 13827 — (607) 223-2360
 
-## Context
+Key pages
 
-Home Central Stores serves the Southern Tier of New York with three locations: Owego, Vestal, and Candor. We offer hardware, building supplies, tools, paint, lumber, contractor rewards, rental equipment, gift cards, and professional support. Product pages use dynamic routes (/product/[id]). Career listings use dynamic routes (/careers/[job_id]). Order tracking uses /order/[id]. The site is built with Next.js.
+Shop all products
+Contractor Zone
+Store locations & hours
+Services
+Special Ordering
+Owego Showroom
+Custom Paint
+Contact
+
+What we carry
+Hardware, lumber, building materials, tools, paint, millwork,
+
+windows, doors, flooring, siding, kitchen and bath fixtures,
+
+fasteners, electrical, plumbing, HVAC supplies.
+Services
+Delivery and job-site logistics, material cutting and pipe
+
+threading, tool repair and sharpening, blueprint takeoffs,
+
+custom paint mixing, lock re-keying and key cutting,
+
+special and custom ordering.

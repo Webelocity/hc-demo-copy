@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FiAlertTriangle, FiRefreshCw, FiEdit3, FiChevronRight } from 'react-icons/fi';
 import { fetchSingleProductById } from '@/Api/Apis';
+import { getProductImageUrls } from '@webelocity/api';
 import SelectedVariantAndPrice from '@/components/Pages/Shop/SingleProduct/SelectedVariantAndPrice';
 import VariantAttributes from '@/components/Pages/Shop/SingleProduct/VariantSelector';
 import QuantityPicker from '@/components/Pages/Shop/SingleProduct/QuantityPicker';
@@ -213,7 +214,92 @@ export default async function ProductPage({
                 })
                 .filter((item): item is { label: string; href: string } => Boolean(item)),
         ];
+
+        const schemaBreadcrumbItems: { position: number; name: string; item: string }[] = [
+            { position: 1, name: 'Home', item: 'https://www.hcinc.com/' },
+            { position: 2, name: 'Shop', item: 'https://www.hcinc.com/shop/catalogue' },
+        ]
+
+        if ((product as any)?.category) {
+            schemaBreadcrumbItems.push({
+                position: 3,
+                name: (product as any).category.name,
+                item: `https://www.hcinc.com/shop/catalogue?cat=${(product as any).category.slug ?? (product as any).category._id}`,
+            })
+        }
+
+        if ((product as any)?.subcategory) {
+            schemaBreadcrumbItems.push({
+                position: schemaBreadcrumbItems.length + 1,
+                name: (product as any).subcategory.name,
+                item: `https://www.hcinc.com/shop/catalogue?sub=${(product as any).subcategory.slug ?? (product as any).subcategory._id}`,
+            })
+        }
+
+        schemaBreadcrumbItems.push({
+            position: schemaBreadcrumbItems.length + 1,
+            name: (product as any)?.name ?? 'Product',
+            item: `https://www.hcinc.com/product/${(product as any)?.slug ?? (product as any)?._id}`,
+        })
+
+        const productJsonLd = product ? {
+            '@context': 'https://schema.org',
+            '@graph': [
+                {
+                    '@type': 'Product',
+                    '@id': `https://www.hcinc.com/product/${(product as any).slug ?? (product as any)._id}#product`,
+                    name: (product as any).name,
+                    description: (product as any).description ?? '',
+                    sku: (product as any).sku ?? (product as any)._id,
+                    image: getProductImageUrls(product as any),
+                    url: `https://www.hcinc.com/product/${(product as any).slug ?? (product as any)._id}`,
+                    ...((product as any).brand && {
+                        brand: {
+                            '@type': 'Brand',
+                            name: typeof (product as any).brand === 'string'
+                                ? (product as any).brand
+                                : (product as any).brand?.name ?? '',
+                        },
+                    }),
+                    offers: {
+                        '@type': 'Offer',
+                        url: `https://www.hcinc.com/product/${(product as any).slug ?? (product as any)._id}`,
+                        priceCurrency: 'USD',
+                        ...((product as any).finalPrice != null && {
+                            price: Number((product as any).finalPrice).toFixed(2),
+                        }),
+                        availability: (product as any).isActive === false
+                            ? 'https://schema.org/OutOfStock'
+                            : 'https://schema.org/InStock',
+                        seller: {
+                            '@type': 'Organization',
+                            name: 'Home Central Stores',
+                        },
+                        priceValidUntil: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                            .toISOString().split('T')[0],
+                    },
+                },
+                {
+                    '@type': 'BreadcrumbList',
+                    '@id': `https://www.hcinc.com/product/${(product as any).slug ?? (product as any)._id}#breadcrumb`,
+                    itemListElement: schemaBreadcrumbItems.map((crumb) => ({
+                        '@type': 'ListItem',
+                        position: crumb.position,
+                        name: crumb.name,
+                        item: crumb.item,
+                    })),
+                },
+            ],
+        } : null
+
         return (
+            <>
+            {productJsonLd && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+                />
+            )}
             <div className='baseContainer'>
                 <div className='maxWidth py-[2.5rem]  flex flex-col  gap-[1.5rem]'>
                     <div className="w-full overflow-x-auto">
@@ -303,7 +389,7 @@ export default async function ProductPage({
                     <RelatedProducts productId={product._id} />
                 </div>
             </div>
-
+            </>
         );
     } catch (error: any) {
         console.error(error);

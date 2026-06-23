@@ -182,7 +182,51 @@ function CatalogueContent() {
         return 'All products';
     };
 
+    const isSub = !!subParam;
+    const categoryId = catParam ?? subParam;
+    const categoryName = renderTitle() === 'All products' ? undefined : renderTitle();
+
+    const categoryJsonLd = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'CollectionPage',
+                '@id': `https://www.hcinc.com/shop/catalogue${
+                    categoryId ? `?${isSub ? 'sub' : 'cat'}=${categoryId}` : ''
+                }#collection`,
+                name: categoryName
+                    ? `${categoryName} | Home Central Stores`
+                    : 'Shop All Products | Home Central Stores',
+                description: categoryName
+                    ? `Shop ${categoryName} at Home Central Stores — hardware and building supplies in Owego, Vestal, and Candor NY.`
+                    : 'Browse 60,000+ hardware and building supply products at Home Central Stores in New York.',
+                url: `https://www.hcinc.com/shop/catalogue${
+                    categoryId ? `?${isSub ? 'sub' : 'cat'}=${categoryId}` : ''
+                }`,
+                isPartOf: { '@id': 'https://www.hcinc.com/#website' },
+            },
+            {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.hcinc.com/' },
+                    { '@type': 'ListItem', position: 2, name: 'Shop', item: 'https://www.hcinc.com/shop/catalogue' },
+                    ...(categoryName ? [{
+                        '@type': 'ListItem',
+                        position: 3,
+                        name: categoryName,
+                        item: `https://www.hcinc.com/shop/catalogue?${isSub ? 'sub' : 'cat'}=${categoryId}`,
+                    }] : []),
+                ],
+            },
+        ],
+    };
+
     return (
+        <>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(categoryJsonLd) }}
+        />
         <div className="baseContainer">
             <div className=" maxWidth py-[2.5rem] flex gap-[2rem] min-w-0">
                 {!isMobile && (
@@ -282,7 +326,7 @@ function CatalogueContent() {
                 </div>
             </div>
         </div>
-
+        </>
     );
 }
 
