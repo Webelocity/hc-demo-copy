@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getAllCategories, SITE_URL } from '@webelocity/api'
+import { getAllCategories, SITE_URL } from '@/lib/sitemapHelpers'
 
 export const revalidate = 3600
 

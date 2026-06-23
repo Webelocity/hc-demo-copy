@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { getProductCount, SITE_URL, PAGE_SIZE } from '@webelocity/api'
+import { getProductCount, SITE_URL, PAGE_SIZE } from '@/lib/sitemapHelpers'
 
 const staticPages: MetadataRoute.Sitemap = [
   { url: `${SITE_URL}/`,                  lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },

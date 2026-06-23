@@ -3,7 +3,7 @@ import {
   getProductsPage,
   getProductImageUrls,
   SITE_URL,
-} from '@webelocity/api'
+} from '@/lib/sitemapHelpers'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 3600

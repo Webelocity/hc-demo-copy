@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     EMAILJS_SERVICE_ID: process.env.EMAILJS_SERVICE_ID,
     EMAILJS_USER_ID: process.env.EMAILJS_USER_ID,
   },
-  transpilePackages: ['mui-tel-input', '@webelocity/api', '@webelocity/core', '@webelocity/env'],
+  transpilePackages: ['mui-tel-input'],
   poweredByHeader: false,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { FiAlertTriangle, FiRefreshCw, FiEdit3, FiChevronRight } from 'react-icons/fi';
 import { fetchSingleProductById } from '@/Api/Apis';
-import { getProductImageUrls } from '@webelocity/api';
+import { getProductImageUrls } from '@/lib/sitemapHelpers';
 import SelectedVariantAndPrice from '@/components/Pages/Shop/SingleProduct/SelectedVariantAndPrice';
 import VariantAttributes from '@/components/Pages/Shop/SingleProduct/VariantSelector';
 import QuantityPicker from '@/components/Pages/Shop/SingleProduct/QuantityPicker';
