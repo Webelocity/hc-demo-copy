@@ -5,7 +5,10 @@ type Product = {
     refundPolicy?: string;
     storeId: string;
     name: string;
+    slug?: string;
     description: string;
+    seoTitle?: string;
+    seoDescription?: string;
     productMedia: ProductMedia[];
     thumbnail: ProductMedia;
     defaultPath: { _id: string, name: string }[],

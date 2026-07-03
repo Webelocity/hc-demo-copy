@@ -28,6 +28,14 @@ function getBannerStyle(banner?: StrapiBanner) {
     return backgroundUrl ? { backgroundImage: backgroundUrl } : undefined;
 }
 
+function getBannerImageUrl(banner: StrapiBanner | undefined, fallback: string) {
+    const url = banner?.Background_Image?.url
+        ? getStrapiImageUrl(banner.Background_Image.url)
+        : '';
+
+    return url || fallback;
+}
+
 function BannerSkeleton({ className }: { className?: string }) {
     return (
         <div
@@ -78,9 +86,17 @@ export default function Banners() {
                     ) : (
                         <>
                             <div
-                                className="flex flex-col py-[4rem] px-[2.5rem]  items-start flex-[6] lg:aspect-[815/368] rounded-[var(--Radius-md)] bg-[url('/assets/image/HomePage/heater.png')] bg-cover bg-center bg-no-repeat"
-                                style={getBannerStyle(banner1)}
+                                className="relative flex flex-col py-[4rem] px-[2.5rem] items-start flex-[6] lg:aspect-[815/368] rounded-[var(--Radius-md)] overflow-hidden"
                             >
+                                <Image
+                                    src={getBannerImageUrl(banner1, '/assets/image/HomePage/heater.png')}
+                                    alt={banner1?.Title || 'Stay Cozy With Compact Heaters'}
+                                    fill
+                                    priority
+                                    className="object-cover object-center"
+                                    sizes="(max-width: 1024px) 100vw, 60vw"
+                                />
+                                <div className="relative z-10 flex flex-col items-start">
                                 <h1 className="text-[2.5rem] font-bold text-white" >
                                     {banner1?.Title || "Stay Cozy With Compact Heaters"}
                                 </h1>
@@ -91,6 +107,7 @@ export default function Banners() {
                                     <Button href={banner1?.CTA || "/shop/catalogue?cat=69143e9d6ac9361831e46266&page=1"} variant="primary">
                                         {"Shop Now"}
                                     </Button>
+                                </div>
                                 </div>
                             </div>
                             <div

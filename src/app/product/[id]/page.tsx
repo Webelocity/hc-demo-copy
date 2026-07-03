@@ -27,18 +27,29 @@ function stripHtml(html: string): string {
     return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
+function truncate(text: string, maxLength: number): string {
+    const stripped = stripHtml(text);
+    if (!stripped) return '';
+    return stripped.slice(0, maxLength) + (stripped.length > maxLength ? '…' : '');
+}
+
 export async function generateMetadata({ params }: { params: Promise<PageParams> }): Promise<Metadata> {
     const { id } = await params;
     try {
         const product = await fetchSingleProductById(id);
-        const title = product?.name ?? 'Product';
-        const rawDesc = product?.description ?? '';
-        const description = rawDesc ? (stripHtml(rawDesc).slice(0, 160) + (stripHtml(rawDesc).length > 160 ? '…' : '')) : `Shop ${product?.name ?? 'this product'} at Home Central Stores – hardware and building supplies in Owego, Vestal, and Candor, NY.`;
+        const title = (product?.seoTitle || product?.name) ?? 'Product';
+        const description =
+            product?.seoDescription ||
+            truncate(product?.description ?? '', 160) ||
+            `Shop ${product?.name ?? 'this product'} at Home Central Stores – hardware and building supplies in Owego, Vestal, and Candor, NY.`;
         const image = product?.thumbnail?.file;
         const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.hcinc.com';
         return {
             title,
             description,
+            alternates: {
+                canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/products/${product.slug}`,
+            },
             openGraph: {
                 title: `${title} | Home Central Stores`,
                 description,
@@ -259,6 +270,13 @@ export default async function ProductPage({
                             name: typeof (product as any).brand === 'string'
                                 ? (product as any).brand
                                 : (product as any).brand?.name ?? '',
+                        },
+                    }),
+                    ...((product as any).reviews?.length > 0 && {
+                        aggregateRating: {
+                            '@type': 'AggregateRating',
+                            ratingValue: (product as any).rating,
+                            reviewCount: (product as any).reviews.length,
                         },
                     }),
                     offers: {
